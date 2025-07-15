@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinza Berlin - Admin Dashboard Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: #F5F5F5;
+            color: #333333;
+        }
+        
+        .container {
+            max-width: 414px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .header {
+            background-color: #FFFFFF;
+            padding: 16px;
+            border-bottom: 1px solid #EEEEEE;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .city-badge {
+            background-color: #2196F3;
+            color: #FFFFFF;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 16px;
+        }
+        
+        .stats-container {
+            margin-bottom: 16px;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .stats-card {
+            flex: 0 0 48%;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stats-card.pending-events {
+            background-color: #FF9800;
+            color: #FFFFFF;
+        }
+        
+        .stats-card.pending-comments {
+            background-color: #9C27B0;
+            color: #FFFFFF;
+        }
+        
+        .stats-card.active-events {
+            background-color: #4CAF50;
+            color: #FFFFFF;
+        }
+        
+        .stats-card.reported-content {
+            background-color: #F44336;
+            color: #FFFFFF;
+        }
+        
+        .stats-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .stats-number {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        .stats-label {
+            font-size: 12px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+        
+        .tool-button {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tool-icon-container {
+            width: 48px;
+            height: 48px;
+            border-radius: 24px;
+            background-color: #2196F3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 16px;
+            color: #FFFFFF;
+        }
+        
+        .tool-icon-container.red {
+            background-color: #F44336;
+        }
+        
+        .tool-text-container {
+            flex: 1;
+        }
+        
+        .tool-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .tool-description {
+            font-size: 12px;
+            color: #666666;
+        }
+        
+        .tool-badge-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .tool-badge-text {
+            background-color: #F44336;
+            color: #FFFFFF;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 8px;
+            min-width: 24px;
+            text-align: center;
+        }
+        
+        .guideline-card {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .guideline-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .guideline-text {
+            font-size: 14px;
+            color: #333333;
+            margin-bottom: 16px;
+        }
+        
+        .guideline-rule {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .guideline-rule-text {
+            font-size: 14px;
+            color: #333333;
+            margin-left: 8px;
+            flex: 1;
+        }
+        
+        .section-container {
+            margin-bottom: 24px;
+        }
+        
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #FFFFFF;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #EEEEEE;
+            max-width: 414px;
+            margin: 0 auto;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: #666666;
+        }
+        
+        .nav-item.active {
+            color: #2196F3;
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .screen-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2196F3;
+        }
+        
+        .preview-note {
+            background-color: #FFF9C4;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="screen-title">Kinza Berlin App Preview</div>
+        
+        <div class="preview-note">
+            This is a static HTML preview of the Admin Dashboard screen. The actual app is built with React Native and Expo.
+        </div>
+        
+        <div class="header">
+            <div class="header-title">Admin Dashboard</div>
+            <div class="city-badge">Berlin</div>
+        </div>
+        
+        <div class="content">
+            <div class="stats-container">
+                <div class="stats-row">
+                    <div class="stats-card pending-events">
+                        <span class="material-icons stats-icon">calendar_today</span>
+                        <div class="stats-number">12</div>
+                        <div class="stats-label">Pending Events</div>
+                    </div>
+                    
+                    <div class="stats-card pending-comments">
+                        <span class="material-icons stats-icon">chat_bubble</span>
+                        <div class="stats-number">28</div>
+                        <div class="stats-label">Pending Comments</div>
+                    </div>
+                </div>
+                
+                <div class="stats-row">
+                    <div class="stats-card active-events">
+                        <span class="material-icons stats-icon">check_circle</span>
+                        <div class="stats-number">87</div>
+                        <div class="stats-label">Active Events</div>
+                    </div>
+                    
+                    <div class="stats-card reported-content">
+                        <span class="material-icons stats-icon">flag</span>
+                        <div class="stats-number">5</div>
+                        <div class="stats-label">Reported Content</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-container">
+                <div class="section-title">Admin Tools</div>
+                
+                <div class="tool-button">
+                    <div class="tool-icon-container">
+                        <span class="material-icons">security</span>
+                    </div>
+                    <div class="tool-text-container">
+                        <div class="tool-title">Moderation Queue</div>
+                        <div class="tool-description">Review and approve pending events and comments</div>
+                    </div>
+                    <div class="tool-badge-container">
+                        <div class="tool-badge-text">40</div>
+                        <span class="material-icons">chevron_right</span>
+                    </div>
+                </div>
+                
+                <div class="tool-button">
+                    <div class="tool-icon-container red">
+                        <span class="material-icons">flag</span>
+                    </div>
+                    <div class="tool-text-container">
+                        <div class="tool-title">Report Review</div>
+                        <div class="tool-description">Handle reported content and user complaints</div>
+                    </div>
+                    <div class="tool-badge-container">
+                        <div class="tool-badge-text">5</div>
+                        <span class="material-icons">chevron_right</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-container">
+                <div class="section-title">Admin Guidelines</div>
+                
+                <div class="guideline-card">
+                    <div class="guideline-title">Moderation Policy</div>
+                    <div class="guideline-text">Follow these guidelines when reviewing content to ensure a safe and family-friendly environment.</div>
+                    
+                    <div class="guideline-rule">
+                        <span class="material-icons" style="color: #4CAF50;">check_circle</span>
+                        <div class="guideline-rule-text">Approve content that is family-friendly and accurate</div>
+                    </div>
+                    
+                    <div class="guideline-rule">
+                        <span class="material-icons" style="color: #4CAF50;">check_circle</span>
+                        <div class="guideline-rule-text">Ensure events have complete information and are age-appropriate</div>
+                    </div>
+                    
+                    <div class="guideline-rule">
+                        <span class="material-icons" style="color: #F44336;">cancel</span>
+                        <div class="guideline-rule-text">Reject content with inappropriate language or themes</div>
+                    </div>
+                    
+                    <div class="guideline-rule">
+                        <span class="material-icons" style="color: #F44336;">cancel</span>
+                        <div class="guideline-rule-text">Reject spam, misleading information, or commercial promotions</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-bar">
+            <div class="nav-item">
+                <span class="material-icons nav-icon">map</span>
+                <div>Map</div>
+            </div>
+            <div class="nav-item">
+                <span class="material-icons nav-icon">event</span>
+                <div>Events</div>
+            </div>
+            <div class="nav-item">
+                <span class="material-icons nav-icon">bookmark</span>
+                <div>Saved</div>
+            </div>
+            <div class="nav-item active">
+                <span class="material-icons nav-icon">dashboard</span>
+                <div>Admin</div>
+            </div>
+            <div class="nav-item">
+                <span class="material-icons nav-icon">person</span>
+                <div>Profile</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

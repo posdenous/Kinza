@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinza Berlin - Organiser Dashboard Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: #F5F5F5;
+            color: #333333;
+        }
+        
+        .container {
+            max-width: 414px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .header {
+            background-color: #FFFFFF;
+            padding: 16px;
+            border-bottom: 1px solid #EEEEEE;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .city-badge {
+            background-color: #2196F3;
+            color: #FFFFFF;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 16px;
+            padding-bottom: 80px;
+        }
+        
+        .stats-container {
+            margin-bottom: 16px;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .stats-card {
+            flex: 0 0 48%;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stats-card.total-events {
+            background-color: #2196F3;
+            color: #FFFFFF;
+        }
+        
+        .stats-card.pending-events {
+            background-color: #FF9800;
+            color: #FFFFFF;
+        }
+        
+        .stats-card.views {
+            background-color: #9C27B0;
+            color: #FFFFFF;
+        }
+        
+        .stats-card.saves {
+            background-color: #4CAF50;
+            color: #FFFFFF;
+        }
+        
+        .stats-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .stats-number {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        .stats-label {
+            font-size: 12px;
+        }
+        
+        .create-event-button {
+            background-color: #4CAF50;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #FFFFFF;
+        }
+        
+        .create-event-button-text {
+            color: #FFFFFF;
+            font-weight: bold;
+            font-size: 16px;
+            margin-left: 8px;
+        }
+        
+        .tabs-container {
+            display: flex;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px 0;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            background-color: #2196F3;
+            color: #FFFFFF;
+        }
+        
+        .tab-text {
+            font-size: 12px;
+        }
+        
+        .active-tab-text {
+            color: #FFFFFF;
+            font-weight: bold;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+        
+        .event-item-container {
+            margin-bottom: 24px;
+            position: relative;
+        }
+        
+        .event-status-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            z-index: 1;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+        
+        .status-text {
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .event-card {
+            background-color: #FFFFFF;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .event-image {
+            height: 120px;
+            background-color: #E0E0E0;
+            background-image: url('https://via.placeholder.com/414x120');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .event-category {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #FFFFFF;
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 12px;
+        }
+        
+        .event-content {
+            padding: 16px;
+        }
+        
+        .event-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .event-details {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        
+        .event-detail {
+            display: flex;
+            align-items: center;
+            margin-right: 16px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #666666;
+        }
+        
+        .event-detail-icon {
+            font-size: 16px;
+            margin-right: 4px;
+            color: #666666;
+        }
+        
+        .event-description {
+            font-size: 14px;
+            color: #666666;
+            margin-bottom: 16px;
+        }
+        
+        .event-stats {
+            display: flex;
+            justify-content: flex-end;
+            padding: 8px;
+            background-color: #F5F5F5;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        
+        .event-stat {
+            display: flex;
+            align-items: center;
+            margin-left: 16px;
+        }
+        
+        .event-stat-text {
+            font-size: 12px;
+            color: #666666;
+            margin-left: 4px;
+        }
+        
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #FFFFFF;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #EEEEEE;
+            max-width: 414px;
+            margin: 0 auto;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: #666666;
+        }
+        
+        .nav-item.active {
+            color: #2196F3;
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .screen-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #2196F3;
+        }
+        
+        .preview-note {
+            background-color: #FFF9C4;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="screen-title">Kinza Berlin App Preview</div>
+        
+        <div class="preview-note">
+            This is a static HTML preview of the Organiser Dashboard screen. The actual app is built with React Native and Expo.
+        </div>
+        
+        <div class="header">
+            <div class="header-title">Organiser Dashboard</div>
+            <div class="city-badge">Berlin</div>
+        </div>
+        
+        <div class="content">
+            <div class="stats-container">
+                <div class="stats-row">
+                    <div class="stats-card total-events">
+                        <span class="material-icons stats-icon">calendar_today</span>
+                        <div class="stats-number">8</div>
+                        <div class="stats-label">Total Events</div>
+                    </div>
+                    
+                    <div class="stats-card pending-events">
+                        <span class="material-icons stats-icon">hourglass_empty</span>
+                        <div class="stats-number">3</div>
+                        <div class="stats-label">Pending Events</div>
+                    </div>
+                </div>
+                
+                <div class="stats-row">
+                    <div class="stats-card views">
+                        <span class="material-icons stats-icon">visibility</span>
+                        <div class="stats-number">245</div>
+                        <div class="stats-label">Total Views</div>
+                    </div>
+                    
+                    <div class="stats-card saves">
+                        <span class="material-icons stats-icon">bookmark</span>
+                        <div class="stats-number">42</div>
+                        <div class="stats-label">Total Saves</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="create-event-button">
+                <span class="material-icons">add_circle</span>
+                <div class="create-event-button-text">Create New Event</div>
+            </div>
+            
+            <div class="tabs-container">
+                <div class="tab active">
+                    <div class="tab-text active-tab-text">All Events (8)</div>
+                </div>
+                <div class="tab">
+                    <div class="tab-text">Pending (3)</div>
+                </div>
+                <div class="tab">
+                    <div class="tab-text">Approved (4)</div>
+                </div>
+                <div class="tab">
+                    <div class="tab-text">Rejected (1)</div>
+                </div>
+            </div>
+            
+            <div class="section-title">Your Events</div>
+            
+            <div class="event-item-container">
+                <div class="event-status-badge">
+                    <div class="status-indicator" style="background-color: #FF9800;"></div>
+                    <div class="status-text">Pending</div>
+                </div>
+                
+                <div class="event-card">
+                    <div class="event-image">
+                        <div class="event-category">Workshop</div>
+                    </div>
+                    <div class="event-content">
+                        <div class="event-title">Kids Pottery Workshop</div>
+                        <div class="event-details">
+                            <div class="event-detail">
+                                <span class="material-icons event-detail-icon">calendar_today</span>
+                                <span>Jul 20, 2025</span>
+                            </div>
+                            <div class="event-detail">
+                                <span class="material-icons event-detail-icon">schedule</span>
+                                <span>14:00 - 16:00</span>
+                            </div>
+                            <div class="event-detail">
+                                <span class="material-icons event-detail-icon">child_care</span>
+                                <span>Ages 6-12</span>
+                            </div>
+                            <div class="event-detail">
+                                <span class="material-icons event-detail-icon">euro</span>
+                                <span>15€</span>
+                            </div>
+                        </div>
+                        <div class="event-description">
+                            A fun pottery workshop where kids can create their own clay masterpieces...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="event-stats">
+                    <div class="event-stat">
+                        <span class="material-icons" style="font-size: 16px; color: #666666;">visibility</span>
+                        <div class="event-stat-text">0</div>
+                    </div>
+                    
+                    <div class="event-stat">
+                        <span class="material-icons" style="font-size: 16px; color: #666666;">bookmark</span>
+                        <div class="event-stat-text">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="event-item-container">
+                <div class="event-status-badge">
+                    <div class="status-indicator" style="background-color: #4CAF50;"></div>
+                    <div class="status-text">Approved</div>
+                </div>
+                
+                <div class="event-card">
+                    <div class="event-image" style="background-image: url('https://via.placeholder.com/414x120/87CEEB/FFFFFF?text=Family+Picnic');">
+                        <div class="event-category">Outdoor</div>
+                    </div>
+                    <div class="event-content">
+                        <div class="event-title">Family Picnic in Tiergarten</div>
+                        <div class="event-details">
+                            <div class="event-detail">
+                                <span class="material-icons event-detail-icon">calendar_today</span>
+                                <span>Jul 18, 2025</span>
+                            </div>
+                            <div class="event-detail">
+                                <span class="material-icons event-detail-icon">schedule</span>
+                                <span>11:00 - 15:00</span>
+                            </div>
+                            <div class="event-detail">
+                                <span class="material-icons event-detail-icon">child_care</span>
+                                <span>All ages</span>
+                            </div>
+                            <div class="event-detail">
+                                <span class="material-icons event-detail-icon">euro</span>
+                                <span>Free</span>
+                            </div>
+                        </div>
+                        <div class="event-description">
+                            Join us for a community family picnic with games, music and fun activities...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="event-stats">
+                    <div class="event-stat">
+                        <span class="material-icons" style="font-size: 16px; color: #666666;">visibility</span>
+                        <div class="event-stat-text">124</div>
+                    </div>
+                    
+                    <div class="event-stat">
+                        <span class="material-icons" style="font-size: 16px; color: #666666;">bookmark</span>
+                        <div class="event-stat-text">28</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-bar">
+            <div class="nav-item">
+                <span class="material-icons nav-icon">map</span>
+                <div>Map</div>
+            </div>
+            <div class="nav-item">
+                <span class="material-icons nav-icon">event</span>
+                <div>Events</div>
+            </div>
+            <div class="nav-item">
+                <span class="material-icons nav-icon">add_circle</span>
+                <div>Create</div>
+            </div>
+            <div class="nav-item active">
+                <span class="material-icons nav-icon">dashboard</span>
+                <div>Organiser</div>
+            </div>
+            <div class="nav-item">
+                <span class="material-icons nav-icon">person</span>
+                <div>Profile</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

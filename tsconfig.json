@@ -1,0 +1,18 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@screens/*": ["src/screens/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@utils/*": ["src/utils/*"],
+      "@styles/*": ["src/styles/*"],
+      "@auth/*": ["src/auth/*"],
+      "@firebase/*": ["firebase/*"],
+      "@types/*": ["types/*"],
+      "@assets/*": ["assets/*"]
+    }
+  }
+}
