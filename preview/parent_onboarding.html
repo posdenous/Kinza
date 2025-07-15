@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinza Berlin - Parent Onboarding</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: #F5F5F5;
+            color: #333333;
+        }
+        
+        .container {
+            max-width: 414px;
+            height: 100vh;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #EEEEEE;
+            position: relative;
+        }
+        
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+        }
+        
+        .language-button {
+            padding: 5px 10px;
+            margin-left: 5px;
+            border: 1px solid #DDDDDD;
+            border-radius: 4px;
+            background-color: #FFFFFF;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .language-button.active {
+            background-color: #2196F3;
+            color: #FFFFFF;
+            border-color: #2196F3;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background-color: #EEEEEE;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.3s ease;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .step-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #DDDDDD;
+            margin: 0 5px;
+        }
+        
+        .step-dot.active {
+            background-color: #4CAF50;
+        }
+        
+        .content {
+            padding: 20px;
+            height: calc(100vh - 180px);
+            overflow-y: auto;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+        
+        .description {
+            font-size: 16px;
+            color: #757575;
+            margin-bottom: 20px;
+        }
+        
+        .step {
+            display: none;
+        }
+        
+        .step.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .label {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #DDDDDD;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #DDDDDD;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #FFFFFF;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .checkbox-label {
+            font-size: 16px;
+            color: #333333;
+        }
+        
+        .interest-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .interest-item {
+            padding: 12px;
+            border: 1px solid #DDDDDD;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .interest-item.selected {
+            background-color: #E3F2FD;
+            border-color: #2196F3;
+            color: #2196F3;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .auth-button {
+            padding: 12px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-button.google {
+            background-color: #FFFFFF;
+            border: 1px solid #DDDDDD;
+            color: #333333;
+        }
+        
+        .auth-button.facebook {
+            background-color: #3b5998;
+            border: 1px solid #3b5998;
+            color: #FFFFFF;
+        }
+        
+        .auth-button.email {
+            background-color: #F5F5F5;
+            border: 1px solid #DDDDDD;
+            color: #333333;
+        }
+        
+        .navigation {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #EEEEEE;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #FFFFFF;
+        }
+        
+        .back-button {
+            padding: 12px 20px;
+            border: 1px solid #DDDDDD;
+            border-radius: 4px;
+            background-color: #FFFFFF;
+            color: #333333;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .next-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: #FFFFFF;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .skip-button {
+            padding: 12px 20px;
+            border: none;
+            background-color: transparent;
+            color: #757575;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="language-selector">
+                <button class="language-button active" onclick="changeLanguage('EN')">EN</button>
+                <button class="language-button" onclick="changeLanguage('DE')">DE</button>
+                <button class="language-button" onclick="changeLanguage('IT')">IT</button>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div class="step-indicator" id="step-indicator">
+            <div class="step-dot active"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+        </div>
+        
+        <div class="content">
+            <!-- Step 1: Language Selection -->
+            <div class="step active" id="step-1">
+                <h2 class="title" id="language-title">Choose Your Language</h2>
+                <p class="description" id="language-description">Select the language you prefer to use with Kinza Berlin.</p>
+                
+                <div class="form-group">
+                    <label class="label" id="language-label">Language</label>
+                    <select class="select" id="language-select">
+                        <option value="en">English</option>
+                        <option value="de">Deutsch</option>
+                        <option value="it">Italiano</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Step 2: Location Permission -->
+            <div class="step" id="step-2">
+                <h2 class="title" id="location-title">Location Access</h2>
+                <p class="description" id="location-description">Allow Kinza to access your location to find events near you.</p>
+                
+                <div class="form-group">
+                    <button class="next-button" style="width: 100%; margin-bottom: 20px;" id="allow-location-button">Allow Location Access</button>
+                    
+                    <p class="description" id="or-text">Or enter your ZIP code manually:</p>
+                    
+                    <div class="form-group">
+                        <label class="label" id="zip-label">ZIP Code</label>
+                        <input type="text" class="input" id="zip-input" placeholder="e.g. 10115">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3: Child Profile Setup -->
+            <div class="step" id="step-3">
+                <h2 class="title" id="child-profile-title">Child Profile Setup</h2>
+                <p class="description" id="child-profile-description">Create a profile for your child to personalize event recommendations.</p>
+                
+                <div class="form-group">
+                    <label class="label" id="child-name-label">Child's Name</label>
+                    <input type="text" class="input" id="child-name-input" placeholder="Enter name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="label" id="child-age-label">Child's Age</label>
+                    <select class="select" id="child-age-select">
+                        <option value="">Select age</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        <input type="checkbox" class="checkbox" id="consent-checkbox">
+                        <label class="checkbox-label" id="consent-label">I consent to Kinza Berlin collecting and processing my child's data to provide personalized event recommendations.</label>
+                    </div>
+                    <p class="description" id="consent-info">Your consent is required to enable personalized features. You can withdraw consent at any time in the Privacy settings.</p>
+                </div>
+            </div>
+            
+            <!-- Step 4: Interest Selection -->
+            <div class="step" id="step-4">
+                <h2 class="title" id="interests-title">Select Interests</h2>
+                <p class="description" id="interests-description">Choose activities your child enjoys to get personalized event recommendations.</p>
+                
+                <div class="interest-grid" id="interest-grid">
+                    <div class="interest-item" onclick="toggleInterest(this)" id="interest-music">Music</div>
+                    <div class="interest-item" onclick="toggleInterest(this)" id="interest-sports">Sports</div>
+                    <div class="interest-item" onclick="toggleInterest(this)" id="interest-art">Art & Crafts</div>
+                    <div class="interest-item" onclick="toggleInterest(this)" id="interest-nature">Nature</div>
+                    <div class="interest-item" onclick="toggleInterest(this)" id="interest-science">Science</div>
+                    <div class="interest-item" onclick="toggleInterest(this)" id="interest-reading">Reading</div>
+                    <div class="interest-item" onclick="toggleInterest(this)" id="interest-cooking">Cooking</div>
+                    <div class="interest-item" onclick="toggleInterest(this)" id="interest-theater">Theater</div>
+                </div>
+            </div>
+            
+            <!-- Step 5: Authentication Options -->
+            <div class="step" id="step-5">
+                <h2 class="title" id="auth-title">Create Your Account</h2>
+                <p class="description" id="auth-description">Sign in to save events, receive notifications, and more.</p>
+                
+                <div class="auth-buttons">
+                    <button class="auth-button google" id="google-button">
+                        <span class="material-icons" style="margin-right: 10px;">account_circle</span>
+                        Continue with Google
+                    </button>
+                    <button class="auth-button facebook" id="facebook-button">
+                        <span class="material-icons" style="margin-right: 10px;">facebook</span>
+                        Continue with Facebook
+                    </button>
+                    <button class="auth-button email" id="email-button">
+                        <span class="material-icons" style="margin-right: 10px;">email</span>
+                        Sign up with Email
+                    </button>
+                </div>
+                
+                <button class="skip-button" id="skip-button">Skip for now</button>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button class="back-button" id="back-button" onclick="navigateStep(-1)">Back</button>
+            <button class="next-button" id="next-button" onclick="navigateStep(1)">Next</button>
+        </div>
+    </div>
+
+    <script>
+        // Current step and language
+        let currentStep = 1;
+        let currentLang = 'EN';
+        const totalSteps = 5;
+        
+        // Translations
+        const translations = {
+            'EN': {
+                'chooseLanguage': 'Choose Your Language',
+                'languageDescription': 'Select the language you prefer to use with Kinza Berlin.',
+                'language': 'Language',
+                'locationAccess': 'Location Access',
+                'locationDescription': 'Allow Kinza to access your location to find events near you.',
+                'allowLocation': 'Allow Location Access',
+                'orEnterZip': 'Or enter your ZIP code manually:',
+                'zipCode': 'ZIP Code',
+                'childProfileSetup': 'Child Profile Setup',
+                'childProfileDescription': 'Create a profile for your child to personalize event recommendations.',
+                'childName': 'Child\'s Name',
+                'childAge': 'Child\'s Age',
+                'selectAge': 'Select age',
+                'consent': 'I consent to Kinza Berlin collecting and processing my child\'s data to provide personalized event recommendations.',
+                'consentInfo': 'Your consent is required to enable personalized features. You can withdraw consent at any time in the Privacy settings.',
+                'selectInterests': 'Select Interests',
+                'interestsDescription': 'Choose activities your child enjoys to get personalized event recommendations.',
+                'music': 'Music',
+                'sports': 'Sports',
+                'art': 'Art & Crafts',
+                'nature': 'Nature',
+                'science': 'Science',
+                'reading': 'Reading',
+                'cooking': 'Cooking',
+                'theater': 'Theater',
+                'createAccount': 'Create Your Account',
+                'authDescription': 'Sign in to save events, receive notifications, and more.',
+                'continueWithGoogle': 'Continue with Google',
+                'continueWithFacebook': 'Continue with Facebook',
+                'signUpWithEmail': 'Sign up with Email',
+                'skipForNow': 'Skip for now',
+                'back': 'Back',
+                'next': 'Next',
+                'finish': 'Finish'
+            },
+            'DE': {
+                'chooseLanguage': 'Wähle deine Sprache',
+                'languageDescription': 'Wähle die Sprache, die du mit Kinza Berlin verwenden möchtest.',
+                'language': 'Sprache',
+                'locationAccess': 'Standortzugriff',
+                'locationDescription': 'Erlaube Kinza den Zugriff auf deinen Standort, um Veranstaltungen in deiner Nähe zu finden.',
+                'allowLocation': 'Standortzugriff erlauben',
+                'orEnterZip': 'Oder gib deine Postleitzahl manuell ein:',
+                'zipCode': 'Postleitzahl',
+                'childProfileSetup': 'Kinderprofil einrichten',
+                'childProfileDescription': 'Erstelle ein Profil für dein Kind, um personalisierte Veranstaltungsempfehlungen zu erhalten.',
+                'childName': 'Name des Kindes',
+                'childAge': 'Alter des Kindes',
+                'selectAge': 'Alter auswählen',
+                'consent': 'Ich stimme zu, dass Kinza Berlin die Daten meines Kindes sammelt und verarbeitet, um personalisierte Veranstaltungsempfehlungen anzubieten.',
+                'consentInfo': 'Deine Zustimmung ist erforderlich, um personalisierte Funktionen zu aktivieren. Du kannst die Zustimmung jederzeit in den Datenschutzeinstellungen widerrufen.',
+                'selectInterests': 'Interessen auswählen',
+                'interestsDescription': 'Wähle Aktivitäten, die dein Kind gerne macht, um personalisierte Veranstaltungsempfehlungen zu erhalten.',
+                'music': 'Musik',
+                'sports': 'Sport',
+                'art': 'Kunst & Handwerk',
+                'nature': 'Natur',
+                'science': 'Wissenschaft',
+                'reading': 'Lesen',
+                'cooking': 'Kochen',
+                'theater': 'Theater',
+                'createAccount': 'Konto erstellen',
+                'authDescription': 'Melde dich an, um Veranstaltungen zu speichern, Benachrichtigungen zu erhalten und mehr.',
+                'continueWithGoogle': 'Mit Google fortfahren',
+                'continueWithFacebook': 'Mit Facebook fortfahren',
+                'signUpWithEmail': 'Mit E-Mail registrieren',
+                'skipForNow': 'Vorerst überspringen',
+                'back': 'Zurück',
+                'next': 'Weiter',
+                'finish': 'Fertig'
+            },
+            'IT': {
+                'chooseLanguage': 'Scegli la tua lingua',
+                'languageDescription': 'Seleziona la lingua che preferisci usare con Kinza Berlin.',
+                'language': 'Lingua',
+                'locationAccess': 'Accesso alla posizione',
+                'locationDescription': 'Consenti a Kinza di accedere alla tua posizione per trovare eventi vicino a te.',
+                'allowLocation': 'Consenti accesso alla posizione',
+                'orEnterZip': 'O inserisci manualmente il tuo codice postale:',
+                'zipCode': 'Codice postale',
+                'childProfileSetup': 'Configurazione profilo bambino',
+                'childProfileDescription': 'Crea un profilo per il tuo bambino per personalizzare i consigli sugli eventi.',
+                'childName': 'Nome del bambino',
+                'childAge': 'Età del bambino',
+                'selectAge': 'Seleziona età',
+                'consent': 'Acconsento a Kinza Berlin di raccogliere ed elaborare i dati del mio bambino per fornire consigli personalizzati sugli eventi.',
+                'consentInfo': 'Il tuo consenso è necessario per abilitare funzionalità personalizzate. Puoi ritirare il consenso in qualsiasi momento nelle impostazioni della Privacy.',
+                'selectInterests': 'Seleziona interessi',
+                'interestsDescription': 'Scegli le attività che piacciono al tuo bambino per ricevere consigli personalizzati sugli eventi.',
+                'music': 'Musica',
+                'sports': 'Sport',
+                'art': 'Arte e artigianato',
+                'nature': 'Natura',
+                'science': 'Scienza',
+                'reading': 'Lettura',
+                'cooking': 'Cucina',
+                'theater': 'Teatro',
+                'createAccount': 'Crea il tuo account',
+                'authDescription': 'Accedi per salvare eventi, ricevere notifiche e altro ancora.',
+                'continueWithGoogle': 'Continua con Google',
+                'continueWithFacebook': 'Continua con Facebook',
+                'signUpWithEmail': 'Registrati con email',
+                'skipForNow': 'Salta per ora',
+                'back': 'Indietro',
+                'next': 'Avanti',
+                'finish': 'Fine'
+            }
+        };
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateUI();
+            document.getElementById('back-button').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+        });
+        
+        // Change language
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // Update active language button
+            document.querySelectorAll('.language-button').forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent === lang) {
+                    button.classList.add('active');
+                }
+            });
+            
+            updateUI();
+        }
+        
+        // Navigate between steps
+        function navigateStep(direction) {
+            const newStep = currentStep + direction;
+            
+            if (newStep < 1 || newStep > totalSteps) {
+                return;
+            }
+            
+            // Hide current step
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            
+            // Show new step
+            currentStep = newStep;
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            
+            // Update progress bar
+            const progress = (currentStep - 1) / (totalSteps - 1);
+            document.getElementById('progress-bar').style.width = `${progress * 100}%`;
+            
+            // Update step dots
+            document.querySelectorAll('.step-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index + 1 <= currentStep);
+            });
+            
+            // Update navigation buttons
+            document.getElementById('back-button').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+            
+            const nextButton = document.getElementById('next-button');
+            if (currentStep === totalSteps) {
+                nextButton.textContent = translations[currentLang]['finish'];
+            } else {
+                nextButton.textContent = translations[currentLang]['next'];
+            }
+            
+            updateUI();
+        }
+        
+        // Toggle interest selection
+        function toggleInterest(element) {
+            element.classList.toggle('selected');
+        }
+        
+        // Update UI with current language
+        function updateUI() {
+            const t = translations[currentLang];
+            
+            // Step 1: Language Selection
+            document.getElementById('language-title').textContent = t['chooseLanguage'];
+            document.getElementById('language-description').textContent = t['languageDescription'];
+            document.getElementById('language-label').textContent = t['language'];
+            
+            // Step 2: Location Permission
+            document.getElementById('location-title').textContent = t['locationAccess'];
+            document.getElementById('location-description').textContent = t['locationDescription'];
+            document.getElementById('allow-location-button').textContent = t['allowLocation'];
+            document.getElementById('or-text').textContent = t['orEnterZip'];
+            document.getElementById('zip-label').textContent = t['zipCode'];
+            
+            // Step 3: Child Profile Setup
+            document.getElementById('child-profile-title').textContent = t['childProfileSetup'];
+            document.getElementById('child-profile-description').textContent = t['childProfileDescription'];
+            document.getElementById('child-name-label').textContent = t['childName'];
+            document.getElementById('child-age-label').textContent = t['childAge'];
+            document.getElementById('consent-label').textContent = t['consent'];
+            document.getElementById('consent-info').textContent = t['consentInfo'];
+            
+            // Step 4: Interest Selection
+            document.getElementById('interests-title').textContent = t['selectInterests'];
+            document.getElementById('interests-description').textContent = t['interestsDescription'];
+            document.getElementById('interest-music').textContent = t['music'];
+            document.getElementById('interest-sports').textContent = t['sports'];
+            document.getElementById('interest-art').textContent = t['art'];
+            document.getElementById('interest-nature').textContent = t['nature'];
+            document.getElementById('interest-science').textContent = t['science'];
+            document.getElementById('interest-reading').textContent = t['reading'];
+            document.getElementById('interest-cooking').textContent = t['cooking'];
+            document.getElementById('interest-theater').textContent = t['theater'];
+            
+            // Step 5: Authentication Options
+            document.getElementById('auth-title').textContent = t['createAccount'];
+            document.getElementById('auth-description').textContent = t['authDescription'];
+            document.getElementById('google-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">account_circle</span>${t['continueWithGoogle']}`;
+            document.getElementById('facebook-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">facebook</span>${t['continueWithFacebook']}`;
+            document.getElementById('email-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">email</span>${t['signUpWithEmail']}`;
+            document.getElementById('skip-button').textContent = t['skipForNow'];
+            
+            // Navigation buttons
+            document.getElementById('back-button').textContent = t['back'];
+            
+            const nextButton = document.getElementById('next-button');
+            if (currentStep === totalSteps) {
+                nextButton.textContent = t['finish'];
+            } else {
+                nextButton.textContent = t['next'];
+            }
+        }
+    </script>
+</body>
+</html>
