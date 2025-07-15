@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinza Berlin - Mobile Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+        }
+        
+        .mobile-container {
+            max-width: 375px;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+            height: 750px;
+            border: 10px solid #333;
+            border-width: 50px 5px;
+            position: relative;
+        }
+        
+        .mobile-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background-color: #333;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            z-index: 10;
+        }
+        
+        .mobile-content {
+            height: 100%;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+        }
+        
+        .app-header {
+            background-color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .back-button {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .placeholder {
+            width: 30px;
+        }
+        
+        .section {
+            background-color: white;
+            margin: 15px;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-info {
+            flex: 1;
+            margin-right: 15px;
+        }
+        
+        .setting-title {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .setting-description {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .consent-button {
+            background-color: #e3f2fd;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .consent-button-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2196F3;
+        }
+        
+        .link-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .link-button-text {
+            font-size: 16px;
+            color: #2196F3;
+        }
+        
+        .save-button {
+            background-color: #2196F3;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            margin: 20px 15px;
+        }
+        
+        .save-button-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .language-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .language-button {
+            padding: 5px 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .language-button.active {
+            background-color: #2196F3;
+            color: white;
+        }
+        
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: white;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            position: sticky;
+            bottom: 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .nav-item.active {
+            color: #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-selector">
+        <div class="language-button active" onclick="changeLanguage('en')">EN</div>
+        <div class="language-button" onclick="changeLanguage('de')">DE</div>
+        <div class="language-button" onclick="changeLanguage('it')">IT</div>
+    </div>
+    
+    <div class="mobile-container">
+        <div class="mobile-header"></div>
+        <div class="mobile-content">
+            <!-- Privacy Screen -->
+            <div class="app-header">
+                <div class="back-button">←</div>
+                <div class="header-title" data-i18n="privacy.title">Privacy Settings</div>
+                <div class="placeholder"></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title" data-i18n="privacy.locationSharing">Location Sharing</div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-title" data-i18n="privacy.shareLocation">Share My Location</div>
+                        <div class="setting-description" data-i18n="privacy.shareLocationDesc">Allow the app to use your location to find nearby events</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title" data-i18n="privacy.profileVisibility">Profile Visibility</div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-title" data-i18n="privacy.shareProfile">Share My Profile</div>
+                        <div class="setting-description" data-i18n="privacy.shareProfileDesc">Allow other parents to see your profile information</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-title" data-i18n="privacy.childProfilesVisible">Show Child Profiles</div>
+                        <div class="setting-description" data-i18n="privacy.childProfilesVisibleDesc">Display your children's profiles to other parents</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="consent-button">
+                    <div class="consent-button-text" data-i18n="privacy.giveConsent">Give Consent for Child Profiles</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title" data-i18n="privacy.interactions">Interactions</div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-title" data-i18n="privacy.allowComments">Allow Comments</div>
+                        <div class="setting-description" data-i18n="privacy.allowCommentsDesc">Allow others to comment on your posts and events</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title" data-i18n="privacy.notifications">Notifications</div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-title" data-i18n="privacy.eventNotifications">Event Notifications</div>
+                        <div class="setting-description" data-i18n="privacy.eventNotificationsDesc">Receive notifications about new events</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-title" data-i18n="privacy.messageNotifications">Message Notifications</div>
+                        <div class="setting-description" data-i18n="privacy.messageNotificationsDesc">Receive notifications about new messages</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title" data-i18n="privacy.dataUsage">Data Usage</div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-title" data-i18n="privacy.dataCollection">Data Collection</div>
+                        <div class="setting-description" data-i18n="privacy.dataCollectionDesc">Allow anonymous data collection to improve the app</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="link-button">
+                    <div class="link-button-text" data-i18n="privacy.viewPrivacyPolicy">View Privacy Policy</div>
+                    <div>→</div>
+                </div>
+                
+                <div class="link-button">
+                    <div class="link-button-text" data-i18n="privacy.requestDataDeletion">Request Data Deletion</div>
+                    <div>→</div>
+                </div>
+            </div>
+            
+            <div class="save-button">
+                <div class="save-button-text" data-i18n="privacy.saveSettings">Save Settings</div>
+            </div>
+            
+            <div class="bottom-nav">
+                <div class="nav-item">
+                    <div class="nav-icon">🗺️</div>
+                    <div data-i18n="nav.map">Map</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">🔍</div>
+                    <div data-i18n="nav.search">Search</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">❤️</div>
+                    <div data-i18n="nav.saved">Saved</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">👤</div>
+                    <div data-i18n="nav.profile">Profile</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Translations
+        const translations = {
+            en: {
+                "privacy.title": "Privacy Settings",
+                "privacy.locationSharing": "Location Sharing",
+                "privacy.shareLocation": "Share My Location",
+                "privacy.shareLocationDesc": "Allow the app to use your location to find nearby events",
+                "privacy.profileVisibility": "Profile Visibility",
+                "privacy.shareProfile": "Share My Profile",
+                "privacy.shareProfileDesc": "Allow other parents to see your profile information",
+                "privacy.childProfilesVisible": "Show Child Profiles",
+                "privacy.childProfilesVisibleDesc": "Display your children's profiles to other parents",
+                "privacy.giveConsent": "Give Consent for Child Profiles",
+                "privacy.interactions": "Interactions",
+                "privacy.allowComments": "Allow Comments",
+                "privacy.allowCommentsDesc": "Allow others to comment on your posts and events",
+                "privacy.notifications": "Notifications",
+                "privacy.eventNotifications": "Event Notifications",
+                "privacy.eventNotificationsDesc": "Receive notifications about new events",
+                "privacy.messageNotifications": "Message Notifications",
+                "privacy.messageNotificationsDesc": "Receive notifications about new messages",
+                "privacy.dataUsage": "Data Usage",
+                "privacy.dataCollection": "Data Collection",
+                "privacy.dataCollectionDesc": "Allow anonymous data collection to improve the app",
+                "privacy.viewPrivacyPolicy": "View Privacy Policy",
+                "privacy.requestDataDeletion": "Request Data Deletion",
+                "privacy.saveSettings": "Save Settings",
+                "nav.map": "Map",
+                "nav.search": "Search",
+                "nav.saved": "Saved",
+                "nav.profile": "Profile"
+            },
+            de: {
+                "privacy.title": "Datenschutzeinstellungen",
+                "privacy.locationSharing": "Standortfreigabe",
+                "privacy.shareLocation": "Meinen Standort teilen",
+                "privacy.shareLocationDesc": "Erlauben Sie der App, Ihren Standort zu verwenden, um Veranstaltungen in der Nähe zu finden",
+                "privacy.profileVisibility": "Profilsichtbarkeit",
+                "privacy.shareProfile": "Mein Profil teilen",
+                "privacy.shareProfileDesc": "Anderen Eltern erlauben, Ihre Profilinformationen zu sehen",
+                "privacy.childProfilesVisible": "Kinderprofile anzeigen",
+                "privacy.childProfilesVisibleDesc": "Zeigen Sie die Profile Ihrer Kinder anderen Eltern an",
+                "privacy.giveConsent": "Einwilligung für Kinderprofile geben",
+                "privacy.interactions": "Interaktionen",
+                "privacy.allowComments": "Kommentare erlauben",
+                "privacy.allowCommentsDesc": "Anderen erlauben, Ihre Beiträge und Veranstaltungen zu kommentieren",
+                "privacy.notifications": "Benachrichtigungen",
+                "privacy.eventNotifications": "Veranstaltungsbenachrichtigungen",
+                "privacy.eventNotificationsDesc": "Benachrichtigungen über neue Veranstaltungen erhalten",
+                "privacy.messageNotifications": "Nachrichtenbenachrichtigungen",
+                "privacy.messageNotificationsDesc": "Benachrichtigungen über neue Nachrichten erhalten",
+                "privacy.dataUsage": "Datennutzung",
+                "privacy.dataCollection": "Datenerfassung",
+                "privacy.dataCollectionDesc": "Anonyme Datenerfassung zur Verbesserung der App zulassen",
+                "privacy.viewPrivacyPolicy": "Datenschutzrichtlinie anzeigen",
+                "privacy.requestDataDeletion": "Datenlöschung beantragen",
+                "privacy.saveSettings": "Einstellungen speichern",
+                "nav.map": "Karte",
+                "nav.search": "Suche",
+                "nav.saved": "Gespeichert",
+                "nav.profile": "Profil"
+            },
+            it: {
+                "privacy.title": "Impostazioni Privacy",
+                "privacy.locationSharing": "Condivisione Posizione",
+                "privacy.shareLocation": "Condividi La Mia Posizione",
+                "privacy.shareLocationDesc": "Consenti all'app di utilizzare la tua posizione per trovare eventi nelle vicinanze",
+                "privacy.profileVisibility": "Visibilità Profilo",
+                "privacy.shareProfile": "Condividi Il Mio Profilo",
+                "privacy.shareProfileDesc": "Consenti ad altri genitori di vedere le informazioni del tuo profilo",
+                "privacy.childProfilesVisible": "Mostra Profili Bambini",
+                "privacy.childProfilesVisibleDesc": "Mostra i profili dei tuoi bambini ad altri genitori",
+                "privacy.giveConsent": "Dai Consenso per i Profili Bambini",
+                "privacy.interactions": "Interazioni",
+                "privacy.allowComments": "Consenti Commenti",
+                "privacy.allowCommentsDesc": "Consenti agli altri di commentare i tuoi post ed eventi",
+                "privacy.notifications": "Notifiche",
+                "privacy.eventNotifications": "Notifiche Eventi",
+                "privacy.eventNotificationsDesc": "Ricevi notifiche su nuovi eventi",
+                "privacy.messageNotifications": "Notifiche Messaggi",
+                "privacy.messageNotificationsDesc": "Ricevi notifiche su nuovi messaggi",
+                "privacy.dataUsage": "Utilizzo Dati",
+                "privacy.dataCollection": "Raccolta Dati",
+                "privacy.dataCollectionDesc": "Consenti la raccolta anonima di dati per migliorare l'app",
+                "privacy.viewPrivacyPolicy": "Visualizza Informativa Privacy",
+                "privacy.requestDataDeletion": "Richiedi Cancellazione Dati",
+                "privacy.saveSettings": "Salva Impostazioni",
+                "nav.map": "Mappa",
+                "nav.search": "Cerca",
+                "nav.saved": "Salvati",
+                "nav.profile": "Profilo"
+            }
+        };
+        
+        // Change language function
+        function changeLanguage(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            
+            // Update active language button
+            document.querySelectorAll('.language-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.language-button[onclick="changeLanguage('${lang}')"]`).classList.add('active');
+        }
+        
+        // Initialize with English
+        changeLanguage('en');
+    </script>
+</body>
+</html>
