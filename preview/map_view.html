@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinza Berlin - Map View Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: #F5F5F5;
+            color: #333333;
+        }
+        
+        .container {
+            max-width: 414px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            padding-bottom: 70px;
+        }
+        
+        .screen-title {
+            background-color: #2196F3;
+            color: #FFFFFF;
+            padding: 8px 16px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .preview-note {
+            background-color: #FFFDE7;
+            padding: 8px 16px;
+            font-size: 12px;
+            text-align: center;
+            border-bottom: 1px solid #EEEEEE;
+        }
+        
+        .language-selector {
+            display: flex;
+            justify-content: center;
+            margin: 8px 0;
+        }
+        
+        .language-button {
+            padding: 8px 16px;
+            margin: 0 4px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .language-button.active {
+            background-color: #2196F3;
+            color: #FFFFFF;
+        }
+        
+        .language-button:not(.active) {
+            background-color: #EEEEEE;
+            color: #666666;
+        }
+        
+        .map-container {
+            position: relative;
+            height: calc(100vh - 200px);
+            background-color: #E5E3DF;
+            background-image: url('https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/13.404954,52.520008,12,0/600x600?access_token=placeholder');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .map-search {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            display: flex;
+            align-items: center;
+            background-color: #FFFFFF;
+            border-radius: 24px;
+            padding: 8px 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-icon {
+            color: #757575;
+            margin-right: 8px;
+        }
+        
+        .search-input {
+            flex: 1;
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .filter-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background-color: #F5F5F5;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+        
+        .map-marker {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+        
+        .marker-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            background-color: #2196F3;
+            color: #FFFFFF;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .marker-icon.workshop {
+            background-color: #9C27B0;
+        }
+        
+        .marker-icon.outdoor {
+            background-color: #4CAF50;
+        }
+        
+        .marker-icon.music {
+            background-color: #FF9800;
+        }
+        
+        .map-controls {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .map-control-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        
+        .event-preview {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #FFFFFF;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .preview-handle {
+            width: 40px;
+            height: 4px;
+            background-color: #DDDDDD;
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+        
+        .preview-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .preview-details {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .preview-date {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #757575;
+            margin-right: 16px;
+        }
+        
+        .preview-location {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #757575;
+        }
+        
+        .preview-actions {
+            display: flex;
+            margin-top: 16px;
+        }
+        
+        .preview-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .preview-button.primary {
+            background-color: #2196F3;
+            color: #FFFFFF;
+            margin-right: 8px;
+        }
+        
+        .preview-button.secondary {
+            background-color: #F5F5F5;
+            color: #333333;
+        }
+        
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: #FFFFFF;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 414px;
+            margin: 0 auto;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            height: 100%;
+            color: #757575;
+            font-size: 12px;
+        }
+        
+        .nav-item.active {
+            color: #2196F3;
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="screen-title">Kinza Berlin App Preview</div>
+        
+        <div class="preview-note">
+            This is a static HTML preview of the Map View screen. The actual app is built with React Native and Expo with full multilingual support (EN/DE/IT).
+        </div>
+        
+        <div class="language-selector">
+            <div class="language-button active">English</div>
+            <div class="language-button">Deutsch</div>
+            <div class="language-button">Italiano</div>
+        </div>
+        
+        <div class="map-container">
+            <!-- Map Search -->
+            <div class="map-search">
+                <span class="material-icons search-icon">search</span>
+                <input type="text" class="search-input" placeholder="Find events nearby">
+                <div class="filter-button">
+                    <span class="material-icons">tune</span>
+                </div>
+            </div>
+            
+            <!-- Map Markers -->
+            <div class="map-marker" style="top: 40%; left: 30%;">
+                <div class="marker-icon workshop">
+                    <span class="material-icons" style="font-size: 18px;">brush</span>
+                </div>
+            </div>
+            
+            <div class="map-marker" style="top: 60%; left: 50%;">
+                <div class="marker-icon outdoor">
+                    <span class="material-icons" style="font-size: 18px;">park</span>
+                </div>
+            </div>
+            
+            <div class="map-marker" style="top: 45%; left: 70%;">
+                <div class="marker-icon music">
+                    <span class="material-icons" style="font-size: 18px;">music_note</span>
+                </div>
+            </div>
+            
+            <div class="map-marker" style="top: 35%; left: 55%;">
+                <div class="marker-icon">
+                    <span class="material-icons" style="font-size: 18px;">event</span>
+                </div>
+            </div>
+            
+            <!-- Map Controls -->
+            <div class="map-controls">
+                <div class="map-control-button">
+                    <span class="material-icons">add</span>
+                </div>
+                <div class="map-control-button">
+                    <span class="material-icons">remove</span>
+                </div>
+                <div class="map-control-button">
+                    <span class="material-icons">my_location</span>
+                </div>
+            </div>
+            
+            <!-- Event Preview -->
+            <div class="event-preview">
+                <div class="preview-handle"></div>
+                <div class="preview-title">Kids Pottery Workshop</div>
+                <div class="preview-details">
+                    <div class="preview-date">
+                        <span class="material-icons" style="font-size: 16px; margin-right: 4px;">calendar_today</span>
+                        Jul 18, 2025
+                    </div>
+                    <div class="preview-location">
+                        <span class="material-icons" style="font-size: 16px; margin-right: 4px;">location_on</span>
+                        Creative Studio Berlin
+                    </div>
+                </div>
+                <div class="preview-actions">
+                    <div class="preview-button primary">
+                        <span class="material-icons" style="font-size: 16px; margin-right: 4px;">info</span>
+                        Details
+                    </div>
+                    <div class="preview-button secondary">
+                        <span class="material-icons" style="font-size: 16px; margin-right: 4px;">favorite_border</span>
+                        Save
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-bar">
+            <div class="nav-item active">
+                <span class="material-icons nav-icon">map</span>
+                <div>Map</div>
+            </div>
+            
+            <div class="nav-item">
+                <span class="material-icons nav-icon">search</span>
+                <div>Search</div>
+            </div>
+            
+            <div class="nav-item">
+                <span class="material-icons nav-icon">favorite</span>
+                <div>Saved</div>
+            </div>
+            
+            <div class="nav-item">
+                <span class="material-icons nav-icon">person</span>
+                <div>Profile</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Translation data for all supported languages
+        const translations = {
+            'English': {
+                'findEventsNearby': 'Find events nearby',
+                'kidsPotteryWorkshop': 'Kids Pottery Workshop',
+                'creativeStudioBerlin': 'Creative Studio Berlin',
+                'details': 'Details',
+                'save': 'Save',
+                'map': 'Map',
+                'search': 'Search',
+                'saved': 'Saved',
+                'profile': 'Profile'
+            },
+            'Deutsch': {
+                'findEventsNearby': 'Veranstaltungen in der Nähe finden',
+                'kidsPotteryWorkshop': 'Töpferkurs für Kinder',
+                'creativeStudioBerlin': 'Kreativstudio Berlin',
+                'details': 'Details',
+                'save': 'Speichern',
+                'map': 'Karte',
+                'search': 'Suche',
+                'saved': 'Gespeichert',
+                'profile': 'Profil'
+            },
+            'Italiano': {
+                'findEventsNearby': 'Trova eventi nelle vicinanze',
+                'kidsPotteryWorkshop': 'Laboratorio di Ceramica per Bambini',
+                'creativeStudioBerlin': 'Studio Creativo Berlino',
+                'details': 'Dettagli',
+                'save': 'Salva',
+                'map': 'Mappa',
+                'search': 'Cerca',
+                'saved': 'Salvati',
+                'profile': 'Profilo'
+            }
+        };
+        
+        // Current language (default: English)
+        let currentLang = 'English';
+        
+        // Function to change language
+        function changeLanguage(lang) {
+            // Update current language
+            currentLang = lang;
+            
+            // Update search placeholder
+            document.querySelector('.search-input').placeholder = translations[lang]['findEventsNearby'];
+            
+            // Update preview content
+            document.querySelector('.preview-title').textContent = translations[lang]['kidsPotteryWorkshop'];
+            document.querySelector('.preview-location').childNodes[1].textContent = translations[lang]['creativeStudioBerlin'];
+            
+            // Update buttons
+            document.querySelector('.preview-button.primary').childNodes[1].textContent = translations[lang]['details'];
+            document.querySelector('.preview-button.secondary').childNodes[1].textContent = translations[lang]['save'];
+            
+            // Update navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            if (navItems.length >= 4) {
+                navItems[0].querySelector('div').textContent = translations[lang]['map'];
+                navItems[1].querySelector('div').textContent = translations[lang]['search'];
+                navItems[2].querySelector('div').textContent = translations[lang]['saved'];
+                navItems[3].querySelector('div').textContent = translations[lang]['profile'];
+            }
+            
+            // Update active language button
+            document.querySelectorAll('.language-button').forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent.trim() === lang) {
+                    button.classList.add('active');
+                }
+            });
+        }
+        
+        // Add event listeners to language buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.language-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    changeLanguage(this.textContent.trim());
+                });
+            });
+        });
+    </script>
+</body>
+</html>
