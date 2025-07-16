@@ -32,30 +32,37 @@
             padding: 20px;
             text-align: center;
             border-bottom: 1px solid #EEEEEE;
-            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .language-selector {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
+            display: inline-flex;
+            background-color: #F0F0F0;
+            border-radius: 20px;
+            padding: 4px;
+            margin: 0 auto;
         }
         
         .language-button {
-            padding: 5px 10px;
-            margin-left: 5px;
-            border: 1px solid #DDDDDD;
-            border-radius: 4px;
-            background-color: #FFFFFF;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 16px;
+            background-color: transparent;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 500;
+            color: #666666;
+            transition: all 0.2s ease;
+            min-width: 40px;
+            text-align: center;
         }
         
         .language-button.active {
             background-color: #2196F3;
             color: #FFFFFF;
-            border-color: #2196F3;
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
         }
         
         .progress-container {
@@ -143,21 +150,22 @@
             background-color: #FFFFFF;
         }
         
-        .checkbox-container {
+        .consent-container {
             display: flex;
             align-items: center;
             margin-bottom: 10px;
         }
         
-        .checkbox {
-            margin-right: 10px;
-            width: 20px;
-            height: 20px;
-        }
-        
-        .checkbox-label {
+        .consent-text {
             font-size: 16px;
             color: #333333;
+            margin-left: 10px;
+        }
+        
+        .consent-info {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 20px;
         }
         
         .interest-grid {
@@ -257,6 +265,11 @@
             cursor: pointer;
             text-decoration: underline;
         }
+        
+        .privacy-link {
+            color: #2196F3;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -289,10 +302,10 @@
                 
                 <div class="form-group">
                     <label class="label" id="language-label">Language</label>
-                    <select class="select" id="language-select">
-                        <option value="en">English</option>
-                        <option value="de">Deutsch</option>
-                        <option value="it">Italiano</option>
+                    <select class="select" id="language-select" onchange="handleLanguageSelect(this.value)">
+                        <option value="English">English</option>
+                        <option value="Deutsch">Deutsch</option>
+                        <option value="Italiano">Italiano</option>
                     </select>
                 </div>
             </div>
@@ -350,11 +363,16 @@
                 </div>
                 
                 <div class="form-group">
-                    <div class="checkbox-container">
-                        <input type="checkbox" class="checkbox" id="consent-checkbox">
-                        <label class="checkbox-label" id="consent-label">I consent to Kinza Berlin collecting and processing my child's data to provide personalized event recommendations.</label>
+                    <div class="consent-container">
+                        <input type="checkbox" id="consent-checkbox">
+                        <label for="consent-checkbox" id="consent-label" class="consent-text">
+                            I confirm that I am the parent or legal guardian of the child, and I give my consent for Kinza Berlin to collect and use my child's first name and age only to personalize event recommendations within the app.
+                        </label>
                     </div>
-                    <p class="description" id="consent-info">Your consent is required to enable personalized features. You can withdraw consent at any time in the Privacy settings.</p>
+                    <p id="consent-info" class="consent-info">
+                        This data is stored securely, not shared with third parties, and will not be used for marketing.<br><br>
+                        You can withdraw your consent or delete the data at any time in the app settings. <a href="#" class="privacy-link">View our full Privacy Policy</a>
+                    </p>
                 </div>
             </div>
             
@@ -427,8 +445,8 @@
                 'childName': 'Child\'s Name',
                 'childAge': 'Child\'s Age',
                 'selectAge': 'Select age',
-                'consent': 'I consent to Kinza Berlin collecting and processing my child\'s data to provide personalized event recommendations.',
-                'consentInfo': 'Your consent is required to enable personalized features. You can withdraw consent at any time in the Privacy settings.',
+                'consent': 'I confirm that I am the parent or legal guardian of the child, and I give my consent for Kinza Berlin to collect and use my child\'s first name and age only to personalize event recommendations within the app.',
+                'consentInfo': 'This data is stored securely, not shared with third parties, and will not be used for marketing.\n\nYou can withdraw your consent or delete the data at any time in the app settings. [View our full Privacy Policy]',
                 'selectInterests': 'Select Interests',
                 'interestsDescription': 'Choose activities your child enjoys to get personalized event recommendations.',
                 'music': 'Music',
@@ -463,8 +481,8 @@
                 'childName': 'Name des Kindes',
                 'childAge': 'Alter des Kindes',
                 'selectAge': 'Alter auswählen',
-                'consent': 'Ich stimme zu, dass Kinza Berlin die Daten meines Kindes sammelt und verarbeitet, um personalisierte Veranstaltungsempfehlungen anzubieten.',
-                'consentInfo': 'Deine Zustimmung ist erforderlich, um personalisierte Funktionen zu aktivieren. Du kannst die Zustimmung jederzeit in den Datenschutzeinstellungen widerrufen.',
+                'consent': 'Ich bestätige, dass ich der Elternteil oder gesetzliche Vormund des Kindes bin und ich gebe meine Einwilligung, dass Kinza Berlin den Vornamen und das Alter meines Kindes nur zur Personalisierung von Veranstaltungsempfehlungen innerhalb der App erfassen und verwenden darf.',
+                'consentInfo': 'Diese Daten werden sicher gespeichert, nicht an Dritte weitergegeben und nicht für Marketingzwecke verwendet.\n\nSie können Ihre Einwilligung jederzeit in den App-Einstellungen widerrufen oder die Daten löschen. [Vollständige Datenschutzrichtlinie anzeigen]',
                 'selectInterests': 'Interessen auswählen',
                 'interestsDescription': 'Wähle Aktivitäten, die dein Kind gerne macht, um personalisierte Veranstaltungsempfehlungen zu erhalten.',
                 'music': 'Musik',
@@ -499,8 +517,8 @@
                 'childName': 'Nome del bambino',
                 'childAge': 'Età del bambino',
                 'selectAge': 'Seleziona età',
-                'consent': 'Acconsento a Kinza Berlin di raccogliere ed elaborare i dati del mio bambino per fornire consigli personalizzati sugli eventi.',
-                'consentInfo': 'Il tuo consenso è necessario per abilitare funzionalità personalizzate. Puoi ritirare il consenso in qualsiasi momento nelle impostazioni della Privacy.',
+                'consent': 'Confermo di essere il genitore o il tutore legale del bambino e do il mio consenso affinché Kinza Berlin raccolga e utilizzi solo il nome e l\'età del mio bambino per personalizzare i consigli sugli eventi all\'interno dell\'app.',
+                'consentInfo': 'Questi dati sono archiviati in modo sicuro, non condivisi con terze parti e non saranno utilizzati per il marketing.\n\nPuoi ritirare il tuo consenso o eliminare i dati in qualsiasi momento nelle impostazioni dell\'app. [Visualizza la nostra Informativa sulla privacy completa]',
                 'selectInterests': 'Seleziona interessi',
                 'interestsDescription': 'Scegli le attività che piacciono al tuo bambino per ricevere consigli personalizzati sugli eventi.',
                 'music': 'Musica',
@@ -523,11 +541,76 @@
             }
         };
         
+        // Handle language select from dropdown
+        function handleLanguageSelect(selectedValue) {
+            const langMap = {
+                'English': 'EN',
+                'Deutsch': 'DE',
+                'Italiano': 'IT'
+            };
+            changeLanguage(langMap[selectedValue]);
+        }
+        
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            // Check if a language is stored in localStorage
+            const storedLang = localStorage.getItem('preferredLanguage');
+            if (storedLang) {
+                currentLang = storedLang;
+            }
+            
+            // Update UI with current language
             updateUI();
+            
+            // Update language buttons and dropdown to match current language
+            document.querySelectorAll('.language-button').forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent === currentLang) {
+                    button.classList.add('active');
+                }
+            });
+            
+            // Map language code to dropdown value
+            const langMap = {
+                'EN': 'English',
+                'DE': 'Deutsch',
+                'IT': 'Italiano'
+            };
+            const langDropdown = document.getElementById('language-select');
+            if (langDropdown && langMap[currentLang]) {
+                langDropdown.value = langMap[currentLang];
+            }
+            
             document.getElementById('back-button').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+            
+            // Store form values in localStorage when changed
+            document.getElementById('child-name-input').addEventListener('change', function() {
+                localStorage.setItem('childName', this.value);
+            });
+            
+            document.getElementById('child-age-select').addEventListener('change', function() {
+                localStorage.setItem('childAge', this.value);
+            });
+            
+            document.getElementById('consent-checkbox').addEventListener('change', function() {
+                localStorage.setItem('consentGiven', this.checked);
+                document.getElementById('consent-toggle').checked = this.checked;
+            });
+            
+            // Load stored values if available
+            const storedName = localStorage.getItem('childName');
+            const storedAge = localStorage.getItem('childAge');
+            const storedConsent = localStorage.getItem('consentGiven') === 'true';
+            
+            if (storedName) document.getElementById('child-name-input').value = storedName;
+            if (storedAge) document.getElementById('child-age-select').value = storedAge;
+            if (storedConsent !== null) {
+                document.getElementById('consent-checkbox').checked = storedConsent;
+                document.getElementById('consent-toggle').checked = storedConsent;
+            }
         });
+        
+        // Update UI with current language
         
         // Change language
         function changeLanguage(lang) {
@@ -540,6 +623,18 @@
                     button.classList.add('active');
                 }
             });
+            
+            // Update dropdown in step 1 if it exists
+            const langDropdown = document.getElementById('language-select');
+            if (langDropdown) {
+                // Map language code to dropdown value
+                const langMap = {
+                    'EN': 'English',
+                    'DE': 'Deutsch',
+                    'IT': 'Italiano'
+                };
+                langDropdown.value = langMap[lang];
+            }
             
             updateUI();
         }
