@@ -135,6 +135,28 @@
             background-color: #F57C00;
         }
         
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 4px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        .tag-parent {
+            background-color: #e7f3ff;
+            color: #007bff;
+            border: 1px solid #b3d7ff;
+        }
+        
+        .tag-admin {
+            background-color: #fbeaea;
+            color: #dc3545;
+            border: 1px solid #f5c6cb;
+        }
+        
         .footer {
             margin-top: 30px;
             text-align: center;
@@ -147,99 +169,51 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="title">Kinza Berlin App Previews</div>
-            <div class="subtitle">HTML previews of different user interfaces for the Kinza Berlin app</div>
+        <h1>Kinza Berlin - Application Previews</h1>
+        <p class="intro">This page provides links to live HTML previews for various user flows and administrative tools. These are used for rapid prototyping, UI testing, and stakeholder reviews.</p>
+        
+        <div class="user-section">
+            <h2>User-Facing Previews (Parent/Guardian)</h2>
+            <ul class="preview-list">
+                <li class="preview-item">
+                    <a href="./parent_onboarding.html" target="_blank">Parent Onboarding Flow</a>
+                    <p>Simulates the complete first-time user experience, including language selection, privacy consent, and child profile creation.</p>
+                </li>
+                <li class="preview-item">
+                    <a href="./search_results.html" target="_blank">Search & Discovery</a>
+                    <p>Prototypes the core event discovery experience, showing how users can search for and find activities.</p>
+                </li>
+                <li class="preview-item">
+                    <a href="./map_view.html" target="_blank">Map View</a>
+                    <p>Visualizes how events are displayed on a map interface for geographical discovery.</p>
+                </li>
+                <li class="preview-item">
+                    <a href="./saved_events.html" target="_blank">Saved Events</a>
+                    <p>Shows the screen where users can view events they have saved for later.</p>
+                </li>
+                <li class="preview-item">
+                    <a href="./mobile_privacy.html" target="_blank">Privacy Settings</a>
+                    <p>Focuses on the user-facing privacy controls, including consent management and data deletion.</p>
+                </li>
+            </ul>
         </div>
         
-        <div class="preview-grid">
-            <!-- Admin Views -->
-            <div class="preview-card">
-                <div class="preview-header admin-header">Admin Dashboard</div>
-                <div class="preview-content">
-                    <div class="preview-description">
-                        Administrative interface for managing content, users, and settings for the Kinza Berlin app.
-                    </div>
-                    <a href="admin_dashboard.html" class="preview-link admin-link">View Admin Dashboard</a>
-                </div>
-            </div>
-            
-            <div class="preview-card">
-                <div class="preview-header admin-header">Report Review</div>
-                <div class="preview-content">
-                    <div class="preview-description">
-                        Interface for reviewing and moderating reported content, implementing UGC moderation requirements.
-                    </div>
-                    <a href="report_review.html" class="preview-link admin-link">View Report Review</a>
-                </div>
-            </div>
-            
-            <!-- Organiser Views -->
-            <div class="preview-card">
-                <div class="preview-header organiser-header">Organiser Dashboard</div>
-                <div class="preview-content">
-                    <div class="preview-description">
-                        Dashboard for event organizers to manage their events, track attendance, and update event details.
-                    </div>
-                    <a href="organiser_dashboard.html" class="preview-link organiser-link">View Organiser Dashboard</a>
-                </div>
-            </div>
-            
-            <!-- User Views -->
-            <div class="preview-card">
-                <div class="preview-header user-header">Parent Onboarding</div>
-                <div class="preview-content">
-                    <div class="preview-description">
-                        Multi-step onboarding flow for parents with child profile setup, interest selection, and consent management.
-                    </div>
-                    <a href="parent_onboarding.html" class="preview-link user-link">View Parent Onboarding</a>
-                </div>
-            </div>
-            
-            <div class="preview-card">
-                <div class="preview-header user-header">Search Results</div>
-                <div class="preview-content">
-                    <div class="preview-description">
-                        User interface for browsing and searching events with filtering options and multilingual support.
-                    </div>
-                    <a href="search_results.html" class="preview-link user-link">View Search Results</a>
-                </div>
-            </div>
-            
-            <div class="preview-card">
-                <div class="preview-header user-header">Map View</div>
-                <div class="preview-content">
-                    <div class="preview-description">
-                        Interactive map interface showing nearby events with location markers and event previews.
-                    </div>
-                    <a href="map_view.html" class="preview-link user-link">View Map Interface</a>
-                </div>
-            </div>
-            
-            <div class="preview-card">
-                <div class="preview-header user-header">Saved Events</div>
-                <div class="preview-content">
-                    <div class="preview-description">
-                        User's saved events view with upcoming and past events categorized by date.
-                    </div>
-                    <a href="saved_events.html" class="preview-link user-link">View Saved Events</a>
-                </div>
-            </div>
-            
-            <div class="preview-card">
-                <div class="preview-header user-header">Mobile Privacy</div>
-                <div class="preview-content">
-                    <div class="preview-description">
-                        Privacy settings interface for mobile users, demonstrating consent requirements and profile visibility options.
-                    </div>
-                    <a href="mobile_privacy.html" class="preview-link user-link">View Mobile Privacy</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>Kinza Berlin App &copy; 2025 - HTML Previews</p>
-            <p>These are static HTML previews. The actual app is built with React Native and Expo.</p>
+        <div class="admin-section">
+            <h2>Admin & Moderator Previews</h2>
+            <ul class="preview-list">
+                <li class="preview-item">
+                    <a href="./report_review.html" target="_blank">Content Moderation Dashboard</a>
+                    <p>An internal tool for administrators to review, approve, or reject user-generated content that has been flagged.</p>
+                </li>
+                 <li class="preview-item">
+                    <a href="./admin_dashboard.html" target="_blank">Admin Dashboard</a>
+                    <p>Administrative interface for managing content, users, and settings.</p>
+                </li>
+                 <li class="preview-item">
+                    <a href="./organiser_dashboard.html" target="_blank">Organiser Dashboard</a>
+                    <p>Dashboard for event organizers to manage their events and track attendance.</p>
+                </li>
+            </ul>
         </div>
     </div>
 </body>
