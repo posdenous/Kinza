@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 8080;
+const BASE_DIR = __dirname;
 
 const MIME_TYPES = {
   '.html': 'text/html',
@@ -19,12 +20,13 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
   console.log(`Request for ${req.url}`);
   
-  // Normalize URL to prevent directory traversal
-  let filePath = '.' + req.url;
-  
-  // If URL ends with /, serve index.html
-  if (filePath === './' || filePath === '.') {
-    filePath = './index.html';
+    // Normalize URL and map to preview directory to prevent directory traversal
+  const safePath = path.normalize(req.url).replace(/^\/+/, ''); // strip leading slashes
+  let filePath = path.join(BASE_DIR, safePath);
+
+  // If root request, serve index.html in preview directory
+  if (req.url === '/' || req.url === '') {
+    filePath = path.join(BASE_DIR, 'index.html');
   }
   
   const extname = path.extname(filePath);
@@ -34,8 +36,8 @@ const server = http.createServer((req, res) => {
   fs.readFile(filePath, (err, content) => {
     if (err) {
       if (err.code === 'ENOENT') {
-        // If the requested file is not found, try to serve index.html
-        fs.readFile('./index.html', (err, content) => {
+        // If the requested file is not found, try to serve preview/index.html
+        fs.readFile(path.join(BASE_DIR, 'index.html'), (err, content) => {
           if (err) {
             res.writeHead(404);
             res.end('File not found');

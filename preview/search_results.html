@@ -380,8 +380,8 @@
         
         <div class="nav-bar">
             <div class="nav-item">
-                <span class="material-icons nav-icon">map</span>
-                <div>Map</div>
+                <span class="material-icons nav-icon">home</span>
+                <div>Home</div>
             </div>
             
             <div class="nav-item active">
@@ -424,7 +424,7 @@
                 'art': 'Art',
                 'save': 'Save',
                 'saved': 'Saved',
-                'map': 'Map',
+                'home': 'Home',
                 'search': 'Search',
                 'profile': 'Profile',
                 'ages': 'Ages',
@@ -442,7 +442,7 @@
                 'art': 'Kunst',
                 'save': 'Speichern',
                 'saved': 'Gespeichert',
-                'map': 'Karte',
+                'home': 'Start',
                 'search': 'Suche',
                 'profile': 'Profil',
                 'ages': 'Alter',
@@ -460,7 +460,7 @@
                 'art': 'Arte',
                 'save': 'Salva',
                 'saved': 'Salvato',
-                'map': 'Mappa',
+                'home': 'Home',
                 'search': 'Cerca',
                 'profile': 'Profilo',
                 'ages': 'Età',
@@ -507,7 +507,7 @@
             // Update navigation
             const navItems = document.querySelectorAll('.nav-item');
             if (navItems.length >= 4) {
-                navItems[0].querySelector('div').textContent = translations[lang]['map'];
+                navItems[0].querySelector('div').textContent = translations[lang]['home'];
                 navItems[1].querySelector('div').textContent = translations[lang]['search'];
                 navItems[2].querySelector('div').textContent = translations[lang]['saved'];
                 navItems[3].querySelector('div').textContent = translations[lang]['profile'];

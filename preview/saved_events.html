@@ -432,8 +432,8 @@
         
         <div class="nav-bar">
             <div class="nav-item">
-                <span class="material-icons nav-icon">map</span>
-                <div>Map</div>
+                <span class="material-icons nav-icon">home</span>
+                <div>Home</div>
             </div>
             
             <div class="nav-item">
@@ -475,7 +475,7 @@
                 'share': 'Share',
                 'ages': 'Ages',
                 'allAges': 'All ages',
-                'map': 'Map',
+                'home': 'Home',
                 'search': 'Search',
                 'profile': 'Profile',
                 'kidsCookingClass': 'Kids Cooking Class',
@@ -499,7 +499,7 @@
                 'share': 'Teilen',
                 'ages': 'Alter',
                 'allAges': 'Alle Altersgruppen',
-                'map': 'Karte',
+                'home': 'Start',
                 'search': 'Suche',
                 'profile': 'Profil',
                 'kidsCookingClass': 'Kochkurs für Kinder',
@@ -523,7 +523,7 @@
                 'share': 'Condividi',
                 'ages': 'Età',
                 'allAges': 'Tutte le età',
-                'map': 'Mappa',
+                'home': 'Home',
                 'search': 'Cerca',
                 'profile': 'Profilo',
                 'kidsCookingClass': 'Corso di Cucina per Bambini',
@@ -616,7 +616,7 @@
             // Update navigation
             const navItems = document.querySelectorAll('.nav-item');
             if (navItems.length >= 4) {
-                navItems[0].querySelector('div').textContent = translations[lang]['map'];
+                navItems[0].querySelector('div').textContent = translations[lang]['home'];
                 navItems[1].querySelector('div').textContent = translations[lang]['search'];
                 navItems[2].querySelector('div').textContent = translations[lang]['saved'];
                 navItems[3].querySelector('div').textContent = translations[lang]['profile'];
