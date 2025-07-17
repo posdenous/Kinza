@@ -17,6 +17,8 @@ import SearchResultsScreen from './src/screens/SearchResultsScreen';
 import AdminDashboardScreen from './src/screens/AdminDashboardScreen';
 import OrganiserDashboardScreen from './src/screens/OrganiserDashboardScreen';
 import ReportReviewScreen from './src/screens/ReportReviewScreen';
+import ScreenshotDemoScreen from './src/screens/ScreenshotDemoScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -42,7 +44,10 @@ function MainTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
-      <Tab.Screen name="Search" component={SearchResultsScreen} />
+      <Tab.Screen 
+        name="Search" 
+        component={(props: any) => <SearchResultsScreen {...props} route={{ params: { cityId: 'berlin' } }} />} 
+      />
       <Tab.Screen name="Profile" component={ProfileStack} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
@@ -62,9 +67,10 @@ function HomeStack() {
 function ProfileStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ProfileScreen" component={PlaceholderScreen} options={{ title: 'Profile' }} />
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Profile' }} />
       <Stack.Screen name="Privacy" component={PrivacyScreen} />
       <Stack.Screen name="Trust" component={TrustScreen} />
+      <Stack.Screen name="Screenshots" component={ScreenshotDemoScreen} options={{ title: 'Save Screenshots' }} />
     </Stack.Navigator>
   );
 }
