@@ -225,6 +225,37 @@
             color: #333333;
         }
         
+        .feature-benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .auth-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .auth-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .auth-link {
+            text-decoration: none;
+            color: #2196F3;
+        }
+        
         .navigation {
             padding: 20px;
             display: flex;
@@ -395,25 +426,40 @@
             
             <!-- Step 5: Authentication Options -->
             <div class="step" id="step-5">
-                <h2 class="title" id="auth-title">Create Your Account</h2>
-                <p class="description" id="auth-description">Sign in to save events, receive notifications, and more.</p>
+                <h2 class="title" id="auth-title">Create Account</h2>
+                <p class="description" id="auth-description">Create an account to save your preferences and favorite events.</p>
                 
-                <div class="auth-buttons">
-                    <button class="auth-button google" id="google-button">
-                        <span class="material-icons" style="margin-right: 10px;">account_circle</span>
-                        Continue with Google
-                    </button>
-                    <button class="auth-button facebook" id="facebook-button">
-                        <span class="material-icons" style="margin-right: 10px;">facebook</span>
-                        Continue with Facebook
-                    </button>
-                    <button class="auth-button email" id="email-button">
-                        <span class="material-icons" style="margin-right: 10px;">email</span>
-                        Sign up with Email
-                    </button>
+                <div class="feature-benefits">
+                    <div class="benefit-item">
+                        <span class="material-icons">bookmark</span>
+                        <p id="benefit-save">Save your favorite events and get reminders</p>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="material-icons">person</span>
+                        <p id="benefit-profile">Access your personalized recommendations across devices</p>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="material-icons">notifications_active</span>
+                        <p id="benefit-notify">Get notified about new events matching your interests</p>
+                    </div>
                 </div>
                 
-                <button class="skip-button" id="skip-button">Skip for now</button>
+                <div class="auth-options">
+                    <button class="auth-button google" id="google-button">
+                        <span class="material-icons" style="margin-right: 10px;">account_circle</span>Google
+                    </button>
+                    <button class="auth-button facebook" id="facebook-button">
+                        <span class="material-icons" style="margin-right: 10px;">facebook</span>Facebook
+                    </button>
+                    <button class="auth-button email" id="email-button">
+                        <span class="material-icons" style="margin-right: 10px;">email</span>Email
+                    </button>
+                    
+                    <div class="auth-footer">
+                        <p id="already-account">Already have an account? <a href="#" class="auth-link" id="sign-in-link">Sign In</a></p>
+                        <button class="skip-button" id="skip-button">Skip for now</button>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -457,15 +503,19 @@
                 'reading': 'Reading',
                 'cooking': 'Cooking',
                 'theater': 'Theater',
-                'createAccount': 'Create Your Account',
-                'authDescription': 'Sign in to save events, receive notifications, and more.',
+                'createAccount': 'Create Account',
+                'authDescription': 'Create an account to save your preferences and favorite events.',
                 'continueWithGoogle': 'Continue with Google',
                 'continueWithFacebook': 'Continue with Facebook',
                 'signUpWithEmail': 'Sign up with Email',
                 'skipForNow': 'Skip for now',
                 'back': 'Back',
                 'next': 'Next',
-                'finish': 'Finish'
+                'finish': 'Finish',
+                'benefitSave': 'Save your favorite events and get reminders',
+                'benefitProfile': 'Access your personalized recommendations across devices',
+                'benefitNotify': 'Get notified about new events matching your interests',
+                'alreadyAccount': 'Already have an account?'
             },
             'DE': {
                 'chooseLanguage': 'Wähle deine Sprache',
@@ -494,14 +544,18 @@
                 'cooking': 'Kochen',
                 'theater': 'Theater',
                 'createAccount': 'Konto erstellen',
-                'authDescription': 'Melde dich an, um Veranstaltungen zu speichern, Benachrichtigungen zu erhalten und mehr.',
+                'authDescription': 'Erstelle ein Konto, um deine Vorlieben und Favoriten zu speichern.',
                 'continueWithGoogle': 'Mit Google fortfahren',
                 'continueWithFacebook': 'Mit Facebook fortfahren',
                 'signUpWithEmail': 'Mit E-Mail registrieren',
                 'skipForNow': 'Vorerst überspringen',
                 'back': 'Zurück',
                 'next': 'Weiter',
-                'finish': 'Fertig'
+                'finish': 'Fertig',
+                'benefitSave': 'Speichere deine Favoriten und erhalte Erinnerungen',
+                'benefitProfile': 'Greife auf deine personalisierten Empfehlungen auf allen Geräten zu',
+                'benefitNotify': 'Erhalte Benachrichtigungen über neue Veranstaltungen, die deinen Interessen entsprechen',
+                'alreadyAccount': 'Hast du bereits ein Konto?'
             },
             'IT': {
                 'chooseLanguage': 'Scegli la tua lingua',
@@ -530,14 +584,18 @@
                 'cooking': 'Cucina',
                 'theater': 'Teatro',
                 'createAccount': 'Crea il tuo account',
-                'authDescription': 'Accedi per salvare eventi, ricevere notifiche e altro ancora.',
+                'authDescription': 'Crea un account per salvare le tue preferenze e i tuoi eventi preferiti.',
                 'continueWithGoogle': 'Continua con Google',
                 'continueWithFacebook': 'Continua con Facebook',
                 'signUpWithEmail': 'Registrati con email',
                 'skipForNow': 'Salta per ora',
                 'back': 'Indietro',
                 'next': 'Avanti',
-                'finish': 'Fine'
+                'finish': 'Fine',
+                'benefitSave': 'Salva i tuoi eventi preferiti e ricevi promemoria',
+                'benefitProfile': 'Accedi alle tue raccomandazioni personalizzate su tutti i dispositivi',
+                'benefitNotify': 'Ricevi notifiche sugli eventi nuovi che corrispondono ai tuoi interessi',
+                'alreadyAccount': 'Hai già un account?'
             }
         };
         
@@ -651,6 +709,10 @@
             document.getElementById('google-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">account_circle</span>${t['continueWithGoogle']}`;
             document.getElementById('facebook-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">facebook</span>${t['continueWithFacebook']}`;
             document.getElementById('email-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">email</span>${t['signUpWithEmail']}`;
+            document.getElementById('benefit-save').textContent = t['benefitSave'];
+            document.getElementById('benefit-profile').textContent = t['benefitProfile'];
+            document.getElementById('benefit-notify').textContent = t['benefitNotify'];
+            document.getElementById('already-account').textContent = t['alreadyAccount'];
             document.getElementById('skip-button').textContent = t['skipForNow'];
             
             // Navigation buttons
