@@ -12,7 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { doc, updateDoc } from 'firebase/firestore';
-import { useFirestore } from 'react-firebase-hooks/firestore';
+import { useFirestoreInstance } from '../hooks/useFirestoreInstance';
 import { getAuth } from 'firebase/auth';
 import { City, useUserCity } from '../hooks/useCities';
 
@@ -25,7 +25,7 @@ const CitySwitcher: React.FC<CitySwitcherProps> = ({ onCityChange, compact = fal
   const { t } = useTranslation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { currentCity, cities, loading, error } = useUserCity();
-  const [firestore] = useFirestore();
+  const [firestore] = useFirestoreInstance();
   const auth = getAuth();
   const user = auth.currentUser;
 

@@ -591,5 +591,180 @@
             </div>
         </div>
     </div>
+    
+    <script>
+      // Translation data for all supported languages
+      const translations = {
+        'English': {
+          'reportReview': 'Report Review',
+          'pendingReports': 'Pending Reports',
+          'event': 'Event',
+          'comment': 'Comment',
+          'profile': 'Profile',
+          'inappropriateContent': 'Inappropriate Content',
+          'offensiveLanguage': 'Offensive Language',
+          'harassmentBullying': 'Harassment/Bullying',
+          'eventDescription': 'This event contains content that is not suitable for children. The description includes references to alcohol.',
+          'commentDescription': 'This comment contains offensive language that violates our community guidelines.',
+          'profileDescription': 'This profile contains inappropriate content in the bio section.',
+          'view': 'View',
+          'dismiss': 'Dismiss',
+          'resolve': 'Resolve',
+          'reportDetails': 'Report Details',
+          'reportedItem': 'Reported Item',
+          'reportedBy': 'Reported By',
+          'reportDate': 'Report Date',
+          'reportReason': 'Report Reason',
+          'additionalNotes': 'Additional Notes',
+          'close': 'Close'
+        },
+        'Deutsch': {
+          'reportReview': 'Berichtsprüfung',
+          'pendingReports': 'Ausstehende Berichte',
+          'event': 'Veranstaltung',
+          'comment': 'Kommentar',
+          'profile': 'Profil',
+          'inappropriateContent': 'Unangemessener Inhalt',
+          'offensiveLanguage': 'Beleidigende Sprache',
+          'harassmentBullying': 'Belästigung/Mobbing',
+          'eventDescription': 'Diese Veranstaltung enthält Inhalte, die für Kinder nicht geeignet sind. Die Beschreibung enthält Hinweise auf Alkohol.',
+          'commentDescription': 'Dieser Kommentar enthält beleidigende Sprache, die gegen unsere Community-Richtlinien verstößt.',
+          'profileDescription': 'Dieses Profil enthält unangemessene Inhalte im Bio-Bereich.',
+          'view': 'Ansehen',
+          'dismiss': 'Ablehnen',
+          'resolve': 'Lösen',
+          'reportDetails': 'Berichtsdetails',
+          'reportedItem': 'Gemeldetes Element',
+          'reportedBy': 'Gemeldet von',
+          'reportDate': 'Berichtsdatum',
+          'reportReason': 'Berichtsgrund',
+          'additionalNotes': 'Zusätzliche Notizen',
+          'close': 'Schließen'
+        },
+        'Italiano': {
+          'reportReview': 'Revisione Segnalazioni',
+          'pendingReports': 'Segnalazioni in Attesa',
+          'event': 'Evento',
+          'comment': 'Commento',
+          'profile': 'Profilo',
+          'inappropriateContent': 'Contenuto Inappropriato',
+          'offensiveLanguage': 'Linguaggio Offensivo',
+          'harassmentBullying': 'Molestie/Bullismo',
+          'eventDescription': 'Questo evento contiene contenuti non adatti ai bambini. La descrizione include riferimenti all\'alcol.',
+          'commentDescription': 'Questo commento contiene un linguaggio offensivo che viola le nostre linee guida della comunità.',
+          'profileDescription': 'Questo profilo contiene contenuti inappropriati nella sezione bio.',
+          'view': 'Visualizza',
+          'dismiss': 'Ignora',
+          'resolve': 'Risolvi',
+          'reportDetails': 'Dettagli Segnalazione',
+          'reportedItem': 'Elemento Segnalato',
+          'reportedBy': 'Segnalato Da',
+          'reportDate': 'Data Segnalazione',
+          'reportReason': 'Motivo Segnalazione',
+          'additionalNotes': 'Note Aggiuntive',
+          'close': 'Chiudi'
+        }
+      };
+      
+      // Current language (default: English)
+      let currentLang = 'English';
+      
+      // Function to change language
+      function changeLanguage(lang) {
+        // Update current language
+        currentLang = lang;
+        
+        // Update UI elements with translations
+        document.querySelector('.header-title').textContent = translations[lang]['reportReview'];
+        document.querySelector('.section-title').textContent = translations[lang]['pendingReports'] + ' (3)';
+        
+        // Update report type badges
+        document.querySelectorAll('.report-type-badge-text').forEach(badge => {
+          if (badge.textContent === 'Event') {
+            badge.textContent = translations[lang]['event'];
+          } else if (badge.textContent === 'Comment') {
+            badge.textContent = translations[lang]['comment'];
+          } else if (badge.textContent === 'Profile') {
+            badge.textContent = translations[lang]['profile'];
+          }
+        });
+        
+        // Update report reasons
+        document.querySelectorAll('.report-reason').forEach(reason => {
+          if (reason.textContent === 'Inappropriate Content') {
+            reason.textContent = translations[lang]['inappropriateContent'];
+          } else if (reason.textContent === 'Offensive Language') {
+            reason.textContent = translations[lang]['offensiveLanguage'];
+          } else if (reason.textContent === 'Harassment/Bullying') {
+            reason.textContent = translations[lang]['harassmentBullying'];
+          }
+        });
+        
+        // Update report details
+        const reportDetails = document.querySelectorAll('.report-details');
+        if (reportDetails.length >= 3) {
+          reportDetails[0].textContent = translations[lang]['eventDescription'];
+          reportDetails[1].textContent = translations[lang]['commentDescription'];
+          reportDetails[2].textContent = translations[lang]['profileDescription'];
+        }
+        
+        // Update buttons
+        document.querySelectorAll('.view-button-text').forEach(btn => {
+          btn.textContent = translations[lang]['view'];
+        });
+        document.querySelectorAll('.dismiss-button-text').forEach(btn => {
+          btn.textContent = translations[lang]['dismiss'];
+        });
+        document.querySelectorAll('.resolve-button-text').forEach(btn => {
+          btn.textContent = translations[lang]['resolve'];
+        });
+        
+        // Update modal content if it exists
+        if (document.querySelector('.modal-title')) {
+          document.querySelector('.modal-title').textContent = translations[lang]['reportDetails'];
+          document.querySelector('.close-button').textContent = translations[lang]['close'];
+          
+          // Update modal labels
+          const modalLabels = document.querySelectorAll('.detail-label');
+          if (modalLabels.length >= 5) {
+            modalLabels[0].textContent = translations[lang]['reportedItem'] + ':';
+            modalLabels[1].textContent = translations[lang]['reportedBy'] + ':';
+            modalLabels[2].textContent = translations[lang]['reportDate'] + ':';
+            modalLabels[3].textContent = translations[lang]['reportReason'] + ':';
+            modalLabels[4].textContent = translations[lang]['additionalNotes'] + ':';
+          }
+        }
+        
+        // Update active language button
+        document.querySelectorAll('.language-button').forEach(button => {
+          button.classList.remove('active');
+          if (button.textContent.trim() === lang) {
+            button.classList.add('active');
+          }
+        });
+      }
+
+      function showModal() {
+        document.querySelector('.modal-overlay').style.display = 'flex';
+      }
+
+      function hideModal() {
+        document.querySelector('.modal-overlay').style.display = 'none';
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.language-button').forEach(button => {
+          button.addEventListener('click', function() {
+            changeLanguage(this.textContent.trim());
+          });
+        });
+
+        document.querySelectorAll('.view-button').forEach(button => {
+          button.addEventListener('click', showModal);
+        });
+
+        document.querySelector('.close-button').addEventListener('click', hideModal);
+      });
+    </script>
 </body>
 </html>

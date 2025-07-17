@@ -12,7 +12,7 @@ import {
   Timestamp,
   DocumentReference
 } from 'firebase/firestore';
-import { useFirestore } from 'react-firebase-hooks/firestore';
+import { useFirestoreInstance } from './useFirestoreInstance';
 import { useUserRole } from './useUserRole';
 import { useUserCity } from './useCities';
 
@@ -47,10 +47,13 @@ export interface UseUgcModerationResult {
  * Custom hook for handling user-generated content moderation
  * Enforces the rule that all user-generated content must pass moderation before being displayed
  */
-const useUgcModeration = (): UseUgcModerationResult => {
+export interface UseUgcModerationOptions {
+  aiScreen?: (contentType: ContentType, contentData: any) => Promise<string[]>;
+}
+const useUgcModeration = ({ aiScreen }: UseUgcModerationOptions = {}): UseUgcModerationResult => {
   const { t } = useTranslation();
-  const [firestore] = useFirestore();
-  const { userRole } = useUserRole();
+  const [firestore] = useFirestoreInstance();
+  const { role: userRole } = useUserRole();
   const { currentCityId } = useUserCity();
   
   const [pendingModerationCount, setPendingModerationCount] = useState<number>(0);
@@ -104,8 +107,8 @@ const useUgcModeration = (): UseUgcModerationResult => {
     try {
       setLoading(true);
       
-      // Run AI content screening (simulated)
-      const aiFlags = await runAiScreening(contentType, contentData);
+      // Run AI content screening (can be injected for testing)
+      const aiFlags = await (aiScreen ?? runAiScreening)(contentType, contentData);
       
       // Create moderation item
       const moderationRef = collection(firestore, 'moderation');
@@ -353,8 +356,8 @@ const useUgcModeration = (): UseUgcModerationResult => {
       }
     }
     
-    // Simulate async operation
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // Simulate async operation (100 ms delay)
+    await new Promise<void>(res => setTimeout(() => res(), 100));
     
     return flags;
   };

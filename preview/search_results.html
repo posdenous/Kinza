@@ -204,6 +204,7 @@
             margin-bottom: 16px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -401,6 +402,14 @@
     </div>
     
     <script>
+        // Navigation configuration
+        const navConfig = {
+            'map': 'map_view.html',
+            'search': 'search_results.html',
+            'saved': 'saved_events.html',
+            'profile': 'redirect.html?to=profile'
+        };
+        
         // Translation data for all supported languages
         const translations = {
             'English': {
@@ -523,11 +532,33 @@
             });
         }
         
-        // Add event listeners to language buttons
+        // Add event listeners to language buttons and navigation items
         document.addEventListener('DOMContentLoaded', function() {
+            // Language button event listeners
             document.querySelectorAll('.language-button').forEach(button => {
                 button.addEventListener('click', function() {
                     changeLanguage(this.textContent.trim());
+                });
+            });
+            
+            // Navigation item event listeners
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    // Get the navigation type from the text content
+                    const navType = this.querySelector('div').textContent.toLowerCase();
+                    
+                    // Remove active class from all nav items
+                    document.querySelectorAll('.nav-item').forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Navigate to the corresponding page
+                    if (navConfig[navType]) {
+                        window.location.href = navConfig[navType];
+                    }
                 });
             });
         });

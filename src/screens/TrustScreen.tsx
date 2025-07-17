@@ -14,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { useFirestore } from 'react-firebase-hooks/firestore';
+import { useFirestoreInstance } from '../hooks/useFirestoreInstance';
 import { getAuth } from 'firebase/auth';
 import { useUserRole } from '../hooks/useUserRole';
 import { useUserCity } from '../hooks/useCities';
@@ -36,7 +36,7 @@ const initialReportFormData: ReportFormData = {
 const TrustScreen: React.FC = () => {
   const { t } = useTranslation();
   const navigation = useNavigation();
-  const [firestore] = useFirestore();
+  const [firestore] = useFirestoreInstance();
   const auth = getAuth();
   const user = auth.currentUser;
   const { userRole } = useUserRole();

@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { useFirestore } from 'react-firebase-hooks/firestore';
+import { useFirestoreInstance } from '../hooks/useFirestoreInstance';
 import { useUserCity } from '../hooks/useCities';
 import useUgcModeration from '../hooks/useUgcModeration';
 
@@ -27,7 +27,7 @@ interface CommentInputProps {
  */
 const CommentInput: React.FC<CommentInputProps> = ({ eventId, onCommentAdded }) => {
   const { t } = useTranslation();
-  const [firestore] = useFirestore();
+  const [firestore] = useFirestoreInstance();
   const auth = getAuth();
   const user = auth.currentUser;
   const { currentCityId } = useUserCity();

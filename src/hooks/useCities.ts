@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, query, getDocs, doc, getDoc } from 'firebase/firestore';
-import { useFirestore } from 'react-firebase-hooks/firestore';
+import { useFirestoreInstance } from './useFirestoreInstance';
 import { getAuth } from 'firebase/auth';
 
 export interface City {
@@ -20,7 +20,7 @@ export const useCities = () => {
   const [cities, setCities] = useState<City[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  const [firestore] = useFirestore();
+  const [firestore] = useFirestoreInstance();
   const auth = getAuth();
 
   useEffect(() => {
@@ -67,7 +67,7 @@ export const useUserCity = () => {
   const [currentCityId, setCurrentCityId] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  const [firestore] = useFirestore();
+  const [firestore] = useFirestoreInstance();
   const auth = getAuth();
   const user = auth.currentUser;
   const { cities, loading: citiesLoading } = useCities();

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, limit, orderBy, startAt, endAt, Firestore } from 'firebase/firestore';
-import { useFirestore } from 'react-firebase-hooks/firestore';
+import { useFirestoreInstance } from './useFirestoreInstance';
 import { getAuth } from 'firebase/auth';
 import { useUserRole } from './useUserRole';
 
@@ -35,7 +35,7 @@ export const useSearch = (options: SearchOptions) => {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-  const [firestore] = useFirestore();
+  const [firestore] = useFirestoreInstance();
   const { userRole, isLoading: roleLoading } = useUserRole();
   const auth = getAuth();
   const user = auth.currentUser;

@@ -559,7 +559,6 @@
                 currentLang = storedLang;
             }
             
-            // Update UI with current language
             updateUI();
             
             // Update language buttons and dropdown to match current language
@@ -611,6 +610,59 @@
         });
         
         // Update UI with current language
+        function updateUI() {
+            const t = translations[currentLang];
+            
+            // Step 1: Language Selection
+            document.getElementById('language-title').textContent = t['chooseLanguage'];
+            document.getElementById('language-description').textContent = t['languageDescription'];
+            document.getElementById('language-label').textContent = t['language'];
+            
+            // Step 2: Location Permission
+            document.getElementById('location-title').textContent = t['locationAccess'];
+            document.getElementById('location-description').textContent = t['locationDescription'];
+            document.getElementById('allow-location-button').textContent = t['allowLocation'];
+            document.getElementById('or-text').textContent = t['orEnterZip'];
+            document.getElementById('zip-label').textContent = t['zipCode'];
+            
+            // Step 3: Child Profile Setup
+            document.getElementById('child-profile-title').textContent = t['childProfileSetup'];
+            document.getElementById('child-profile-description').textContent = t['childProfileDescription'];
+            document.getElementById('child-name-label').textContent = t['childName'];
+            document.getElementById('child-age-label').textContent = t['childAge'];
+            document.getElementById('consent-label').textContent = t['consent'];
+            document.getElementById('consent-info').textContent = t['consentInfo'];
+            
+            // Step 4: Interest Selection
+            document.getElementById('interests-title').textContent = t['selectInterests'];
+            document.getElementById('interests-description').textContent = t['interestsDescription'];
+            document.getElementById('interest-music').textContent = t['music'];
+            document.getElementById('interest-sports').textContent = t['sports'];
+            document.getElementById('interest-art').textContent = t['art'];
+            document.getElementById('interest-nature').textContent = t['nature'];
+            document.getElementById('interest-science').textContent = t['science'];
+            document.getElementById('interest-reading').textContent = t['reading'];
+            document.getElementById('interest-cooking').textContent = t['cooking'];
+            document.getElementById('interest-theater').textContent = t['theater'];
+            
+            // Step 5: Authentication Options
+            document.getElementById('auth-title').textContent = t['createAccount'];
+            document.getElementById('auth-description').textContent = t['authDescription'];
+            document.getElementById('google-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">account_circle</span>${t['continueWithGoogle']}`;
+            document.getElementById('facebook-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">facebook</span>${t['continueWithFacebook']}`;
+            document.getElementById('email-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">email</span>${t['signUpWithEmail']}`;
+            document.getElementById('skip-button').textContent = t['skipForNow'];
+            
+            // Navigation buttons
+            document.getElementById('back-button').textContent = t['back'];
+            
+            const nextButton = document.getElementById('next-button');
+            if (currentStep === totalSteps) {
+                nextButton.textContent = t['finish'];
+            } else {
+                nextButton.textContent = t['next'];
+            }
+        }
         
         // Change language
         function changeLanguage(lang) {
@@ -679,61 +731,6 @@
         // Toggle interest selection
         function toggleInterest(element) {
             element.classList.toggle('selected');
-        }
-        
-        // Update UI with current language
-        function updateUI() {
-            const t = translations[currentLang];
-            
-            // Step 1: Language Selection
-            document.getElementById('language-title').textContent = t['chooseLanguage'];
-            document.getElementById('language-description').textContent = t['languageDescription'];
-            document.getElementById('language-label').textContent = t['language'];
-            
-            // Step 2: Location Permission
-            document.getElementById('location-title').textContent = t['locationAccess'];
-            document.getElementById('location-description').textContent = t['locationDescription'];
-            document.getElementById('allow-location-button').textContent = t['allowLocation'];
-            document.getElementById('or-text').textContent = t['orEnterZip'];
-            document.getElementById('zip-label').textContent = t['zipCode'];
-            
-            // Step 3: Child Profile Setup
-            document.getElementById('child-profile-title').textContent = t['childProfileSetup'];
-            document.getElementById('child-profile-description').textContent = t['childProfileDescription'];
-            document.getElementById('child-name-label').textContent = t['childName'];
-            document.getElementById('child-age-label').textContent = t['childAge'];
-            document.getElementById('consent-label').textContent = t['consent'];
-            document.getElementById('consent-info').textContent = t['consentInfo'];
-            
-            // Step 4: Interest Selection
-            document.getElementById('interests-title').textContent = t['selectInterests'];
-            document.getElementById('interests-description').textContent = t['interestsDescription'];
-            document.getElementById('interest-music').textContent = t['music'];
-            document.getElementById('interest-sports').textContent = t['sports'];
-            document.getElementById('interest-art').textContent = t['art'];
-            document.getElementById('interest-nature').textContent = t['nature'];
-            document.getElementById('interest-science').textContent = t['science'];
-            document.getElementById('interest-reading').textContent = t['reading'];
-            document.getElementById('interest-cooking').textContent = t['cooking'];
-            document.getElementById('interest-theater').textContent = t['theater'];
-            
-            // Step 5: Authentication Options
-            document.getElementById('auth-title').textContent = t['createAccount'];
-            document.getElementById('auth-description').textContent = t['authDescription'];
-            document.getElementById('google-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">account_circle</span>${t['continueWithGoogle']}`;
-            document.getElementById('facebook-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">facebook</span>${t['continueWithFacebook']}`;
-            document.getElementById('email-button').innerHTML = `<span class="material-icons" style="margin-right: 10px;">email</span>${t['signUpWithEmail']}`;
-            document.getElementById('skip-button').textContent = t['skipForNow'];
-            
-            // Navigation buttons
-            document.getElementById('back-button').textContent = t['back'];
-            
-            const nextButton = document.getElementById('next-button');
-            if (currentStep === totalSteps) {
-                nextButton.textContent = t['finish'];
-            } else {
-                nextButton.textContent = t['next'];
-            }
         }
     </script>
 </body>
