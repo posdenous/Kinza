@@ -4,6 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 
+import theme from '../styles/theme';
+import { getGradientBackgroundStyle } from '../utils/gradientUtils';
+import UserAvatar from '../components/UserAvatar';
+
 /**
  * Profile screen component with access to various user settings and tools
  */
@@ -42,7 +46,7 @@ const ProfileScreen: React.FC = () => {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.profileImageContainer}>
-          <Ionicons name="person-circle" size={80} color="#4A90E2" />
+          <UserAvatar userId="user123" size={100} />
         </View>
         <Text style={styles.profileName}>User Name</Text>
         <Text style={styles.profileEmail}>user@example.com</Text>
@@ -56,10 +60,10 @@ const ProfileScreen: React.FC = () => {
             onPress={() => handleMenuPress(item.screen)}
           >
             <View style={styles.menuIconContainer}>
-              <Ionicons name={item.icon as any} size={24} color="#4A90E2" />
+              <Ionicons name={item.icon as any} size={24} color={theme.colors.primary} aria-label={item.title} />
             </View>
             <Text style={styles.menuItemText}>{item.title}</Text>
-            <Ionicons name="chevron-forward" size={20} color="#999" />
+            <Ionicons name="chevron-forward" size={20} color="#999" aria-label={`Navigate to ${item.title}`} />
           </TouchableOpacity>
         ))}
       </View>
@@ -74,47 +78,46 @@ const ProfileScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
+    backgroundColor: theme.colors.gradients.profile[0], // Use the first color from the profile gradient
   },
   header: {
     alignItems: 'center',
-    paddingVertical: 30,
-    backgroundColor: '#FFFFFF',
+    paddingVertical: theme.spacing[6],
+    backgroundColor: theme.colors.ui.background,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: theme.colors.ui.border,
+    ...theme.shadows.sm,
   },
   profileImageContainer: {
     marginBottom: 16,
   },
   profileName: {
-    fontSize: 22,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
+    fontSize: theme.typography.fontSize['2xl'],
+    fontFamily: theme.typography.fontFamily.heading,
+    color: theme.colors.text.dark,
+    marginBottom: theme.spacing[1],
   },
   profileEmail: {
-    fontSize: 16,
-    color: '#666',
+    fontSize: theme.typography.fontSize.base,
+    fontFamily: theme.typography.fontFamily.body,
+    color: theme.colors.text.light,
   },
   menuContainer: {
-    backgroundColor: '#FFFFFF',
-    marginTop: 16,
-    borderRadius: 8,
+    backgroundColor: theme.colors.ui.background,
+    marginTop: theme.spacing[4],
+    borderRadius: theme.borders.radius.xl,
     overflow: 'hidden',
-    marginHorizontal: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    marginHorizontal: theme.spacing[4],
+    ...theme.shadows.sm,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: theme.colors.ui.border,
+    minHeight: theme.layout.touchableMinHeight,
   },
   menuIconContainer: {
     width: 40,
@@ -123,17 +126,18 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     flex: 1,
-    fontSize: 16,
-    color: '#333',
+    fontSize: theme.typography.fontSize.base,
+    fontFamily: theme.typography.fontFamily.body,
+    color: theme.colors.text.dark,
   },
   footer: {
-    marginTop: 40,
+    padding: theme.spacing[4],
     alignItems: 'center',
-    paddingBottom: 20,
   },
   versionText: {
-    fontSize: 14,
-    color: '#999',
+    fontSize: theme.typography.fontSize.sm,
+    fontFamily: theme.typography.fontFamily.body,
+    color: theme.colors.text.light,
   },
 });
 

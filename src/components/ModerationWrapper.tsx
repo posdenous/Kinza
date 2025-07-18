@@ -17,6 +17,10 @@ interface ModerationWrapperProps {
   children: React.ReactNode;
   onModerate?: () => void;
   showPendingMessage?: boolean;
+  customLoadingComponent?: React.ReactNode;
+  loadingSize?: 'small' | 'large';
+  loadingColor?: string;
+  loadingTimeout?: number;
 }
 
 /**
@@ -29,41 +33,96 @@ const ModerationWrapper: React.FC<ModerationWrapperProps> = ({
   children,
   onModerate,
   showPendingMessage = true,
+  customLoadingComponent,
+  loadingSize = 'small',
+  loadingColor = '#2196F3',
+  loadingTimeout = 10000, // 10 seconds default timeout
 }) => {
   const { t } = useTranslation();
   const { checkModerationStatus } = useUgcModeration();
-  const { userRole } = useUserRole();
+  const { role } = useUserRole();
   
   const [moderationStatus, setModerationStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingTimedOut, setLoadingTimedOut] = useState<boolean>(false);
+  const [retrying, setRetrying] = useState<boolean>(false);
 
   // Check if user can see unmoderated content
-  const canSeeUnmoderated = ['admin', 'organiser'].includes(userRole);
+  const canSeeUnmoderated = ['admin', 'organiser'].includes(role);
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
     const fetchModerationStatus = async () => {
       if (!contentId) {
         setLoading(false);
         return;
       }
+      
+      // Reset states when starting a new fetch
+      if (!retrying) {
+        setLoading(true);
+        setLoadingTimedOut(false);
+      }
+      
+      // Set timeout for loading
+      timeoutId = setTimeout(() => {
+        if (loading) {
+          setLoadingTimedOut(true);
+          setLoading(false);
+        }
+      }, loadingTimeout);
 
       try {
         const status = await checkModerationStatus(contentType, contentId);
         setModerationStatus(status);
+        setLoading(false);
+        setLoadingTimedOut(false);
       } catch (err) {
         console.error('Error checking moderation status:', err);
-      } finally {
         setLoading(false);
       }
     };
 
     fetchModerationStatus();
-  }, [contentId, contentType, checkModerationStatus]);
+    
+    // Cleanup timeout on unmount or when dependencies change
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [contentId, contentType, checkModerationStatus, loadingTimeout, retrying]);
+  
+  // Function to retry loading when timed out
+  const handleRetry = () => {
+    setRetrying(true);
+    // This will trigger the useEffect again
+    setTimeout(() => setRetrying(false), 100);
+  };
 
   if (loading) {
+    // Use custom loading component if provided
+    if (customLoadingComponent) {
+      return <View style={styles.loadingContainer}>{customLoadingComponent}</View>;
+    }
+    
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="small" color="#2196F3" />
+        <ActivityIndicator size={loadingSize} color={loadingColor} />
+        <Text style={styles.loadingText}>{t('moderation.checkingStatus')}</Text>
+      </View>
+    );
+  }
+  
+  // Show timeout message if loading timed out
+  if (loadingTimedOut) {
+    return (
+      <View style={styles.timeoutContainer}>
+        <Ionicons name="alert-circle-outline" size={24} color="#FF5722" />
+        <Text style={styles.timeoutMessage}>{t('moderation.loadingTimeout')}</Text>
+        <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+          <Ionicons name="refresh-outline" size={16} color="#FFFFFF" />
+          <Text style={styles.retryButtonText}>{t('common.retry')}</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -136,6 +195,41 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: 60,
+  },
+  loadingText: {
+    marginTop: 8,
+    color: '#757575',
+    fontSize: 14,
+  },
+  timeoutContainer: {
+    padding: 16,
+    backgroundColor: '#FFF5F5',
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 8,
+  },
+  timeoutMessage: {
+    marginTop: 8,
+    color: '#FF5722',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 12,
+    backgroundColor: '#2196F3',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  retryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: 4,
   },
   pendingContainer: {
     padding: 16,

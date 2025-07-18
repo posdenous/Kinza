@@ -18,10 +18,12 @@ import { City, useUserCity } from '../hooks/useCities';
 
 interface CitySwitcherProps {
   onCityChange?: (cityId: string) => void;
+  onCityChangeComplete?: (cityId: string) => void;
   compact?: boolean;
+  reloadEvents?: boolean;
 }
 
-const CitySwitcher: React.FC<CitySwitcherProps> = ({ onCityChange, compact = false }) => {
+const CitySwitcher: React.FC<CitySwitcherProps> = ({ onCityChange, onCityChangeComplete, compact = false, reloadEvents = true }) => {
   const { t } = useTranslation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { currentCity, cities, loading, error } = useUserCity();
@@ -48,6 +50,17 @@ const CitySwitcher: React.FC<CitySwitcherProps> = ({ onCityChange, compact = fal
       }
       
       setIsModalVisible(false);
+      
+      // Trigger event reload if needed
+      if (reloadEvents) {
+        // Small delay to ensure city change is processed
+        setTimeout(() => {
+          // Call the onCityChangeComplete callback if provided
+          if (onCityChangeComplete) {
+            onCityChangeComplete(city.id);
+          }
+        }, 300);
+      }
     } catch (err) {
       console.error('Error updating user city:', err);
       Alert.alert(
@@ -113,7 +126,17 @@ const CitySwitcher: React.FC<CitySwitcherProps> = ({ onCityChange, compact = fal
       <View style={compact ? styles.compactContainer : styles.container}>
         <TouchableOpacity
           style={styles.errorButton}
-          onPress={() => window.location.reload()}
+          onPress={() => {
+            // Refresh the component instead of using window.location.reload()
+            // which is not available in React Native
+            if (error) {
+              // Force a refresh by triggering a state update
+              const { currentCityId } = useUserCity();
+              if (onCityChange && currentCityId) {
+                onCityChange(currentCityId);
+              }
+            }
+          }}
         >
           <Ionicons name="alert-circle-outline" size={compact ? 16 : 20} color="#FF5722" />
           <Text style={styles.errorText}>{t('citySwitcher.error')}</Text>

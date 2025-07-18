@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -35,9 +35,50 @@ const CommentInput: React.FC<CommentInputProps> = ({ eventId, onCommentAdded }) 
   
   const [comment, setComment] = useState<string>('');
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [validation, setValidation] = useState<{
+    isValid: boolean;
+    errors: string[];
+    characterCount: number;
+    maxLength: number;
+  }>({ isValid: false, errors: [], characterCount: 0, maxLength: 500 });
+
+  // Validate comment in real-time
+  useEffect(() => {
+    const errors: string[] = [];
+    const trimmedComment = comment.trim();
+    const characterCount = trimmedComment.length;
+    
+    // Check for empty comment
+    if (characterCount === 0) {
+      errors.push(t('comments.errorEmpty'));
+    }
+    
+    // Check for minimum length
+    if (characterCount > 0 && characterCount < 3) {
+      errors.push(t('comments.errorTooShort'));
+    }
+    
+    // Check for maximum length
+    if (characterCount > validation.maxLength) {
+      errors.push(t('comments.errorTooLong', { max: validation.maxLength }));
+    }
+    
+    // Check for inappropriate content (simple example)
+    const inappropriateWords = ['inappropriate', 'offensive', 'spam']; // This would be more comprehensive in production
+    if (inappropriateWords.some(word => trimmedComment.toLowerCase().includes(word))) {
+      errors.push(t('comments.errorInappropriate'));
+    }
+    
+    setValidation({
+      isValid: errors.length === 0 && characterCount > 0,
+      errors,
+      characterCount,
+      maxLength: validation.maxLength
+    });
+  }, [comment, t]);
 
   const handleSubmitComment = async () => {
-    if (!comment.trim()) {
+    if (!validation.isValid) {
       return;
     }
 
@@ -111,18 +152,37 @@ const CommentInput: React.FC<CommentInputProps> = ({ eventId, onCommentAdded }) 
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.input}
+        style={[styles.input, !validation.isValid && comment.trim().length > 0 && styles.inputError]}
         value={comment}
         onChangeText={setComment}
         placeholder={t('comments.placeholder')}
         placeholderTextColor="#999999"
         multiline
-        maxLength={500}
+        maxLength={validation.maxLength}
       />
+      
+      {/* Character counter */}
+      <Text style={[styles.characterCount, 
+        validation.characterCount > validation.maxLength * 0.8 && styles.characterCountWarning,
+        validation.characterCount > validation.maxLength && styles.characterCountError
+      ]}>
+        {validation.characterCount}/{validation.maxLength}
+      </Text>
+      
+      {/* Validation errors */}
+      {validation.errors.length > 0 && comment.trim().length > 0 && (
+        <View style={styles.validationContainer}>
+          {validation.errors.map((error, index) => (
+            <Text key={index} style={styles.validationError}>
+              <Ionicons name="alert-circle-outline" size={14} color="#FF5722" /> {error}
+            </Text>
+          ))}
+        </View>
+      )}
       <TouchableOpacity
-        style={[styles.submitButton, !comment.trim() && styles.disabledButton]}
+        style={[styles.submitButton, (!validation.isValid || submitting) && styles.disabledButton]}
         onPress={handleSubmitComment}
-        disabled={!comment.trim() || submitting}
+        disabled={!validation.isValid || submitting}
       >
         {submitting ? (
           <ActivityIndicator size="small" color="#FFFFFF" />
@@ -154,6 +214,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
     maxHeight: 100,
     minHeight: 40,
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  inputError: {
+    borderColor: '#FF5722',
+    backgroundColor: '#FFF8F6',
+  },
+  validationContainer: {
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  validationError: {
+    color: '#FF5722',
+    fontSize: 12,
+    marginTop: 2,
+  },
+  characterCount: {
+    position: 'absolute',
+    right: 70,
+    top: 16,
+    fontSize: 10,
+    color: '#999999',
+  },
+  characterCountWarning: {
+    color: '#FF9800',
+  },
+  characterCountError: {
+    color: '#FF5722',
   },
   submitButton: {
     position: 'absolute',

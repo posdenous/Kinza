@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinza Berlin - Translation Preview</title>
+  <style>
+    :root {
+      --primary: #FF5A5F;
+      --secondary: #00A699;
+      --accent: #FC642D;
+      --background: #F7F7F7;
+      --card-bg: #FFFFFF;
+      --text-dark: #484848;
+      --text-medium: #767676;
+      --text-light: #CCCCCC;
+      --border: #DDDDDD;
+      --success: #00A699;
+      --error: #FF5A5F;
+      --warning: #FFB400;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--text-dark);
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      margin: 0;
+      color: var(--primary);
+    }
+    
+    .language-selector {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .language-button {
+      padding: 8px 16px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .language-button:hover {
+      background-color: var(--background);
+    }
+    
+    .language-button.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .section {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .section h2 {
+      margin-top: 0;
+      color: var(--secondary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+    
+    .component-preview {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .component-title {
+      font-weight: 500;
+      color: var(--text-medium);
+      margin-bottom: 10px;
+    }
+    
+    .button {
+      padding: 10px 20px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    
+    .button.secondary {
+      background-color: var(--secondary);
+    }
+    
+    .button.outline {
+      background-color: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    
+    .filter-bar {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding: 10px 0;
+    }
+    
+    .filter-option {
+      padding: 8px 16px;
+      background-color: var(--background);
+      border-radius: 20px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    
+    .filter-option.selected {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .event-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+    
+    .event-image {
+      height: 150px;
+      background-color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .event-details {
+      padding: 15px;
+    }
+    
+    .event-title {
+      margin: 0 0 5px 0;
+      font-size: 18px;
+    }
+    
+    .event-meta {
+      color: var(--text-medium);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .comment {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .comment-content {
+      flex: 1;
+    }
+    
+    .comment-author {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    
+    .comment-text {
+      color: var(--text-dark);
+    }
+    
+    .comment-input {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .comment-input input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 20px 0;
+      color: var(--text-medium);
+      font-size: 14px;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+    
+    .translation-key {
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--text-medium);
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 id="app-title">Kinza Berlin</h1>
+      <div class="language-selector">
+        <button class="language-button active" data-lang="en">English</button>
+        <button class="language-button" data-lang="de">Deutsch</button>
+        <button class="language-button" data-lang="it">Italiano</button>
+      </div>
+    </header>
+    
+    <div class="section">
+      <h2 id="preview-title">Translation Preview</h2>
+      <p id="preview-description">This page demonstrates the translation system in action. Click on the language buttons above to switch between languages.</p>
+    </div>
+    
+    <div class="section">
+      <h2 id="common-elements">Common UI Elements</h2>
+      
+      <div class="component-preview">
+        <div class="component-title">Buttons</div>
+        <button class="button" id="save-button">Save</button>
+        <button class="button secondary" id="cancel-button">Cancel</button>
+        <button class="button outline" id="delete-button">Delete</button>
+      </div>
+      
+      <div class="component-preview">
+        <div class="component-title">Messages</div>
+        <div id="loading-message">Loading...</div>
+        <div id="error-message" style="color: var(--error);">An error occurred</div>
+        <div id="success-message" style="color: var(--success);">Successfully saved</div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2 id="filters-title">Filters</h2>
+      
+      <div class="component-preview">
+        <div class="component-title">Filter Bar</div>
+        <div class="filter-bar">
+          <div class="filter-option selected" id="filter-all">All Categories</div>
+          <div class="filter-option" id="filter-art">Art & Culture</div>
+          <div class="filter-option" id="filter-music">Music</div>
+          <div class="filter-option" id="filter-sports">Sports</div>
+          <div class="filter-option" id="filter-education">Education</div>
+        </div>
+      </div>
+      
+      <div class="component-preview">
+        <div class="component-title">Age Ranges</div>
+        <div class="filter-bar">
+          <div class="filter-option selected" id="age-all">All Ages</div>
+          <div class="filter-option" id="age-toddler">Toddler (0-3)</div>
+          <div class="filter-option" id="age-preschool">Preschool (3-5)</div>
+          <div class="filter-option" id="age-child">Child (5-12)</div>
+          <div class="filter-option" id="age-teen">Teen (12-18)</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2 id="events-title">Events</h2>
+      
+      <div class="component-preview">
+        <div class="component-title">Event Card</div>
+        <div class="event-card">
+          <div class="event-image">Event Image</div>
+          <div class="event-details">
+            <h3 class="event-title" id="event-title">Summer Art Workshop</h3>
+            <div class="event-meta" id="event-date">Tomorrow, 10:00 AM</div>
+            <div class="event-meta" id="event-location">Berlin Art Gallery</div>
+            <div class="event-meta" id="event-age">Ages: 5-12</div>
+            <button class="button outline" id="save-event">Save Event</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2 id="comments-title">Comments</h2>
+      
+      <div class="component-preview">
+        <div class="component-title">Comment List</div>
+        <div class="comment">
+          <div class="avatar">JD</div>
+          <div class="comment-content">
+            <div class="comment-author">John Doe</div>
+            <div class="comment-text" id="comment-1">This event was amazing! My kids loved it.</div>
+          </div>
+        </div>
+        <div class="comment">
+          <div class="avatar">AS</div>
+          <div class="comment-content">
+            <div class="comment-author">Anna Schmidt</div>
+            <div class="comment-text" id="comment-2">Will there be another workshop next month?</div>
+          </div>
+        </div>
+        <div class="comment-input">
+          <div class="avatar">ME</div>
+          <input type="text" id="comment-input" placeholder="Write a comment...">
+          <button class="button" id="post-button">Post</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2 id="avatars-title">User Avatars</h2>
+      
+      <div class="component-preview">
+        <div class="component-title">Avatar Types</div>
+        <div style="display: flex; gap: 20px;">
+          <div>
+            <div class="avatar" style="background-color: var(--primary);">K</div>
+            <div id="avatar-koala">Koala avatar</div>
+            <div class="translation-key">avatar.koala</div>
+          </div>
+          <div>
+            <div class="avatar" style="background-color: var(--secondary);">F</div>
+            <div id="avatar-fox">Fox avatar</div>
+            <div class="translation-key">avatar.fox</div>
+          </div>
+          <div>
+            <div class="avatar" style="background-color: var(--accent);">B</div>
+            <div id="avatar-bunny">Bunny avatar</div>
+            <div class="translation-key">avatar.bunny</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer class="footer">
+      <div id="footer-text">© 2025 Kinza Berlin. All rights reserved.</div>
+    </footer>
+  </div>
+
+  <script>
+    // Translation data
+    const translations = {
+      en: {
+        "common.appName": "Kinza Berlin",
+        "common.loading": "Loading...",
+        "common.error": "An error occurred",
+        "common.save": "Save",
+        "common.cancel": "Cancel",
+        "common.delete": "Delete",
+        "common.success": "Successfully saved",
+        
+        "preview.title": "Translation Preview",
+        "preview.description": "This page demonstrates the translation system in action. Click on the language buttons above to switch between languages.",
+        
+        "ui.commonElements": "Common UI Elements",
+        "filters.title": "Filters",
+        "events.title": "Events",
+        "comments.title": "Comments",
+        "avatars.title": "User Avatars",
+        
+        "filters.allCategories": "All Categories",
+        "filters.art": "Art & Culture",
+        "filters.music": "Music",
+        "filters.sports": "Sports",
+        "filters.education": "Education",
+        
+        "filters.allAges": "All Ages",
+        "filters.toddler": "Toddler (0-3)",
+        "filters.preschool": "Preschool (3-5)",
+        "filters.child": "Child (5-12)",
+        "filters.teen": "Teen (12-18)",
+        
+        "events.summerWorkshop": "Summer Art Workshop",
+        "events.tomorrow": "Tomorrow, 10:00 AM",
+        "events.location": "Berlin Art Gallery",
+        "events.ageRange": "Ages: 5-12",
+        "events.saveEvent": "Save Event",
+        
+        "comments.amazing": "This event was amazing! My kids loved it.",
+        "comments.question": "Will there be another workshop next month?",
+        "comments.writeComment": "Write a comment...",
+        "comments.post": "Post",
+        
+        "avatar.koala": "Koala avatar",
+        "avatar.fox": "Fox avatar",
+        "avatar.bunny": "Bunny avatar",
+        
+        "footer.copyright": "© 2025 Kinza Berlin. All rights reserved."
+      },
+      de: {
+        "common.appName": "Kinza Berlin",
+        "common.loading": "Wird geladen...",
+        "common.error": "Ein Fehler ist aufgetreten",
+        "common.save": "Speichern",
+        "common.cancel": "Abbrechen",
+        "common.delete": "Löschen",
+        "common.success": "Erfolgreich gespeichert",
+        
+        "preview.title": "Übersetzungsvorschau",
+        "preview.description": "Diese Seite demonstriert das Übersetzungssystem in Aktion. Klicken Sie auf die Sprachschaltflächen oben, um zwischen den Sprachen zu wechseln.",
+        
+        "ui.commonElements": "Allgemeine UI-Elemente",
+        "filters.title": "Filter",
+        "events.title": "Veranstaltungen",
+        "comments.title": "Kommentare",
+        "avatars.title": "Benutzer-Avatare",
+        
+        "filters.allCategories": "Alle Kategorien",
+        "filters.art": "Kunst & Kultur",
+        "filters.music": "Musik",
+        "filters.sports": "Sport",
+        "filters.education": "Bildung",
+        
+        "filters.allAges": "Alle Altersgruppen",
+        "filters.toddler": "Kleinkind (0-3)",
+        "filters.preschool": "Vorschule (3-5)",
+        "filters.child": "Kind (5-12)",
+        "filters.teen": "Jugendliche (12-18)",
+        
+        "events.summerWorkshop": "Sommer-Kunstworkshop",
+        "events.tomorrow": "Morgen, 10:00 Uhr",
+        "events.location": "Berliner Kunstgalerie",
+        "events.ageRange": "Alter: 5-12",
+        "events.saveEvent": "Veranstaltung speichern",
+        
+        "comments.amazing": "Diese Veranstaltung war toll! Meine Kinder haben es geliebt.",
+        "comments.question": "Wird es nächsten Monat einen weiteren Workshop geben?",
+        "comments.writeComment": "Schreibe einen Kommentar...",
+        "comments.post": "Posten",
+        
+        "avatar.koala": "Koala-Avatar",
+        "avatar.fox": "Fuchs-Avatar",
+        "avatar.bunny": "Hasen-Avatar",
+        
+        "footer.copyright": "© 2025 Kinza Berlin. Alle Rechte vorbehalten."
+      },
+      it: {
+        "common.appName": "Kinza Berlin",
+        "common.loading": "Caricamento in corso...",
+        "common.error": "Si è verificato un errore",
+        "common.save": "Salva",
+        "common.cancel": "Annulla",
+        "common.delete": "Elimina",
+        "common.success": "Salvato con successo",
+        
+        "preview.title": "Anteprima Traduzioni",
+        "preview.description": "Questa pagina dimostra il sistema di traduzione in azione. Clicca sui pulsanti delle lingue sopra per passare da una lingua all'altra.",
+        
+        "ui.commonElements": "Elementi UI Comuni",
+        "filters.title": "Filtri",
+        "events.title": "Eventi",
+        "comments.title": "Commenti",
+        "avatars.title": "Avatar Utente",
+        
+        "filters.allCategories": "Tutte le Categorie",
+        "filters.art": "Arte e Cultura",
+        "filters.music": "Musica",
+        "filters.sports": "Sport",
+        "filters.education": "Educazione",
+        
+        "filters.allAges": "Tutte le età",
+        "filters.toddler": "Bambini piccoli (0-3)",
+        "filters.preschool": "Prescolare (3-5)",
+        "filters.child": "Bambini (5-12)",
+        "filters.teen": "Adolescenti (12-18)",
+        
+        "events.summerWorkshop": "Workshop Estivo di Arte",
+        "events.tomorrow": "Domani, 10:00",
+        "events.location": "Galleria d'Arte di Berlino",
+        "events.ageRange": "Età: 5-12",
+        "events.saveEvent": "Salva Evento",
+        
+        "comments.amazing": "Questo evento è stato fantastico! I miei bambini lo hanno adorato.",
+        "comments.question": "Ci sarà un altro workshop il mese prossimo?",
+        "comments.writeComment": "Scrivi un commento...",
+        "comments.post": "Pubblica",
+        
+        "avatar.koala": "Avatar koala",
+        "avatar.fox": "Avatar volpe",
+        "avatar.bunny": "Avatar coniglio",
+        
+        "footer.copyright": "© 2025 Kinza Berlin. Tutti i diritti riservati."
+      }
+    };
+    
+    // Current language
+    let currentLanguage = 'en';
+    
+    // Function to update UI with translations
+    function updateTranslations(lang) {
+      // Update active language button
+      document.querySelectorAll('.language-button').forEach(button => {
+        button.classList.toggle('active', button.dataset.lang === lang);
+      });
+      
+      // Update all translated elements
+      document.getElementById('app-title').textContent = translations[lang]['common.appName'];
+      document.getElementById('preview-title').textContent = translations[lang]['preview.title'];
+      document.getElementById('preview-description').textContent = translations[lang]['preview.description'];
+      document.getElementById('common-elements').textContent = translations[lang]['ui.commonElements'];
+      document.getElementById('filters-title').textContent = translations[lang]['filters.title'];
+      document.getElementById('events-title').textContent = translations[lang]['events.title'];
+      document.getElementById('comments-title').textContent = translations[lang]['comments.title'];
+      document.getElementById('avatars-title').textContent = translations[lang]['avatars.title'];
+      
+      // Buttons
+      document.getElementById('save-button').textContent = translations[lang]['common.save'];
+      document.getElementById('cancel-button').textContent = translations[lang]['common.cancel'];
+      document.getElementById('delete-button').textContent = translations[lang]['common.delete'];
+      
+      // Messages
+      document.getElementById('loading-message').textContent = translations[lang]['common.loading'];
+      document.getElementById('error-message').textContent = translations[lang]['common.error'];
+      document.getElementById('success-message').textContent = translations[lang]['common.success'];
+      
+      // Filters
+      document.getElementById('filter-all').textContent = translations[lang]['filters.allCategories'];
+      document.getElementById('filter-art').textContent = translations[lang]['filters.art'];
+      document.getElementById('filter-music').textContent = translations[lang]['filters.music'];
+      document.getElementById('filter-sports').textContent = translations[lang]['filters.sports'];
+      document.getElementById('filter-education').textContent = translations[lang]['filters.education'];
+      
+      // Age ranges
+      document.getElementById('age-all').textContent = translations[lang]['filters.allAges'];
+      document.getElementById('age-toddler').textContent = translations[lang]['filters.toddler'];
+      document.getElementById('age-preschool').textContent = translations[lang]['filters.preschool'];
+      document.getElementById('age-child').textContent = translations[lang]['filters.child'];
+      document.getElementById('age-teen').textContent = translations[lang]['filters.teen'];
+      
+      // Event
+      document.getElementById('event-title').textContent = translations[lang]['events.summerWorkshop'];
+      document.getElementById('event-date').textContent = translations[lang]['events.tomorrow'];
+      document.getElementById('event-location').textContent = translations[lang]['events.location'];
+      document.getElementById('event-age').textContent = translations[lang]['events.ageRange'];
+      document.getElementById('save-event').textContent = translations[lang]['events.saveEvent'];
+      
+      // Comments
+      document.getElementById('comment-1').textContent = translations[lang]['comments.amazing'];
+      document.getElementById('comment-2').textContent = translations[lang]['comments.question'];
+      document.getElementById('comment-input').placeholder = translations[lang]['comments.writeComment'];
+      document.getElementById('post-button').textContent = translations[lang]['comments.post'];
+      
+      // Avatars
+      document.getElementById('avatar-koala').textContent = translations[lang]['avatar.koala'];
+      document.getElementById('avatar-fox').textContent = translations[lang]['avatar.fox'];
+      document.getElementById('avatar-bunny').textContent = translations[lang]['avatar.bunny'];
+      
+      // Footer
+      document.getElementById('footer-text').textContent = translations[lang]['footer.copyright'];
+    }
+    
+    // Initialize with English
+    updateTranslations(currentLanguage);
+    
+    // Add event listeners to language buttons
+    document.querySelectorAll('.language-button').forEach(button => {
+      button.addEventListener('click', () => {
+        currentLanguage = button.dataset.lang;
+        updateTranslations(currentLanguage);
+      });
+    });
+  </script>
+</body>
+</html>

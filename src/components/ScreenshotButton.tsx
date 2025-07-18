@@ -1,7 +1,10 @@
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, Alert, Platform } from 'react-native';
+import React, { useRef } from 'react';
+import { TouchableOpacity, Text, StyleSheet, Alert, Platform, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useScreenshot } from '../utils/screenshot';
+import theme from '../styles/theme';
+import useFocusState from '../hooks/useFocusState';
+import { withStyleFallback, withColorFallback, withFontFallback } from '../utils/styleUtils';
 
 interface ScreenshotButtonProps {
   title?: string;
@@ -16,6 +19,25 @@ export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
   style 
 }) => {
   const { saveScreenshotToDesktop } = useScreenshot();
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const { focusHandlers, focusStyles } = useFocusState();
+  
+  // Bounce animation for button press
+  const animateScale = () => {
+    Animated.sequence([
+      Animated.timing(scaleAnim, {
+        toValue: 0.95,
+        duration: 100,
+        useNativeDriver: true
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 4,
+        tension: 40,
+        useNativeDriver: true
+      })
+    ]).start();
+  };
 
   const handleScreenshot = async () => {
     try {
@@ -46,15 +68,30 @@ export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
   };
 
   return (
-    <TouchableOpacity 
-      style={[styles.button, style]} 
-      onPress={handleScreenshot}
-      accessibilityLabel="Take screenshot"
-      accessibilityHint="Saves a screenshot to your desktop"
-    >
-      <Ionicons name="camera-outline" size={20} color="#FFFFFF" style={styles.icon} />
-      <Text style={styles.text}>{title}</Text>
-    </TouchableOpacity>
+    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+      <TouchableOpacity 
+        style={withStyleFallback([styles.button, style, focusStyles], { 
+          backgroundColor: '#E06B8B', // Fallback to our primary color
+          borderRadius: 16,
+          padding: 12,
+          flexDirection: 'row',
+          alignItems: 'center',
+          minHeight: 44
+        })} 
+        onPress={() => {
+          animateScale();
+          handleScreenshot();
+        }}
+        accessibilityLabel="Take screenshot"
+        accessibilityHint="Saves a screenshot to your desktop"
+        accessible={true}
+        accessibilityRole="button"
+        {...focusHandlers}
+      >
+        <Ionicons name="camera-outline" size={20} color={theme.colors.text.inverse} style={styles.icon} aria-label="Camera" />
+        <Text style={styles.text}>{title}</Text>
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 
@@ -62,23 +99,20 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#4A90E2',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    backgroundColor: theme.colors.primary,
+    paddingVertical: theme.spacing[2],
+    paddingHorizontal: theme.spacing[4],
+    borderRadius: theme.borders.radius.xl, // 16px corner radius per requirements
+    minHeight: theme.layout.touchableMinHeight, // Ensure 44px minimum height for accessibility
+    ...theme.shadows.md, // Add soft shadow per requirements
   },
   icon: {
-    marginRight: 8,
+    marginRight: theme.spacing[2],
   },
   text: {
-    color: '#FFFFFF',
-    fontWeight: '600',
-    fontSize: 16,
+    color: theme.colors.text.inverse,
+    fontFamily: theme.typography.fontFamily.heading, // Poppins bold for buttons per requirements
+    fontSize: theme.typography.fontSize.base, // 16px for text per requirements
   },
 });
 

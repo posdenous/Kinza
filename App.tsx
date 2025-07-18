@@ -10,6 +10,9 @@ import { getAuth } from 'firebase/auth';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './src/utils/i18n';
 
+// Import custom components
+import CustomTabBar from './src/components/CustomTabBar';
+
 // Import screens
 import PrivacyScreen from './src/screens/PrivacyScreen';
 import TrustScreen from './src/screens/TrustScreen';
@@ -42,13 +45,18 @@ const Tab = createBottomTabNavigator();
 // Main tab navigator
 function MainTabs() {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
+    <Tab.Navigator
+      tabBar={props => <CustomTabBar {...props} />}
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Tab.Screen name="Home" component={HomeStack} />
       <Tab.Screen 
         name="Search" 
         component={(props: any) => <SearchResultsScreen {...props} route={{ params: { cityId: 'berlin' } }} />} 
       />
-      <Tab.Screen name="Profile" component={ProfileStack} options={{ headerShown: false }} />
+      <Tab.Screen name="Profile" component={ProfileStack} />
     </Tab.Navigator>
   );
 }

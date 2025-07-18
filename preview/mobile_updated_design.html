@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kinza Berlin - Mobile Design Preview</title>
+  <style>
+    /* Global Styles */
+    :root {
+      /* Color Palette */
+      --color-primary: #E06B8B;
+      --color-secondary: #6B7AE0;
+      --color-accent: #6BE0B8;
+      --color-background: #F8F9FA;
+      --color-text-dark: #333333;
+      --color-text-light: #666666;
+      --color-text-inverse: #FFFFFF;
+      --color-border: #E0E0E0;
+      
+      /* Gradients */
+      --gradient-map: linear-gradient(135deg, #F8E9F0 0%, #E8F0F8 100%);
+      --gradient-profile: linear-gradient(135deg, #E8F0F8 0%, #E9F8F0 100%);
+      
+      /* Spacing */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--color-background);
+      color: var(--color-text-dark);
+      line-height: 1.6;
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+      -webkit-touch-callout: none;
+    }
+    
+    h1, h2, h3, h4, h5, h6, .heading-text, .button-text {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-weight: 700;
+    }
+    
+    /* Layout */
+    .container {
+      width: 100%;
+      margin: 0 auto;
+      background-color: white;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .screen {
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+      padding-bottom: 60px;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Map Screen */
+    .map-screen {
+      background: var(--gradient-map);
+      height: 100%;
+      position: relative;
+    }
+    
+    .map-placeholder {
+      height: 50%;
+      background-color: #E8F0F8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-light);
+      font-size: 16px;
+    }
+    
+    /* Profile Screen */
+    .profile-screen {
+      background: var(--gradient-profile);
+      height: 100%;
+      padding: var(--space-3);
+    }
+    
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--space-4) 0;
+      background-color: white;
+      border-radius: 16px;
+      margin-bottom: var(--space-3);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .profile-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 35px;
+      background-color: var(--color-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-3);
+      color: white;
+      font-size: 35px;
+    }
+    
+    .profile-name {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      margin: 0;
+      color: var(--color-text-dark);
+    }
+    
+    .profile-email {
+      font-size: 14px;
+      color: var(--color-text-light);
+      margin: var(--space-1) 0 0;
+    }
+    
+    .menu-container {
+      background-color: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+      min-height: 44px;
+    }
+    
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+    
+    .menu-item:active {
+      background-color: rgba(107, 122, 224, 0.05);
+    }
+    
+    .menu-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: var(--space-3);
+      color: var(--color-primary);
+    }
+    
+    .menu-text {
+      flex: 1;
+      font-size: 16px;
+    }
+    
+    /* Event Card */
+    .event-card {
+      background-color: white;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: var(--space-3);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    
+    .event-card:active {
+      opacity: 0.9;
+    }
+    
+    .event-image {
+      height: 140px;
+      background-color: #E0E0E0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+    }
+    
+    .event-age-badge {
+      position: absolute;
+      top: var(--space-2);
+      left: var(--space-2);
+      background-color: var(--color-primary);
+      color: white;
+      padding: var(--space-1) var(--space-2);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .event-save-button {
+      position: absolute;
+      top: var(--space-2);
+      right: var(--space-2);
+      background-color: var(--color-primary);
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+    
+    .event-save-button:active {
+      background-color: #D05A7A;
+      transform: scale(0.95);
+    }
+    
+    .event-content {
+      padding: var(--space-3);
+    }
+    
+    .event-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      margin: 0 0 var(--space-1);
+      color: var(--color-text-dark);
+    }
+    
+    .event-details {
+      font-size: 14px;
+      color: var(--color-text-light);
+      margin: 0 0 var(--space-2);
+    }
+    
+    .event-location {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: var(--color-text-light);
+    }
+    
+    .event-location-icon {
+      margin-right: var(--space-1);
+      color: var(--color-primary);
+    }
+    
+    /* Screenshot Button */
+    .screenshot-button {
+      position: fixed;
+      bottom: 70px;
+      right: 16px;
+      background-color: var(--color-primary);
+      color: white;
+      padding: var(--space-2) var(--space-3);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      box-shadow: var(--shadow-md);
+      z-index: 10;
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+    
+    .screenshot-button:active {
+      transform: scale(0.95);
+      background-color: #D05A7A;
+    }
+    
+    .screenshot-icon {
+      margin-right: var(--space-2);
+    }
+    
+    .screenshot-text {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid var(--color-border);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: var(--color-text-light);
+      min-height: 44px;
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+    
+    .nav-item.active {
+      color: var(--color-primary);
+    }
+    
+    .nav-item.active .nav-text {
+      font-weight: 700;
+      text-decoration: underline;
+    }
+    
+    .nav-icon {
+      font-size: 24px;
+    }
+    
+    .nav-text {
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    
+    /* Cartoon Animal Avatars */
+    .animal-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 35px;
+      margin-bottom: var(--space-3);
+    }
+    
+    .animal-avatar.koala {
+      background-color: #8E8E93;
+    }
+    
+    .animal-avatar.fox {
+      background-color: #FF9500;
+    }
+    
+    .animal-avatar.bunny {
+      background-color: #FF2D55;
+    }
+    
+    /* Mobile-specific styles */
+    .language-switcher {
+      display: flex;
+      background-color: var(--color-primary);
+      padding: 5px;
+      justify-content: flex-end;
+    }
+    
+    .language-option {
+      color: white;
+      padding: 5px 8px;
+      margin: 0 2px;
+      font-size: 14px;
+      border-radius: 4px;
+      text-decoration: none;
+    }
+    
+    .language-option.active {
+      background-color: rgba(255, 255, 255, 0.2);
+      font-weight: bold;
+    }
+    
+    .page-header {
+      padding: 12px;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .screen-selector {
+      display: flex;
+      background-color: #f0f0f0;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .screen-option {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      background-color: #f0f0f0;
+      border: none;
+      color: var(--color-text-dark);
+    }
+    
+    .screen-option.active {
+      background-color: var(--color-primary);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+      <a href="#" id="lang-en" class="language-option active">EN</a>
+      <a href="#" id="lang-de" class="language-option">DE</a>
+      <a href="#" id="lang-it" class="language-option">IT</a>
+    </div>
+    
+    <!-- Page Header -->
+    <div class="page-header">
+      Kinza Berlin
+    </div>
+    
+    <!-- Screen Selector -->
+    <div style="padding: 8px;">
+      <div class="screen-selector">
+        <button id="mapTab" class="screen-option active" data-i18n="home">Home</button>
+        <button id="profileTab" class="screen-option" data-i18n="profile">Profile</button>
+      </div>
+    </div>
+    
+    <!-- Map Screen -->
+    <div id="mapScreen" class="screen map-screen">
+      <div class="map-placeholder">
+        <div>Map View</div>
+      </div>
+      
+      <div style="padding: 12px;">
+        <h2 style="font-family: 'Poppins', sans-serif; font-weight: 700; margin-bottom: 12px; font-size: 18px;" data-i18n="events.nearby">Nearby Events</h2>
+        
+        <!-- Event Card 1 -->
+        <div class="event-card" role="button" aria-label="Summer Art Workshop event details">
+          <div class="event-image">
+            <span>📷</span>
+            <div class="event-age-badge">5-12</div>
+            <button class="event-save-button" aria-label="Save event">
+              <span>♡</span>
+            </button>
+          </div>
+          <div class="event-content">
+            <h3 class="event-title" data-i18n="events.summerArt">Summer Art Workshop</h3>
+            <p class="event-details" data-i18n="events.summerArtDesc">Join us for a fun-filled day of creative art activities designed for children.</p>
+            <div class="event-location">
+              <span class="event-location-icon">📍</span>
+              <span data-i18n="location.kulturhaus">Kulturhaus Schöneberg</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Event Card 2 -->
+        <div class="event-card" role="button" aria-label="Music for Kids event details">
+          <div class="event-image">
+            <span>📷</span>
+            <div class="event-age-badge">3-8</div>
+            <button class="event-save-button" aria-label="Save event">
+              <span>♡</span>
+            </button>
+          </div>
+          <div class="event-content">
+            <h3 class="event-title" data-i18n="events.musicKids">Music for Kids</h3>
+            <p class="event-details" data-i18n="events.musicKidsDesc">Interactive music session where children can explore different instruments.</p>
+            <div class="event-location">
+              <span class="event-location-icon">📍</span>
+              <span data-i18n="location.musikschule">Musikschule Kreuzberg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <button class="screenshot-button" aria-label="Take screenshot">
+        <span class="screenshot-icon">📸</span>
+        <span class="screenshot-text" data-i18n="buttons.screenshot">Save Screenshot</span>
+      </button>
+    </div>
+    
+    <!-- Profile Screen -->
+    <div id="profileScreen" class="screen profile-screen" style="display: none;">
+      <div class="profile-header">
+        <!-- Cartoon Animal Avatar - Koala -->
+        <div class="animal-avatar koala" aria-label="Koala avatar">
+          🐨
+        </div>
+        <h2 class="profile-name">User Name</h2>
+        <p class="profile-email">user@example.com</p>
+      </div>
+      
+      <div class="menu-container">
+        <div class="menu-item" role="button" aria-label="Navigate to Saved Events">
+          <span class="menu-icon">❤️</span>
+          <span class="menu-text" data-i18n="profile.savedEvents">Saved Events</span>
+          <span>›</span>
+        </div>
+        <div class="menu-item" role="button" aria-label="Navigate to Settings">
+          <span class="menu-icon">⚙️</span>
+          <span class="menu-text" data-i18n="profile.settings">Settings</span>
+          <span>›</span>
+        </div>
+        <div class="menu-item" role="button" aria-label="Navigate to Privacy">
+          <span class="menu-icon">🔒</span>
+          <span class="menu-text" data-i18n="profile.privacy">Privacy</span>
+          <span>›</span>
+        </div>
+        <div class="menu-item" role="button" aria-label="Navigate to Help">
+          <span class="menu-icon">❓</span>
+          <span class="menu-text" data-i18n="profile.help">Help</span>
+          <span>›</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <div class="nav-item active" id="homeNav" role="button" aria-label="Home tab">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-text" data-i18n="home">Home</div>
+      </div>
+      <div class="nav-item" id="searchNav" role="button" aria-label="Search tab">
+        <div class="nav-icon">🔍</div>
+        <div class="nav-text" data-i18n="search">Search</div>
+      </div>
+      <div class="nav-item" id="profileNav" role="button" aria-label="Profile tab">
+        <div class="nav-icon">👤</div>
+        <div class="nav-text" data-i18n="profile">Profile</div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Translations
+    const translations = {
+      en: {
+        'home': 'Home',
+        'profile': 'Profile',
+        'search': 'Search',
+        'events.nearby': 'Nearby Events',
+        'events.saveEvent': 'Save event',
+        'events.unsaveEvent': 'Remove from saved',
+        'events.noImage': 'No image available',
+        'profile.savedEvents': 'Saved Events',
+        'profile.settings': 'Settings',
+        'profile.privacy': 'Privacy',
+        'profile.help': 'Help',
+        'buttons.screenshot': 'Save Screenshot',
+        'events.summerArt': 'Summer Art Workshop',
+        'events.summerArtDesc': 'Join us for a fun-filled day of creative art activities designed for children.',
+        'events.musicKids': 'Music for Kids',
+        'events.musicKidsDesc': 'Interactive music session where children can explore different instruments.',
+        'location.kulturhaus': 'Kulturhaus Schöneberg',
+        'location.musikschule': 'Musikschule Kreuzberg'
+      },
+      de: {
+        'home': 'Start',
+        'profile': 'Profil',
+        'search': 'Suche',
+        'events.nearby': 'Events in der Nähe',
+        'events.saveEvent': 'Event speichern',
+        'events.unsaveEvent': 'Von gespeicherten entfernen',
+        'events.noImage': 'Kein Bild verfügbar',
+        'profile.savedEvents': 'Gespeicherte Events',
+        'profile.settings': 'Einstellungen',
+        'profile.privacy': 'Datenschutz',
+        'profile.help': 'Hilfe',
+        'buttons.screenshot': 'Screenshot speichern',
+        'events.summerArt': 'Sommer Kunstworkshop',
+        'events.summerArtDesc': 'Erlebe einen Tag voller kreativer Kunstaktivitäten für Kinder.',
+        'events.musicKids': 'Musik für Kinder',
+        'events.musicKidsDesc': 'Interaktive Musiksession, bei der Kinder verschiedene Instrumente erkunden können.',
+        'location.kulturhaus': 'Kulturhaus Schöneberg',
+        'location.musikschule': 'Musikschule Kreuzberg'
+      },
+      it: {
+        'home': 'Home',
+        'profile': 'Profilo',
+        'search': 'Cerca',
+        'events.nearby': 'Eventi vicini',
+        'events.saveEvent': 'Salva evento',
+        'events.unsaveEvent': 'Rimuovi dai salvati',
+        'events.noImage': 'Nessuna immagine disponibile',
+        'profile.savedEvents': 'Eventi salvati',
+        'profile.settings': 'Impostazioni',
+        'profile.privacy': 'Privacy',
+        'profile.help': 'Aiuto',
+        'buttons.screenshot': 'Salva screenshot',
+        'events.summerArt': 'Workshop d\'Arte Estivo',
+        'events.summerArtDesc': 'Unisciti a noi per una giornata divertente piena di attività artistiche creative per bambini.',
+        'events.musicKids': 'Musica per Bambini',
+        'events.musicKidsDesc': 'Sessione musicale interattiva dove i bambini possono esplorare diversi strumenti.',
+        'location.kulturhaus': 'Kulturhaus Schöneberg',
+        'location.musikschule': 'Musikschule Kreuzberg'
+      }
+    };
+    
+    // Current language
+    let currentLanguage = 'en';
+    
+    // Function to translate the UI
+    function translateUI(lang) {
+      currentLanguage = lang;
+      
+      // Update language switcher styling
+      document.querySelectorAll('.language-option').forEach(el => {
+        el.classList.remove('active');
+      });
+      document.getElementById('lang-' + lang).classList.add('active');
+      
+      // Translate all elements with data-i18n attribute
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+    }
+    
+    // Set up language switchers
+    document.getElementById('lang-en').addEventListener('click', function(e) {
+      e.preventDefault();
+      translateUI('en');
+    });
+    
+    document.getElementById('lang-de').addEventListener('click', function(e) {
+      e.preventDefault();
+      translateUI('de');
+    });
+    
+    document.getElementById('lang-it').addEventListener('click', function(e) {
+      e.preventDefault();
+      translateUI('it');
+    });
+    
+    // Tab switching functionality
+    document.getElementById('mapTab').addEventListener('click', function() {
+      document.getElementById('mapScreen').style.display = 'block';
+      document.getElementById('profileScreen').style.display = 'none';
+      document.getElementById('mapTab').classList.add('active');
+      document.getElementById('profileTab').classList.remove('active');
+      
+      // Update bottom nav
+      document.getElementById('homeNav').classList.add('active');
+      document.getElementById('profileNav').classList.remove('active');
+    });
+    
+    document.getElementById('profileTab').addEventListener('click', function() {
+      document.getElementById('mapScreen').style.display = 'none';
+      document.getElementById('profileScreen').style.display = 'block';
+      document.getElementById('profileTab').classList.add('active');
+      document.getElementById('mapTab').classList.remove('active');
+      
+      // Update bottom nav
+      document.getElementById('homeNav').classList.remove('active');
+      document.getElementById('profileNav').classList.add('active');
+    });
+    
+    // Bottom nav functionality
+    document.getElementById('homeNav').addEventListener('click', function() {
+      document.getElementById('mapScreen').style.display = 'block';
+      document.getElementById('profileScreen').style.display = 'none';
+      document.getElementById('mapTab').classList.add('active');
+      document.getElementById('profileTab').classList.remove('active');
+      
+      document.getElementById('homeNav').classList.add('active');
+      document.getElementById('profileNav').classList.remove('active');
+    });
+    
+    document.getElementById('profileNav').addEventListener('click', function() {
+      document.getElementById('mapScreen').style.display = 'none';
+      document.getElementById('profileScreen').style.display = 'block';
+      document.getElementById('profileTab').classList.add('active');
+      document.getElementById('mapTab').classList.remove('active');
+      
+      document.getElementById('homeNav').classList.remove('active');
+      document.getElementById('profileNav').classList.add('active');
+    });
+    
+    // Simulate screenshot button animation
+    const screenshotButton = document.querySelector('.screenshot-button');
+    screenshotButton.addEventListener('click', function() {
+      this.style.transform = 'scale(0.9)';
+      setTimeout(() => {
+        this.style.transform = 'scale(1)';
+        alert('Screenshot saved!');
+      }, 200);
+    });
+    
+    // Switch between animal avatars for demo
+    const animalAvatar = document.querySelector('.animal-avatar');
+    const animals = ['koala', 'fox', 'bunny'];
+    const animalEmojis = ['🐨', '🦊', '🐰'];
+    let currentAnimal = 0;
+    
+    animalAvatar.addEventListener('click', function() {
+      currentAnimal = (currentAnimal + 1) % 3;
+      this.className = 'animal-avatar ' + animals[currentAnimal];
+      this.innerHTML = animalEmojis[currentAnimal];
+      this.setAttribute('aria-label', animals[currentAnimal] + ' avatar');
+    });
+    
+    // Initialize translations
+    translateUI('en');
+  </script>
+</body>
+</html>

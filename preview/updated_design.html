@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinza Berlin - Updated Design Preview</title>
+  <style>
+    /* Global Styles */
+    :root {
+      /* Color Palette */
+      --color-primary: #E06B8B;
+      --color-secondary: #6B7AE0;
+      --color-accent: #6BE0B8;
+      --color-background: #F8F9FA;
+      --color-text-dark: #333333;
+      --color-text-light: #666666;
+      --color-text-inverse: #FFFFFF;
+      --color-border: #E0E0E0;
+      
+      /* Gradients */
+      --gradient-map: linear-gradient(135deg, #F8E9F0 0%, #E8F0F8 100%);
+      --gradient-profile: linear-gradient(135deg, #E8F0F8 0%, #E9F8F0 100%);
+      
+      /* Spacing */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--color-background);
+      color: var(--color-text-dark);
+      line-height: 1.6;
+    }
+    
+    h1, h2, h3, h4, h5, h6, .heading-text, .button-text {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-weight: 700;
+    }
+    
+    /* Layout */
+    .container {
+      max-width: 414px;
+      margin: 0 auto;
+      background-color: white;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .screen {
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+      padding-bottom: 60px;
+    }
+    
+    /* Map Screen */
+    .map-screen {
+      background: var(--gradient-map);
+      height: 100%;
+      position: relative;
+    }
+    
+    .map-placeholder {
+      height: 70%;
+      background-color: #E8F0F8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-light);
+      font-size: 18px;
+    }
+    
+    /* Profile Screen */
+    .profile-screen {
+      background: var(--gradient-profile);
+      height: 100%;
+      padding: var(--space-4);
+    }
+    
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--space-6) 0;
+      background-color: white;
+      border-radius: 16px;
+      margin-bottom: var(--space-4);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      background-color: var(--color-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-4);
+      color: white;
+      font-size: 40px;
+    }
+    
+    .profile-name {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      margin: 0;
+      color: var(--color-text-dark);
+    }
+    
+    .profile-email {
+      font-size: 16px;
+      color: var(--color-text-light);
+      margin: var(--space-1) 0 0;
+    }
+    
+    .menu-container {
+      background-color: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      min-height: 44px;
+    }
+    
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+    
+    .menu-item:focus-visible {
+      outline: 2px solid var(--color-secondary);
+      background-color: rgba(107, 122, 224, 0.05);
+    }
+    
+    .menu-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: var(--space-3);
+      color: var(--color-primary);
+    }
+    
+    .menu-text {
+      flex: 1;
+      font-size: 16px;
+    }
+    
+    /* Event Card */
+    .event-card {
+      background-color: white;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: var(--space-4);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    
+    .event-card:focus-visible {
+      outline: 2px solid var(--color-secondary);
+    }
+    
+    .event-image {
+      height: 160px;
+      background-color: #E0E0E0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+    }
+    
+    .event-age-badge {
+      position: absolute;
+      top: var(--space-3);
+      left: var(--space-3);
+      background-color: var(--color-primary);
+      color: white;
+      padding: var(--space-1) var(--space-2);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .event-save-button {
+      position: absolute;
+      top: var(--space-3);
+      right: var(--space-3);
+      background-color: var(--color-primary);
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .event-save-button:focus-visible {
+      outline: 2px solid var(--color-secondary);
+      background-color: #D05A7A;
+    }
+    
+    .event-content {
+      padding: var(--space-4);
+    }
+    
+    .event-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      margin: 0 0 var(--space-2);
+      color: var(--color-text-dark);
+    }
+    
+    .event-details {
+      font-size: 14px;
+      color: var(--color-text-light);
+      margin: 0 0 var(--space-3);
+    }
+    
+    .event-location {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: var(--color-text-light);
+    }
+    
+    .event-location-icon {
+      margin-right: var(--space-2);
+      color: var(--color-primary);
+    }
+    
+    /* Screenshot Button */
+    .screenshot-button {
+      position: fixed;
+      bottom: 70px;
+      right: 20px;
+      background-color: var(--color-primary);
+      color: white;
+      padding: var(--space-3) var(--space-4);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      box-shadow: var(--shadow-md);
+      z-index: 10;
+      transition: transform 0.2s;
+    }
+    
+    .screenshot-button:active {
+      transform: scale(0.95);
+    }
+    
+    .screenshot-button:focus-visible {
+      outline: 2px solid var(--color-secondary);
+      background-color: #D05A7A;
+    }
+    
+    .screenshot-icon {
+      margin-right: var(--space-2);
+    }
+    
+    .screenshot-text {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 414px;
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid var(--color-border);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 100%;
+      color: var(--color-text-light);
+      min-height: 44px;
+    }
+    
+    .nav-item.active {
+      color: var(--color-primary);
+    }
+    
+    .nav-item.active .nav-text {
+      font-weight: 700;
+      text-decoration: underline;
+    }
+    
+    .nav-icon {
+      font-size: 24px;
+    }
+    
+    .nav-text {
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    
+    /* Cartoon Animal Avatars */
+    .animal-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 40px;
+      margin-bottom: var(--space-4);
+    }
+    
+    .animal-avatar.koala {
+      background-color: #8E8E93;
+    }
+    
+    .animal-avatar.fox {
+      background-color: #FF9500;
+    }
+    
+    .animal-avatar.bunny {
+      background-color: #FF2D55;
+    }
+    
+    /* Responsive font loading */
+    @media screen and (max-width: 320px) {
+      body {
+        font-size: 14px;
+      }
+      
+      .event-title {
+        font-size: 16px;
+      }
+    }
+    
+    /* Focus visible polyfill styles */
+    .js-focus-visible :focus:not(.focus-visible) {
+      outline: none;
+    }
+    
+    .js-focus-visible .focus-visible {
+      outline: 2px solid var(--color-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navigation to other preview pages -->
+    <div style="background-color: #333; color: white; padding: 10px; text-align: center; font-size: 14px;">
+      Preview Pages: 
+      <a href="index.html" style="color: white; margin: 0 5px;">Index</a> | 
+      <a href="map_view.html" style="color: white; margin: 0 5px;">Map View</a> | 
+      <a href="organiser_dashboard.html" style="color: white; margin: 0 5px;">Organiser Dashboard</a> | 
+      <a href="admin_dashboard.html" style="color: white; margin: 0 5px;">Admin Dashboard</a> | 
+      <a href="saved_events.html" style="color: white; margin: 0 5px;">Saved Events</a> | 
+      <a href="mobile_privacy.html" style="color: white; margin: 0 5px;">Privacy</a>
+    </div>
+    
+    <!-- Language Switcher -->
+    <div style="background-color: #E06B8B; color: white; padding: 5px; text-align: right; font-size: 14px;">
+      <span style="margin-right: 10px;">Language:</span>
+      <a href="#" id="lang-en" style="color: white; margin: 0 5px; font-weight: bold;">EN</a> | 
+      <a href="#" id="lang-de" style="color: white; margin: 0 5px;">DE</a> | 
+      <a href="#" id="lang-it" style="color: white; margin: 0 5px;">IT</a>
+    </div>
+    
+    <!-- Tabs for switching between screens -->
+    <div style="display: flex; background-color: #f0f0f0; padding: 10px;">
+      <button id="mapTab" style="flex: 1; padding: 8px; background: #E06B8B; color: white; border: none; border-radius: 4px 0 0 4px;" data-i18n="home">Home</button>
+      <button id="profileTab" style="flex: 1; padding: 8px; background: #f0f0f0; color: #333; border: none; border-radius: 0 4px 4px 0;" data-i18n="profile">Profile</button>
+    </div>
+    
+    <!-- Map Screen -->
+    <div id="mapScreen" class="screen map-screen">
+      <div class="map-placeholder">
+        <div>Map View</div>
+      </div>
+      
+      <div style="padding: 16px;">
+        <h2 style="font-family: 'Poppins', sans-serif; font-weight: 700; margin-bottom: 16px;" data-i18n="events.nearby">Nearby Events</h2>
+        
+        <!-- Event Card 1 -->
+        <div class="event-card" tabindex="0" role="button" aria-label="Summer Art Workshop event details">
+          <div class="event-image">
+            <span>📷 Event Image</span>
+            <div class="event-age-badge">5-12</div>
+            <button class="event-save-button" aria-label="Save event">
+              <span>♡</span>
+            </button>
+          </div>
+          <div class="event-content">
+            <h3 class="event-title" data-i18n="events.summerArt">Summer Art Workshop</h3>
+            <p class="event-details" data-i18n="events.summerArtDesc">Join us for a fun-filled day of creative art activities designed for children.</p>
+            <div class="event-location">
+              <span class="event-location-icon">📍</span>
+              <span data-i18n="location.kulturhaus">Kulturhaus Schöneberg</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Event Card 2 -->
+        <div class="event-card" tabindex="0" role="button" aria-label="Music for Kids event details">
+          <div class="event-image">
+            <span>📷 Event Image</span>
+            <div class="event-age-badge">3-8</div>
+            <button class="event-save-button" aria-label="Save event">
+              <span>♡</span>
+            </button>
+          </div>
+          <div class="event-content">
+            <h3 class="event-title" data-i18n="events.musicKids">Music for Kids</h3>
+            <p class="event-details" data-i18n="events.musicKidsDesc">Interactive music session where children can explore different instruments.</p>
+            <div class="event-location">
+              <span class="event-location-icon">📍</span>
+              <span data-i18n="location.musikschule">Musikschule Kreuzberg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <button class="screenshot-button" aria-label="Take screenshot" tabindex="0">
+        <span class="screenshot-icon">📸</span>
+        <span class="screenshot-text" data-i18n="buttons.screenshot">Save Screenshot</span>
+      </button>
+    </div>
+    
+    <!-- Profile Screen -->
+    <div id="profileScreen" class="screen profile-screen" style="display: none;">
+      <div class="profile-header">
+        <!-- Cartoon Animal Avatar - Koala -->
+        <div class="animal-avatar koala" aria-label="Koala avatar">
+          🐨
+        </div>
+        <h2 class="profile-name">User Name</h2>
+        <p class="profile-email">user@example.com</p>
+      </div>
+      
+      <div class="menu-container">
+        <div class="menu-item" tabindex="0" role="button" aria-label="Navigate to Saved Events">
+          <span class="menu-icon">❤️</span>
+          <span class="menu-text" data-i18n="profile.savedEvents">Saved Events</span>
+          <span>›</span>
+        </div>
+        <div class="menu-item" tabindex="0" role="button" aria-label="Navigate to Settings">
+          <span class="menu-icon">⚙️</span>
+          <span class="menu-text" data-i18n="profile.settings">Settings</span>
+          <span>›</span>
+        </div>
+        <div class="menu-item" tabindex="0" role="button" aria-label="Navigate to Privacy">
+          <span class="menu-icon">🔒</span>
+          <span class="menu-text" data-i18n="profile.privacy">Privacy</span>
+          <span>›</span>
+        </div>
+        <div class="menu-item" tabindex="0" role="button" aria-label="Navigate to Help">
+          <span class="menu-icon">❓</span>
+          <span class="menu-text" data-i18n="profile.help">Help</span>
+          <span>›</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <div class="nav-item active" id="homeNav" role="button" aria-label="Home tab" tabindex="0">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-text" data-i18n="home">Home</div>
+      </div>
+      <div class="nav-item" id="searchNav" role="button" aria-label="Search tab" tabindex="0">
+        <div class="nav-icon">🔍</div>
+        <div class="nav-text" data-i18n="search">Search</div>
+      </div>
+      <div class="nav-item" id="profileNav" role="button" aria-label="Profile tab" tabindex="0">
+        <div class="nav-icon">👤</div>
+        <div class="nav-text" data-i18n="profile">Profile</div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Translations
+    const translations = {
+      en: {
+        'home': 'Home',
+        'profile': 'Profile',
+        'search': 'Search',
+        'events.nearby': 'Nearby Events',
+        'events.saveEvent': 'Save event',
+        'events.unsaveEvent': 'Remove from saved',
+        'events.noImage': 'No image available',
+        'profile.savedEvents': 'Saved Events',
+        'profile.settings': 'Settings',
+        'profile.privacy': 'Privacy',
+        'profile.help': 'Help',
+        'buttons.screenshot': 'Save Screenshot',
+        'events.summerArt': 'Summer Art Workshop',
+        'events.summerArtDesc': 'Join us for a fun-filled day of creative art activities designed for children.',
+        'events.musicKids': 'Music for Kids',
+        'events.musicKidsDesc': 'Interactive music session where children can explore different instruments.',
+        'location.kulturhaus': 'Kulturhaus Schöneberg',
+        'location.musikschule': 'Musikschule Kreuzberg'
+      },
+      de: {
+        'home': 'Start',
+        'profile': 'Profil',
+        'search': 'Suche',
+        'events.nearby': 'Events in der Nähe',
+        'events.saveEvent': 'Event speichern',
+        'events.unsaveEvent': 'Von gespeicherten entfernen',
+        'events.noImage': 'Kein Bild verfügbar',
+        'profile.savedEvents': 'Gespeicherte Events',
+        'profile.settings': 'Einstellungen',
+        'profile.privacy': 'Datenschutz',
+        'profile.help': 'Hilfe',
+        'buttons.screenshot': 'Screenshot speichern',
+        'events.summerArt': 'Sommer Kunstworkshop',
+        'events.summerArtDesc': 'Erlebe einen Tag voller kreativer Kunstaktivitäten für Kinder.',
+        'events.musicKids': 'Musik für Kinder',
+        'events.musicKidsDesc': 'Interaktive Musiksession, bei der Kinder verschiedene Instrumente erkunden können.',
+        'location.kulturhaus': 'Kulturhaus Schöneberg',
+        'location.musikschule': 'Musikschule Kreuzberg'
+      },
+      it: {
+        'home': 'Home',
+        'profile': 'Profilo',
+        'search': 'Cerca',
+        'events.nearby': 'Eventi vicini',
+        'events.saveEvent': 'Salva evento',
+        'events.unsaveEvent': 'Rimuovi dai salvati',
+        'events.noImage': 'Nessuna immagine disponibile',
+        'profile.savedEvents': 'Eventi salvati',
+        'profile.settings': 'Impostazioni',
+        'profile.privacy': 'Privacy',
+        'profile.help': 'Aiuto',
+        'buttons.screenshot': 'Salva screenshot',
+        'events.summerArt': 'Workshop d\'Arte Estivo',
+        'events.summerArtDesc': 'Unisciti a noi per una giornata divertente piena di attività artistiche creative per bambini.',
+        'events.musicKids': 'Musica per Bambini',
+        'events.musicKidsDesc': 'Sessione musicale interattiva dove i bambini possono esplorare diversi strumenti.',
+        'location.kulturhaus': 'Kulturhaus Schöneberg',
+        'location.musikschule': 'Musikschule Kreuzberg'
+      }
+    };
+    
+    // Current language
+    let currentLanguage = 'en';
+    
+    // Function to translate the UI
+    function translateUI(lang) {
+      currentLanguage = lang;
+      
+      // Update language switcher styling
+      document.querySelectorAll('#lang-en, #lang-de, #lang-it').forEach(el => {
+        el.style.fontWeight = 'normal';
+      });
+      document.getElementById('lang-' + lang).style.fontWeight = 'bold';
+      
+      // Translate all elements with data-i18n attribute
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+    }
+    
+    // Set up language switchers
+    document.getElementById('lang-en').addEventListener('click', function(e) {
+      e.preventDefault();
+      translateUI('en');
+    });
+    
+    document.getElementById('lang-de').addEventListener('click', function(e) {
+      e.preventDefault();
+      translateUI('de');
+    });
+    
+    document.getElementById('lang-it').addEventListener('click', function(e) {
+      e.preventDefault();
+      translateUI('it');
+    });
+    
+    // Simple tab switching functionality
+    document.getElementById('mapTab').addEventListener('click', function() {
+      document.getElementById('mapScreen').style.display = 'block';
+      document.getElementById('profileScreen').style.display = 'none';
+      document.getElementById('mapTab').style.background = '#E06B8B';
+      document.getElementById('mapTab').style.color = 'white';
+      document.getElementById('profileTab').style.background = '#f0f0f0';
+      document.getElementById('profileTab').style.color = '#333';
+      
+      // Update bottom nav
+      document.getElementById('homeNav').classList.add('active');
+      document.getElementById('profileNav').classList.remove('active');
+    });
+    
+    document.getElementById('profileTab').addEventListener('click', function() {
+      document.getElementById('mapScreen').style.display = 'none';
+      document.getElementById('profileScreen').style.display = 'block';
+      document.getElementById('profileTab').style.background = '#E06B8B';
+      document.getElementById('profileTab').style.color = 'white';
+      document.getElementById('mapTab').style.background = '#f0f0f0';
+      document.getElementById('mapTab').style.color = '#333';
+      
+      // Update bottom nav
+      document.getElementById('homeNav').classList.remove('active');
+      document.getElementById('profileNav').classList.add('active');
+    });
+    
+    // Bottom nav functionality
+    document.getElementById('homeNav').addEventListener('click', function() {
+      document.getElementById('mapScreen').style.display = 'block';
+      document.getElementById('profileScreen').style.display = 'none';
+      document.getElementById('mapTab').style.background = '#E06B8B';
+      document.getElementById('mapTab').style.color = 'white';
+      document.getElementById('profileTab').style.background = '#f0f0f0';
+      document.getElementById('profileTab').style.color = '#333';
+      
+      document.getElementById('homeNav').classList.add('active');
+      document.getElementById('profileNav').classList.remove('active');
+    });
+    
+    document.getElementById('profileNav').addEventListener('click', function() {
+      document.getElementById('mapScreen').style.display = 'none';
+      document.getElementById('profileScreen').style.display = 'block';
+      document.getElementById('profileTab').style.background = '#E06B8B';
+      document.getElementById('profileTab').style.color = 'white';
+      document.getElementById('mapTab').style.background = '#f0f0f0';
+      document.getElementById('mapTab').style.color = '#333';
+      
+      document.getElementById('homeNav').classList.remove('active');
+      document.getElementById('profileNav').classList.add('active');
+    });
+    
+    // Simulate screenshot button animation
+    const screenshotButton = document.querySelector('.screenshot-button');
+    screenshotButton.addEventListener('click', function() {
+      this.style.transform = 'scale(0.9)';
+      setTimeout(() => {
+        this.style.transform = 'scale(1)';
+        alert('Screenshot saved!');
+      }, 200);
+    });
+    
+    // Simulate focus states for accessibility testing
+    document.querySelectorAll('[tabindex="0"]').forEach(element => {
+      element.addEventListener('focus', function() {
+        this.classList.add('focus-visible');
+      });
+      
+      element.addEventListener('blur', function() {
+        this.classList.remove('focus-visible');
+      });
+    });
+    
+    // Switch between animal avatars for demo
+    const animalAvatar = document.querySelector('.animal-avatar');
+    const animals = ['koala', 'fox', 'bunny'];
+    const animalEmojis = ['🐨', '🦊', '🐰'];
+    let currentAnimal = 0;
+    
+    animalAvatar.addEventListener('click', function() {
+      currentAnimal = (currentAnimal + 1) % 3;
+      this.className = 'animal-avatar ' + animals[currentAnimal];
+      this.innerHTML = animalEmojis[currentAnimal];
+      this.setAttribute('aria-label', animals[currentAnimal] + ' avatar');
+    });
+  </script>
+</body>
+</html>

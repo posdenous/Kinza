@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Text, TouchableOpacity, Animated } from 'react-native';
 import MapView, { Region, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
+
+import theme from '../styles/theme';
 
 import useMapEvents from '../hooks/useMapEvents';
 import MapEventMarker from '../components/MapEventMarker';
@@ -164,7 +166,7 @@ const MapScreen: React.FC = () => {
               style={styles.myLocationButton}
               onPress={centerOnUserLocation}
             >
-              <Ionicons name="locate" size={24} color="#2196F3" />
+              <Ionicons name="locate" size={24} color={theme.colors.secondary} aria-label="Center on my location" />
             </TouchableOpacity>
           )}
           
@@ -198,6 +200,8 @@ const MapScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
+    backgroundColor: theme.colors.gradients.map[0], // Use the first color from the map gradient
   },
   map: {
     flex: 1,
@@ -208,8 +212,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingText: {
-    marginTop: 16,
-    fontSize: 16,
+    marginTop: theme.spacing[4],
+    fontSize: theme.typography.fontSize.base,
+    fontFamily: theme.typography.fontFamily.body,
+    color: theme.colors.text.dark,
   },
   myLocationButton: {
     position: 'absolute',
@@ -218,14 +224,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     width: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: theme.borders.radius.xl,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    ...theme.shadows.sm,
   },
   eventsLoadingContainer: {
     position: 'absolute',
@@ -233,15 +235,18 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 8,
-    padding: 8,
+    borderRadius: theme.borders.radius.xl,
+    padding: theme.spacing[3],
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: theme.layout.touchableMinHeight,
+    ...theme.shadows.sm,
   },
   eventsLoadingText: {
-    marginLeft: 8,
-    fontSize: 14,
+    marginLeft: theme.spacing[2],
+    fontSize: theme.typography.fontSize.base,
+    fontFamily: theme.typography.fontFamily.body,
   },
   errorContainer: {
     position: 'absolute',
@@ -258,21 +263,18 @@ const styles = StyleSheet.create({
   },
   eventsCountContainer: {
     position: 'absolute',
-    bottom: 88,
-    left: 16,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    paddingVertical: 4,
-    paddingHorizontal: 12,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    top: 16,
+    right: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: theme.borders.radius.xl,
+    paddingVertical: theme.spacing[1],
+    paddingHorizontal: theme.spacing[3],
+    ...theme.shadows.sm,
   },
   eventsCountText: {
-    fontSize: 12,
-    fontWeight: 'bold',
+    fontSize: theme.typography.fontSize.sm,
+    fontFamily: theme.typography.fontFamily.heading,
+    color: theme.colors.text.dark,
   },
 });
 

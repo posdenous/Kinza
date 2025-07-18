@@ -34,14 +34,15 @@ interface SearchResultsScreenProps {
 
 const SearchResultsScreen: React.FC<SearchResultsScreenProps> = ({ route }) => {
   const { t } = useTranslation();
-  const navigation = useNavigation();
-  const { userRole } = useUserRole();
+  const navigation = useNavigation<any>(); // Type as any to fix navigation typing issues
+  const { role } = useUserRole();
   const { initialQuery = '', cityId } = route.params;
 
   const [searchQuery, setSearchQuery] = useState<string>(initialQuery);
   const [selectedTypes, setSelectedTypes] = useState<SearchResultType[]>(['event', 'venue']);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [hasActiveFilters, setHasActiveFilters] = useState<boolean>(false);
 
   // Define category filters
   const categoryFilters: CategoryFilter[] = [
@@ -66,6 +67,16 @@ const SearchResultsScreen: React.FC<SearchResultsScreenProps> = ({ route }) => {
   useEffect(() => {
     setSearchQuery(initialQuery);
   }, [initialQuery, cityId]);
+  
+  // Check if there are active filters
+  useEffect(() => {
+    // Consider filters active if categories are selected or if types differ from default
+    const defaultTypes = ['event', 'venue'];
+    const typesChanged = selectedTypes.length !== defaultTypes.length || 
+      !selectedTypes.every(type => defaultTypes.includes(type));
+      
+    setHasActiveFilters(selectedCategories.length > 0 || typesChanged);
+  }, [selectedTypes, selectedCategories]);
 
   const handleSearch = (text: string) => {
     setSearchQuery(text);
@@ -85,6 +96,12 @@ const SearchResultsScreen: React.FC<SearchResultsScreenProps> = ({ route }) => {
     } else {
       setSelectedCategories([...selectedCategories, categoryId]);
     }
+  };
+  
+  // Reset all filters to default values
+  const resetAllFilters = () => {
+    setSelectedTypes(['event', 'venue']);
+    setSelectedCategories([]);
   };
 
   const navigateToDetail = (item: SearchResult) => {
@@ -109,11 +126,25 @@ const SearchResultsScreen: React.FC<SearchResultsScreenProps> = ({ route }) => {
             id: item.id,
             title: item.title,
             description: item.description || '',
-            imageUrl: item.imageUrl,
-            category: item.category || '',
-            startDate: item.date,
-            venue: { address: item.address || '' },
-            ageRange: item.ageRange || '',
+            images: item.imageUrl ? [item.imageUrl] : [],
+            categories: item.category ? [item.category] : [],
+            startDate: item.date || new Date(), // Provide default date to fix type error
+            location: { 
+              name: '',
+              address: item.address || '',
+              coordinates: { latitude: 0, longitude: 0 } 
+            },
+            organiser: { id: '', name: '' },
+            minAge: item.ageRange ? parseInt(item.ageRange.split('-')[0] || '0') : 0,
+            maxAge: item.ageRange ? parseInt(item.ageRange.split('-')[1] || '18') : 18,
+            isFree: true,
+            isApproved: true,
+            moderationStatus: 'approved',
+            cityId: cityId,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            registrationRequired: false,
+            isRecurring: false
           }}
           onPress={() => navigateToDetail(item)}
         />
@@ -225,7 +256,19 @@ const SearchResultsScreen: React.FC<SearchResultsScreenProps> = ({ route }) => {
       
       {showFilters && (
         <View style={styles.filtersContainer}>
-          <Text style={styles.filterTitle}>{t('search.filterByType')}</Text>
+          <View style={styles.filterHeaderRow}>
+            <Text style={styles.filterTitle}>{t('search.filterByType')}</Text>
+            {hasActiveFilters && (
+              <TouchableOpacity 
+                style={styles.resetFiltersButton} 
+                onPress={resetAllFilters}
+                accessibilityLabel={t('search.resetFilters')}
+              >
+                <Ionicons name="refresh-outline" size={14} color="#2196F3" />
+                <Text style={styles.resetFiltersText}>{t('search.resetFilters')}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScrollView}>
             <TouchableOpacity
               style={[
@@ -271,7 +314,7 @@ const SearchResultsScreen: React.FC<SearchResultsScreenProps> = ({ route }) => {
               </Text>
             </TouchableOpacity>
             
-            {userRole === 'admin' && (
+            {role === 'admin' && (
               <TouchableOpacity
                 style={[
                   styles.typeFilter,
@@ -296,7 +339,18 @@ const SearchResultsScreen: React.FC<SearchResultsScreenProps> = ({ route }) => {
             )}
           </ScrollView>
           
-          <Text style={styles.filterTitle}>{t('search.filterByCategory')}</Text>
+          <View style={styles.filterHeaderRow}>
+            <Text style={styles.filterTitle}>{t('search.filterByCategory')}</Text>
+            {selectedCategories.length > 0 && (
+              <TouchableOpacity 
+                style={styles.clearCategoriesButton} 
+                onPress={() => setSelectedCategories([])}
+                accessibilityLabel={t('search.clearCategories')}
+              >
+                <Text style={styles.clearCategoriesText}>{t('search.clearCategories')}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScrollView}>
             {categoryFilters.map((category) => (
               <TouchableOpacity
@@ -414,16 +468,44 @@ const styles = StyleSheet.create({
   },
   filtersContainer: {
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#EEEEEE',
   },
-  filterTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#333333',
+  filterHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
     marginBottom: 8,
+  },
+  resetFiltersButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E3F2FD',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 16,
+  },
+  resetFiltersText: {
+    color: '#2196F3',
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginLeft: 4,
+  },
+  clearCategoriesButton: {
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 16,
+  },
+  clearCategoriesText: {
+    color: '#757575',
+    fontSize: 12,
+  },
+  filterTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   filterScrollView: {
     marginBottom: 16,
