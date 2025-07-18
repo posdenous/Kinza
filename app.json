@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Kinza Berlin",
+    "slug": "kinza-berlin",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "permissions": [
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "web": {
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Kinza to use your location to find events near you."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "kinza-berlin"
+      }
+    }
+  }
+}

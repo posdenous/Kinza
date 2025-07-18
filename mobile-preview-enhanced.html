@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kinza Berlin - Enhanced Mobile Preview</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    .mobile-container {
+      position: relative;
+      width: 375px;
+      height: 812px;
+      margin: 20px auto;
+      border: 16px solid #111;
+      border-radius: 36px;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .status-bar {
+      height: 44px;
+      background-color: #4A90E2;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 14px;
+    }
+    .app-content {
+      height: calc(100% - 44px - 70px);
+      overflow-y: auto;
+    }
+    .tab-bar {
+      height: 70px;
+      background-color: white;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+    .tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 25%;
+      color: #777;
+      font-size: 10px;
+      cursor: pointer;
+    }
+    .tab.active {
+      color: #4A90E2;
+    }
+    .tab-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+    .screen {
+      padding: 16px;
+      display: none;
+    }
+    .screen.active {
+      display: block;
+    }
+    .map-container {
+      height: 300px;
+      background-color: #e9e9e9;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #777;
+      border-radius: 8px;
+    }
+    .event-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .event-image {
+      height: 160px;
+      background-color: #4A90E2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+    .event-details {
+      padding: 16px;
+    }
+    .event-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .event-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .event-description {
+      font-size: 14px;
+      line-height: 1.4;
+      color: #333;
+    }
+    .filter-bar {
+      display: flex;
+      overflow-x: auto;
+      padding: 8px 0;
+      margin-bottom: 16px;
+    }
+    .filter-chip {
+      background-color: #eee;
+      border-radius: 16px;
+      padding: 6px 12px;
+      margin-right: 8px;
+      font-size: 14px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .filter-chip.active {
+      background-color: #4A90E2;
+      color: white;
+    }
+    .language-selector {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 100;
+    }
+    .language-selector select {
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    .search-bar {
+      display: flex;
+      margin-bottom: 16px;
+    }
+    .search-input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .search-results {
+      margin-top: 16px;
+    }
+    .saved-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 300px;
+      color: #777;
+    }
+    .saved-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+    .profile-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      background-color: #4A90E2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 36px;
+      margin-right: 16px;
+    }
+    .profile-name {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .profile-email {
+      color: #777;
+      font-size: 14px;
+    }
+    .profile-section {
+      margin-bottom: 24px;
+    }
+    .profile-section-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #555;
+    }
+    .profile-menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .profile-menu-item:last-child {
+      border-bottom: none;
+    }
+    .city-switcher {
+      margin-bottom: 16px;
+      padding: 8px;
+      background-color: #f0f8ff;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .city-name {
+      font-weight: bold;
+      color: #4A90E2;
+    }
+    .comment-input {
+      display: flex;
+      margin-top: 16px;
+      border-top: 1px solid #eee;
+      padding-top: 16px;
+    }
+    .comment-input input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      margin-right: 8px;
+    }
+    .comment-input button {
+      background-color: #4A90E2;
+      color: white;
+      border: none;
+      border-radius: 16px;
+      padding: 0 16px;
+      cursor: pointer;
+    }
+    .comment-input button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .moderation-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    .moderation-pending {
+      background-color: #FFD700;
+      color: #333;
+    }
+    .moderation-approved {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .moderation-rejected {
+      background-color: #F44336;
+      color: white;
+    }
+    .event-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .event-action {
+      display: flex;
+      align-items: center;
+      color: #777;
+      font-size: 14px;
+    }
+    .event-action-icon {
+      margin-right: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-container">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>Kinza Berlin</span>
+      <span>100%</span>
+    </div>
+    <div class="app-content">
+      <div class="language-selector">
+        <select id="language-select" onchange="changeLanguage()">
+          <option value="en">English</option>
+          <option value="de">Deutsch</option>
+          <option value="it">Italiano</option>
+        </select>
+      </div>
+      
+      <!-- Home Screen -->
+      <div class="screen active" id="home-screen">
+        <h2 id="screen-title-home">Home</h2>
+        <div class="city-switcher">
+          <span id="current-city-label">Current city:</span>
+          <span class="city-name">Berlin</span>
+          <span>🔄</span>
+        </div>
+        <div class="map-container">
+          <div>Interactive Map View</div>
+        </div>
+        <div class="filter-bar">
+          <div class="filter-chip active" id="filter-all">All</div>
+          <div class="filter-chip" id="filter-today">Today</div>
+          <div class="filter-chip" id="filter-weekend">Weekend</div>
+          <div class="filter-chip" id="filter-free">Free</div>
+          <div class="filter-chip" id="filter-kids">Kids</div>
+        </div>
+        <div class="event-card">
+          <div class="event-image">Event Image</div>
+          <div class="event-details">
+            <div class="event-title" id="event1-title">Berlin Zoo Family Day</div>
+            <div class="event-meta">
+              <span id="event1-date">July 20, 2025</span>
+              <span id="event1-age">Ages 3-12</span>
+            </div>
+            <div class="event-description" id="event1-desc">
+              Join us for a special family day at Berlin Zoo with activities for children of all ages.
+            </div>
+            <div class="event-actions">
+              <div class="event-action">
+                <span class="event-action-icon">❤️</span>
+                <span id="save-action">Save</span>
+              </div>
+              <div class="event-action">
+                <span class="event-action-icon">💬</span>
+                <span id="comment-action">Comment</span>
+              </div>
+              <div class="event-action">
+                <span class="event-action-icon">📍</span>
+                <span id="location-action">Location</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="event-card">
+          <div class="event-image">Event Image</div>
+          <div class="event-details">
+            <div class="event-title" id="event2-title">Puppet Theater Workshop</div>
+            <div class="event-meta">
+              <span id="event2-date">July 21, 2025</span>
+              <span id="event2-age">Ages 5-10</span>
+            </div>
+            <div class="event-description" id="event2-desc">
+              Create your own puppet and learn storytelling techniques in this interactive workshop.
+            </div>
+            <div class="event-actions">
+              <div class="event-action">
+                <span class="event-action-icon">❤️</span>
+                <span>Save</span>
+              </div>
+              <div class="event-action">
+                <span class="event-action-icon">💬</span>
+                <span>Comment</span>
+              </div>
+              <div class="event-action">
+                <span class="event-action-icon">📍</span>
+                <span>Location</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Search Screen -->
+      <div class="screen" id="search-screen">
+        <h2 id="screen-title-search">Search</h2>
+        <div class="search-bar">
+          <input type="text" class="search-input" id="search-input" placeholder="Search events...">
+        </div>
+        <div class="filter-bar">
+          <div class="filter-chip active" id="search-filter-all">All</div>
+          <div class="filter-chip" id="search-filter-today">Today</div>
+          <div class="filter-chip" id="search-filter-weekend">Weekend</div>
+          <div class="filter-chip" id="search-filter-free">Free</div>
+          <div class="filter-chip" id="search-filter-kids">Kids</div>
+        </div>
+        <div class="search-results">
+          <div class="event-card">
+            <div class="event-image">Event Image</div>
+            <div class="event-details">
+              <div class="event-title" id="search-event1-title">Children's Museum Workshop</div>
+              <div class="event-meta">
+                <span id="search-event1-date">July 22, 2025</span>
+                <span id="search-event1-age">Ages 4-8</span>
+              </div>
+              <div class="event-description" id="search-event1-desc">
+                Hands-on science experiments and art projects at the Children's Museum.
+              </div>
+            </div>
+          </div>
+          <div class="event-card">
+            <div class="event-image">Event Image</div>
+            <div class="event-details">
+              <div class="event-title" id="search-event2-title">Family Concert in the Park</div>
+              <div class="event-meta">
+                <span id="search-event2-date">July 25, 2025</span>
+                <span id="search-event2-age">All ages</span>
+              </div>
+              <div class="event-description" id="search-event2-desc">
+                Outdoor concert featuring child-friendly music and activities.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Saved Screen -->
+      <div class="screen" id="saved-screen">
+        <h2 id="screen-title-saved">Saved Events</h2>
+        <div class="saved-empty">
+          <div class="saved-icon">❤️</div>
+          <div id="saved-empty-text">No saved events yet</div>
+          <div id="saved-empty-subtext">Events you save will appear here</div>
+        </div>
+      </div>
+      
+      <!-- Profile Screen -->
+      <div class="screen" id="profile-screen">
+        <h2 id="screen-title-profile">Profile</h2>
+        <div class="profile-header">
+          <div class="profile-avatar">U</div>
+          <div>
+            <div class="profile-name">User</div>
+            <div class="profile-email">user@example.com</div>
+          </div>
+        </div>
+        <div class="profile-section">
+          <div class="profile-section-title" id="profile-settings">Settings</div>
+          <div class="profile-menu-item">
+            <span id="profile-privacy">Privacy</span>
+            <span>›</span>
+          </div>
+          <div class="profile-menu-item">
+            <span id="profile-notifications">Notifications</span>
+            <span>›</span>
+          </div>
+          <div class="profile-menu-item">
+            <span id="profile-language">Language</span>
+            <span>›</span>
+          </div>
+        </div>
+        <div class="profile-section">
+          <div class="profile-section-title" id="profile-about">About</div>
+          <div class="profile-menu-item">
+            <span id="profile-help">Help & Support</span>
+            <span>›</span>
+          </div>
+          <div class="profile-menu-item">
+            <span id="profile-terms">Terms of Service</span>
+            <span>›</span>
+          </div>
+          <div class="profile-menu-item">
+            <span id="profile-privacy-policy">Privacy Policy</span>
+            <span>›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab active" data-screen="home-screen">
+        <div class="tab-icon">🏠</div>
+        <div id="tab-home">Home</div>
+      </div>
+      <div class="tab" data-screen="search-screen">
+        <div class="tab-icon">🔍</div>
+        <div id="tab-search">Search</div>
+      </div>
+      <div class="tab" data-screen="saved-screen">
+        <div class="tab-icon">❤️</div>
+        <div id="tab-saved">Saved</div>
+      </div>
+      <div class="tab" data-screen="profile-screen">
+        <div class="tab-icon">👤</div>
+        <div id="tab-profile">Profile</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Translations
+    const translations = {
+      en: {
+        // Home Screen
+        screenTitleHome: "Home",
+        currentCityLabel: "Current city:",
+        filterAll: "All",
+        filterToday: "Today",
+        filterWeekend: "Weekend",
+        filterFree: "Free",
+        filterKids: "Kids",
+        event1Title: "Berlin Zoo Family Day",
+        event1Date: "July 20, 2025",
+        event1Age: "Ages 3-12",
+        event1Desc: "Join us for a special family day at Berlin Zoo with activities for children of all ages.",
+        event2Title: "Puppet Theater Workshop",
+        event2Date: "July 21, 2025",
+        event2Age: "Ages 5-10",
+        event2Desc: "Create your own puppet and learn storytelling techniques in this interactive workshop.",
+        saveAction: "Save",
+        commentAction: "Comment",
+        locationAction: "Location",
+        
+        // Search Screen
+        screenTitleSearch: "Search",
+        searchPlaceholder: "Search events...",
+        searchEvent1Title: "Children's Museum Workshop",
+        searchEvent1Date: "July 22, 2025",
+        searchEvent1Age: "Ages 4-8",
+        searchEvent1Desc: "Hands-on science experiments and art projects at the Children's Museum.",
+        searchEvent2Title: "Family Concert in the Park",
+        searchEvent2Date: "July 25, 2025",
+        searchEvent2Age: "All ages",
+        searchEvent2Desc: "Outdoor concert featuring child-friendly music and activities.",
+        
+        // Saved Screen
+        screenTitleSaved: "Saved Events",
+        savedEmptyText: "No saved events yet",
+        savedEmptySubtext: "Events you save will appear here",
+        
+        // Profile Screen
+        screenTitleProfile: "Profile",
+        profileSettings: "Settings",
+        profilePrivacy: "Privacy",
+        profileNotifications: "Notifications",
+        profileLanguage: "Language",
+        profileAbout: "About",
+        profileHelp: "Help & Support",
+        profileTerms: "Terms of Service",
+        profilePrivacyPolicy: "Privacy Policy",
+        
+        // Tabs
+        tabHome: "Home",
+        tabSearch: "Search",
+        tabSaved: "Saved",
+        tabProfile: "Profile"
+      },
+      de: {
+        // Home Screen
+        screenTitleHome: "Start",
+        currentCityLabel: "Aktuelle Stadt:",
+        filterAll: "Alle",
+        filterToday: "Heute",
+        filterWeekend: "Wochenende",
+        filterFree: "Kostenlos",
+        filterKids: "Kinder",
+        event1Title: "Familientag im Berliner Zoo",
+        event1Date: "20. Juli 2025",
+        event1Age: "Alter 3-12",
+        event1Desc: "Begleiten Sie uns zu einem besonderen Familientag im Berliner Zoo mit Aktivitäten für Kinder jeden Alters.",
+        event2Title: "Puppentheater-Workshop",
+        event2Date: "21. Juli 2025",
+        event2Age: "Alter 5-10",
+        event2Desc: "Erstellen Sie Ihre eigene Puppe und lernen Sie Erzähltechniken in diesem interaktiven Workshop.",
+        saveAction: "Speichern",
+        commentAction: "Kommentieren",
+        locationAction: "Standort",
+        
+        // Search Screen
+        screenTitleSearch: "Suchen",
+        searchPlaceholder: "Veranstaltungen suchen...",
+        searchEvent1Title: "Workshop im Kindermuseum",
+        searchEvent1Date: "22. Juli 2025",
+        searchEvent1Age: "Alter 4-8",
+        searchEvent1Desc: "Praktische Wissenschaftsexperimente und Kunstprojekte im Kindermuseum.",
+        searchEvent2Title: "Familienkonzert im Park",
+        searchEvent2Date: "25. Juli 2025",
+        searchEvent2Age: "Alle Altersgruppen",
+        searchEvent2Desc: "Freiluftkonzert mit kinderfreundlicher Musik und Aktivitäten.",
+        
+        // Saved Screen
+        screenTitleSaved: "Gespeicherte Veranstaltungen",
+        savedEmptyText: "Noch keine gespeicherten Veranstaltungen",
+        savedEmptySubtext: "Gespeicherte Veranstaltungen erscheinen hier",
+        
+        // Profile Screen
+        screenTitleProfile: "Profil",
+        profileSettings: "Einstellungen",
+        profilePrivacy: "Datenschutz",
+        profileNotifications: "Benachrichtigungen",
+        profileLanguage: "Sprache",
+        profileAbout: "Über",
+        profileHelp: "Hilfe & Support",
+        profileTerms: "Nutzungsbedingungen",
+        profilePrivacyPolicy: "Datenschutzrichtlinie",
+        
+        // Tabs
+        tabHome: "Start",
+        tabSearch: "Suchen",
+        tabSaved: "Gespeichert",
+        tabProfile: "Profil"
+      },
+      it: {
+        // Home Screen
+        screenTitleHome: "Home",
+        currentCityLabel: "Città attuale:",
+        filterAll: "Tutti",
+        filterToday: "Oggi",
+        filterWeekend: "Weekend",
+        filterFree: "Gratuito",
+        filterKids: "Bambini",
+        event1Title: "Giornata della Famiglia allo Zoo di Berlino",
+        event1Date: "20 Luglio 2025",
+        event1Age: "Età 3-12",
+        event1Desc: "Unisciti a noi per una giornata speciale in famiglia allo Zoo di Berlino con attività per bambini di tutte le età.",
+        event2Title: "Workshop di Teatro delle Marionette",
+        event2Date: "21 Luglio 2025",
+        event2Age: "Età 5-10",
+        event2Desc: "Crea la tua marionetta e impara tecniche di narrazione in questo workshop interattivo.",
+        saveAction: "Salva",
+        commentAction: "Commenta",
+        locationAction: "Posizione",
+        
+        // Search Screen
+        screenTitleSearch: "Cerca",
+        searchPlaceholder: "Cerca eventi...",
+        searchEvent1Title: "Workshop al Museo dei Bambini",
+        searchEvent1Date: "22 Luglio 2025",
+        searchEvent1Age: "Età 4-8",
+        searchEvent1Desc: "Esperimenti scientifici pratici e progetti artistici al Museo dei Bambini.",
+        searchEvent2Title: "Concerto Familiare nel Parco",
+        searchEvent2Date: "25 Luglio 2025",
+        searchEvent2Age: "Tutte le età",
+        searchEvent2Desc: "Concerto all'aperto con musica e attività a misura di bambino.",
+        
+        // Saved Screen
+        screenTitleSaved: "Eventi Salvati",
+        savedEmptyText: "Nessun evento salvato",
+        savedEmptySubtext: "Gli eventi salvati appariranno qui",
+        
+        // Profile Screen
+        screenTitleProfile: "Profilo",
+        profileSettings: "Impostazioni",
+        profilePrivacy: "Privacy",
+        profileNotifications: "Notifiche",
+        profileLanguage: "Lingua",
+        profileAbout: "Informazioni",
+        profileHelp: "Aiuto e Supporto",
+        profileTerms: "Termini di Servizio",
+        profilePrivacyPolicy: "Informativa sulla Privacy",
+        
+        // Tabs
+        tabHome: "Home",
+        tabSearch: "Cerca",
+        tabSaved: "Salvati",
+        tabProfile: "Profilo"
+      }
+    };
+
+    function changeLanguage() {
+      const lang = document.getElementById('language-select').value;
+      const t = translations[lang];
+      
+      // Update Home Screen
+      document.getElementById('screen-title-home').textContent = t.screenTitleHome;
+      document.getElementById('current-city-label').textContent = t.currentCityLabel;
+      document.getElementById('filter-all').textContent = t.filterAll;
+      document.getElementById('filter-today').textContent = t.filterToday;
+      document.getElementById('filter-weekend').textContent = t.filterWeekend;
+      document.getElementById('filter-free').textContent = t.filterFree;
+      document.getElementById('filter-kids').textContent = t.filterKids;
+      document.getElementById('event1-title').textContent = t.event1Title;
+      document.getElementById('event1-date').textContent = t.event1Date;
+      document.getElementById('event1-age').textContent = t.event1Age;
+      document.getElementById('event1-desc').textContent = t.event1Desc;
+      document.getElementById('event2-title').textContent = t.event2Title;
+      document.getElementById('event2-date').textContent = t.event2Date;
+      document.getElementById('event2-age').textContent = t.event2Age;
+      document.getElementById('event2-desc').textContent = t.event2Desc;
+      document.getElementById('save-action').textContent = t.saveAction;
+      document.getElementById('comment-action').textContent = t.commentAction;
+      document.getElementById('location-action').textContent = t.locationAction;
+      
+      // Update Search Screen
+      document.getElementById('screen-title-search').textContent = t.screenTitleSearch;
+      document.getElementById('search-input').placeholder = t.searchPlaceholder;
+      document.getElementById('search-filter-all').textContent = t.filterAll;
+      document.getElementById('search-filter-today').textContent = t.filterToday;
+      document.getElementById('search-filter-weekend').textContent = t.filterWeekend;
+      document.getElementById('search-filter-free').textContent = t.filterFree;
+      document.getElementById('search-filter-kids').textContent = t.filterKids;
+      document.getElementById('search-event1-title').textContent = t.searchEvent1Title;
+      document.getElementById('search-event1-date').textContent = t.searchEvent1Date;
+      document.getElementById('search-event1-age').textContent = t.searchEvent1Age;
+      document.getElementById('search-event1-desc').textContent = t.searchEvent1Desc;
+      document.getElementById('search-event2-title').textContent = t.searchEvent2Title;
+      document.getElementById('search-event2-date').textContent = t.searchEvent2Date;
+      document.getElementById('search-event2-age').textContent = t.searchEvent2Age;
+      document.getElementById('search-event2-desc').textContent = t.searchEvent2Desc;
+      
+      // Update Saved Screen
+      document.getElementById('screen-title-saved').textContent = t.screenTitleSaved;
+      document.getElementById('saved-empty-text').textContent = t.savedEmptyText;
+      document.getElementById('saved-empty-subtext').textContent = t.savedEmptySubtext;
+      
+      // Update Profile Screen
+      document.getElementById('screen-title-profile').textContent = t.screenTitleProfile;
+      document.getElementById('profile-settings').textContent = t.profileSettings;
+      document.getElementById('profile-privacy').textContent = t.profilePrivacy;
+      document.getElementById('profile-notifications').textContent = t.profileNotifications;
+      document.getElementById('profile-language').textContent = t.profileLanguage;
+      document.getElementById('profile-about').textContent = t.profileAbout;
+      document.getElementById('profile-help').textContent = t.profileHelp;
+      document.getElementById('profile-terms').textContent = t.profileTerms;
+      document.getElementById('profile-privacy-policy').textContent = t.profilePrivacyPolicy;
+      
+      // Update Tabs
+      document.getElementById('tab-home').textContent = t.tabHome;
+      document.getElementById('tab-search').textContent = t.tabSearch;
+      document.getElementById('tab-saved').textContent = t.tabSaved;
+      document.getElementById('tab-profile').textContent = t.tabProfile;
+    }
+
+    // Add click handlers for filter chips
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', function() {
+        const parent = this.parentElement;
+        parent.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Add click handlers for tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Update active tab
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Show corresponding screen
+        const screenId = this.getAttribute('data-screen');
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+const QRCode = require("qrcode"); QRCode.toFile("/Users/brianwilliams/Documents/GitHub/Kinza/expo-qr.png", "exp://192.168.2.103:8081", { width: 300 }, function(err) { if (err) throw err; console.log("QR code saved to expo-qr.png"); });
