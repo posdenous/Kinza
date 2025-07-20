@@ -43,7 +43,7 @@ const ProfileScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} testID="profile-screen">
       <View style={styles.header}>
         <View style={styles.profileImageContainer}>
           <UserAvatar userId="user123" size={100} />
@@ -58,6 +58,7 @@ const ProfileScreen: React.FC = () => {
             key={item.id}
             style={styles.menuItem}
             onPress={() => handleMenuPress(item.screen)}
+            testID={item.id === 'privacy' ? 'privacy-settings' : item.id === 'trust' ? 'trust-safety' : `menu-${item.id}`}
           >
             <View style={styles.menuIconContainer}>
               <Ionicons name={item.icon as any} size={24} color={theme.colors.primary} aria-label={item.title} />

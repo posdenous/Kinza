@@ -9,7 +9,7 @@ import theme from '../styles/theme';
  */
 const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="tab-bar">
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
@@ -53,7 +53,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={`${label} tab`}
-            testID={`${label}-tab`}
+            testID={`tab-${route.name.toLowerCase()}`}
             onPress={onPress}
             style={styles.tabButton}
           >

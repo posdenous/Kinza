@@ -188,7 +188,7 @@ const PrivacyScreen: React.FC = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="privacy-screen">
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
@@ -245,6 +245,7 @@ const PrivacyScreen: React.FC = () => {
               trackColor={{ false: '#D1D1D1', true: '#2196F3' }}
               thumbColor="#FFFFFF"
               disabled={!hasConsent}
+              testID="child-profile-consent"
             />
           </View>
           

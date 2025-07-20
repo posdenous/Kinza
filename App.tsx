@@ -1,4 +1,5 @@
 import React from 'react';
+import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -105,8 +106,16 @@ function OrganiserStack() {
 }
 
 // Placeholder component for screens we haven't implemented yet
-function PlaceholderScreen() {
-  return null;
+function PlaceholderScreen({ route }: { route?: any }) {
+  const screenName = route?.name || 'Screen';
+  const testId = screenName.toLowerCase().replace('screen', '') + '-screen';
+  
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }} testID={testId}>
+      <Text style={{ fontSize: 18, marginBottom: 10 }}>Welcome to {screenName}</Text>
+      <Text style={{ textAlign: 'center', color: '#666' }}>This screen is under development</Text>
+    </View>
+  );
 }
 
 // Root navigation container

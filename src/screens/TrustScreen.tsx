@@ -112,7 +112,7 @@ const TrustScreen: React.FC = () => {
   };
 
   const renderGuidelinesTab = () => (
-    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false} testID="community-guidelines">
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{t('trust.communityGuidelines')}</Text>
         <Text style={styles.paragraph}>{t('trust.communityIntro')}</Text>
@@ -266,7 +266,7 @@ const TrustScreen: React.FC = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="trust-screen">
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
