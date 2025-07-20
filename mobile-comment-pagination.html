@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinza Berlin - Mobile Comment Pagination Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+    
+    .mobile-container {
+      max-width: 375px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .status-bar {
+      background: #000;
+      color: white;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .app-header {
+      background: #4285f4;
+      color: white;
+      padding: 16px;
+      text-align: center;
+    }
+    
+    .app-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .demo-label {
+      font-size: 12px;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+    
+    .event-card {
+      margin: 16px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .event-image {
+      height: 120px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 500;
+    }
+    
+    .event-details {
+      padding: 16px;
+    }
+    
+    .event-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    
+    .event-meta {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .event-description {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    
+    .event-actions {
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top: 1px solid #f0f0f0;
+    }
+    
+    .event-action {
+      display: flex;
+      align-items: center;
+      color: #777;
+      font-size: 14px;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    
+    .event-action:hover {
+      color: #4285f4;
+      background: #f8f9fa;
+    }
+    
+    .event-action svg {
+      margin-right: 6px;
+    }
+    
+    .comment-count {
+      margin-left: 4px;
+      font-weight: 500;
+      color: #4285f4;
+    }
+    
+    /* Mobile Comment Pagination Styles */
+    .comment-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e0e0e0;
+      animation: slideDown 0.3s ease-out;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .comment-status {
+      font-size: 13px;
+      color: #666;
+      font-weight: 500;
+    }
+    
+    .comment-list {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+    
+    .comment-item {
+      display: flex;
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #f8f9fa;
+      transition: background 0.2s ease;
+    }
+    
+    .comment-item:hover {
+      background: #f0f2f5;
+    }
+    
+    .comment-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4285f4, #34a853);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    
+    .comment-content {
+      flex: 1;
+    }
+    
+    .comment-author {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    
+    .comment-text {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+    
+    .comment-time {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .load-more-container {
+      text-align: center;
+      margin: 16px 0;
+    }
+    
+    .load-more-btn {
+      background: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 24px;
+      padding: 14px 28px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 220px;
+      margin: 0 auto;
+      box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
+    }
+    
+    .load-more-btn:hover {
+      background: #3367d6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+    }
+    
+    .load-more-btn:active {
+      transform: translateY(0);
+    }
+    
+    .load-more-btn.loading {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    .load-more-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .comment-input-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 16px;
+      border: 1px solid #e0e0e0;
+      margin-top: 8px;
+    }
+    
+    .comment-input-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #666, #888);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    
+    .comment-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      outline: none;
+      padding: 10px 0;
+    }
+    
+    .comment-input::placeholder {
+      color: #999;
+    }
+    
+    .comment-send-btn {
+      background: #4285f4;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: white;
+      box-shadow: 0 2px 6px rgba(66, 133, 244, 0.3);
+    }
+    
+    .comment-send-btn:hover {
+      background: #3367d6;
+      transform: scale(1.05);
+    }
+    
+    .pagination-stats {
+      background: #e8f4fd;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #1565c0;
+      text-align: center;
+    }
+    
+    .mobile-optimized-badge {
+      background: #34a853;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-container">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>Kinza Berlin</span>
+      <span>100%</span>
+    </div>
+    
+    <div class="app-header">
+      <div class="app-title">Mobile Comment Pagination</div>
+      <div class="demo-label">Optimized for Mobile Devices</div>
+    </div>
+    
+    <div class="pagination-stats">
+      📱 <strong>Mobile Optimized:</strong> 8 initial comments, 5 per load
+      <span class="mobile-optimized-badge">DEMO</span>
+    </div>
+    
+    <div class="event-card">
+      <div class="event-image">Berlin Zoo Family Day</div>
+      <div class="event-details">
+        <div class="event-title">Berlin Zoo Family Day</div>
+        <div class="event-meta">
+          <span>July 20, 2025</span>
+          <span>Ages 3-12</span>
+        </div>
+        <div class="event-description">
+          Join us for a special family day at Berlin Zoo with activities for children of all ages. Interactive exhibits, animal feeding, and educational workshops.
+        </div>
+        
+        <div class="event-actions">
+          <div class="event-action" id="save-btn" onclick="toggleSave()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" id="save-icon">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <span id="save-text">Save</span>
+          </div>
+          <div class="event-action" onclick="toggleComments()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+            </svg>
+            <span>Comments</span>
+            <span class="comment-count" id="comment-count">(23)</span>
+          </div>
+          <div class="event-action" onclick="showLocation()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+            <span>Location</span>
+          </div>
+        </div>
+        
+        <!-- Mobile Comment Section -->
+        <div class="comment-section" id="comment-section" style="display: none;">
+          <div class="comment-header">
+            <span class="comment-status" id="comment-status">Showing 8 of 23 comments</span>
+          </div>
+          
+          <!-- Comment List -->
+          <div class="comment-list" id="comment-list">
+            <div class="comment-item">
+              <div class="comment-avatar">M</div>
+              <div class="comment-content">
+                <div class="comment-author">Maria K.</div>
+                <div class="comment-text">Great event for kids! My 5-year-old loved the animals and interactive exhibits. 🦁</div>
+                <div class="comment-time">2 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="comment-item">
+              <div class="comment-avatar">J</div>
+              <div class="comment-content">
+                <div class="comment-author">Jan S.</div>
+                <div class="comment-text">Perfect family activity. Well organized and educational. The staff was incredibly helpful!</div>
+                <div class="comment-time">4 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="comment-item">
+              <div class="comment-avatar">A</div>
+              <div class="comment-content">
+                <div class="comment-author">Anna M.</div>
+                <div class="comment-text">Loved the interactive exhibits! Will definitely come back next weekend. 👍</div>
+                <div class="comment-time">6 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="comment-item">
+              <div class="comment-avatar">T</div>
+              <div class="comment-content">
+                <div class="comment-author">Thomas B.</div>
+                <div class="comment-text">Great value for money. Kids had a blast and learned so much!</div>
+                <div class="comment-time">8 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="comment-item">
+              <div class="comment-avatar">L</div>
+              <div class="comment-content">
+                <div class="comment-author">Lisa W.</div>
+                <div class="comment-text">Wonderful staff and clean facilities. Highly recommend for families! ⭐</div>
+                <div class="comment-time">10 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="comment-item">
+              <div class="comment-avatar">D</div>
+              <div class="comment-content">
+                <div class="comment-author">David R.</div>
+                <div class="comment-text">Perfect weekend activity. Educational and fun for the whole family!</div>
+                <div class="comment-time">12 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="comment-item">
+              <div class="comment-avatar">S</div>
+              <div class="comment-content">
+                <div class="comment-author">Sarah L.</div>
+                <div class="comment-text">My kids want to go back next weekend. Great experience and memories made! 🎉</div>
+                <div class="comment-time">14 hours ago</div>
+              </div>
+            </div>
+            
+            <div class="comment-item">
+              <div class="comment-avatar">P</div>
+              <div class="comment-content">
+                <div class="comment-author">Peter K.</div>
+                <div class="comment-text">Excellent event organization. Very family-friendly atmosphere and activities.</div>
+                <div class="comment-time">16 hours ago</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Load More Button -->
+          <div class="load-more-container">
+            <button class="load-more-btn" id="load-more-btn" onclick="loadMoreComments()">
+              <span class="load-more-text">Load 5 more comments</span>
+              <div class="load-more-spinner" id="loading-spinner" style="display: none;"></div>
+            </button>
+          </div>
+          
+          <!-- Comment Input -->
+          <div class="comment-input-container">
+            <div class="comment-input-avatar">U</div>
+            <input type="text" class="comment-input" placeholder="Add a comment..." id="comment-input">
+            <button class="comment-send-btn" onclick="addComment()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentlyShowing = 8;
+    let totalComments = 23;
+    let commentsVisible = false;
+    let eventSaved = false;
+    
+    // Additional comments to load
+    const additionalComments = [
+      { author: "Emma F.", text: "Amazing day out! The kids learned so much about wildlife conservation. 🌱", time: "18 hours ago", avatar: "E" },
+      { author: "Michael H.", text: "Great facilities and friendly staff. Perfect for a family weekend!", time: "20 hours ago", avatar: "M" },
+      { author: "Sophie R.", text: "Educational and entertaining. My daughter wants to become a zoologist now! 🐘", time: "22 hours ago", avatar: "S" },
+      { author: "Alex T.", text: "Well worth the visit. Clean, organized, and lots of interactive activities.", time: "1 day ago", avatar: "A" },
+      { author: "Nina K.", text: "Fantastic event! The animal feeding session was the highlight. 🦒", time: "1 day ago", avatar: "N" }
+    ];
+    
+    function toggleComments() {
+      const section = document.getElementById('comment-section');
+      const button = document.querySelector('.event-action[onclick="toggleComments()"]');
+      
+      if (commentsVisible) {
+        section.style.display = 'none';
+        commentsVisible = false;
+        button.style.background = 'transparent';
+      } else {
+        section.style.display = 'block';
+        commentsVisible = true;
+        button.style.background = '#f0f2f5';
+      }
+    }
+    
+    function loadMoreComments() {
+      const button = document.getElementById('load-more-btn');
+      const spinner = document.getElementById('loading-spinner');
+      const text = button.querySelector('.load-more-text');
+      const commentList = document.getElementById('comment-list');
+      const status = document.getElementById('comment-status');
+      
+      // Show loading state
+      button.classList.add('loading');
+      spinner.style.display = 'block';
+      text.textContent = 'Loading...';
+      
+      // Simulate network delay
+      setTimeout(() => {
+        const commentsToAdd = Math.min(5, additionalComments.length, totalComments - currentlyShowing);
+        
+        for (let i = 0; i < commentsToAdd; i++) {
+          const comment = additionalComments[currentlyShowing - 8 + i];
+          if (comment) {
+            const commentElement = document.createElement('div');
+            commentElement.className = 'comment-item';
+            commentElement.innerHTML = `
+              <div class="comment-avatar">${comment.avatar}</div>
+              <div class="comment-content">
+                <div class="comment-author">${comment.author}</div>
+                <div class="comment-text">${comment.text}</div>
+                <div class="comment-time">${comment.time}</div>
+              </div>
+            `;
+            commentElement.style.opacity = '0';
+            commentList.appendChild(commentElement);
+            
+            // Animate in
+            setTimeout(() => {
+              commentElement.style.transition = 'opacity 0.3s ease';
+              commentElement.style.opacity = '1';
+            }, 100);
+          }
+        }
+        
+        currentlyShowing += commentsToAdd;
+        
+        // Update status
+        status.textContent = `Showing ${currentlyShowing} of ${totalComments} comments`;
+        
+        // Reset button state
+        button.classList.remove('loading');
+        spinner.style.display = 'none';
+        
+        if (currentlyShowing >= totalComments) {
+          text.textContent = 'All comments loaded';
+          button.disabled = true;
+          button.style.opacity = '0.5';
+        } else {
+          const remaining = Math.min(5, totalComments - currentlyShowing);
+          text.textContent = `Load ${remaining} more comments`;
+        }
+        
+        // Haptic feedback simulation (visual)
+        button.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+          button.style.transform = 'scale(1)';
+        }, 100);
+        
+      }, 1200); // Realistic loading time
+    }
+    
+    function addComment() {
+      const input = document.getElementById('comment-input');
+      const text = input.value.trim();
+      
+      if (text) {
+        const commentList = document.getElementById('comment-list');
+        const status = document.getElementById('comment-status');
+        const count = document.getElementById('comment-count');
+        
+        const commentElement = document.createElement('div');
+        commentElement.className = 'comment-item';
+        commentElement.innerHTML = `
+          <div class="comment-avatar">U</div>
+          <div class="comment-content">
+            <div class="comment-author">You</div>
+            <div class="comment-text">${text}</div>
+            <div class="comment-time">Just now</div>
+          </div>
+        `;
+        
+        // Add to top of list
+        commentList.insertBefore(commentElement, commentList.firstChild);
+        
+        // Update counts
+        totalComments++;
+        currentlyShowing++;
+        status.textContent = `Showing ${currentlyShowing} of ${totalComments} comments`;
+        count.textContent = `(${totalComments})`;
+        
+        // Clear input
+        input.value = '';
+        
+        // Visual feedback
+        commentElement.style.background = '#e8f5e8';
+        setTimeout(() => {
+          commentElement.style.background = '#f8f9fa';
+        }, 2000);
+      }
+    }
+    
+    // Save functionality
+    function toggleSave() {
+      const saveBtn = document.getElementById('save-btn');
+      const saveIcon = document.getElementById('save-icon');
+      const saveText = document.getElementById('save-text');
+      
+      eventSaved = !eventSaved;
+      
+      if (eventSaved) {
+        // Saved state
+        saveIcon.style.fill = '#ff4757';
+        saveText.textContent = 'Saved';
+        saveBtn.style.color = '#ff4757';
+        saveBtn.style.background = '#fff5f5';
+        
+        // Haptic feedback simulation
+        saveBtn.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          saveBtn.style.transform = 'scale(1)';
+        }, 200);
+        
+        // Show temporary feedback
+        showToast('Event saved to your favorites! ❤️');
+        
+      } else {
+        // Unsaved state
+        saveIcon.style.fill = '#777';
+        saveText.textContent = 'Save';
+        saveBtn.style.color = '#777';
+        saveBtn.style.background = 'transparent';
+        
+        showToast('Event removed from favorites');
+      }
+    }
+    
+    // Location functionality
+    function showLocation() {
+      const locationBtn = document.querySelector('[onclick="showLocation()"]');
+      
+      // Visual feedback
+      locationBtn.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        locationBtn.style.transform = 'scale(1)';
+      }, 150);
+      
+      // Show location modal/info
+      showLocationModal();
+    }
+    
+    function showLocationModal() {
+      // Create location modal
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        animation: fadeIn 0.3s ease;
+      `;
+      
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = `
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        margin: 20px;
+        max-width: 320px;
+        width: 100%;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        animation: slideUp 0.3s ease;
+      `;
+      
+      modalContent.innerHTML = `
+        <div style="text-align: center;">
+          <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #4285f4, #34a853); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+          </div>
+          <h3 style="margin: 0 0 8px; font-size: 18px; font-weight: 600; color: #333;">Berlin Zoo</h3>
+          <p style="margin: 0 0 16px; color: #666; font-size: 14px; line-height: 1.4;">Hardenbergplatz 8<br>10787 Berlin, Germany</p>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <button onclick="openMaps()" style="background: #4285f4; color: white; border: none; border-radius: 8px; padding: 10px 16px; font-size: 14px; font-weight: 500; cursor: pointer;">Open in Maps</button>
+            <button onclick="closeLocationModal()" style="background: #f0f0f0; color: #333; border: none; border-radius: 8px; padding: 10px 16px; font-size: 14px; font-weight: 500; cursor: pointer;">Close</button>
+          </div>
+        </div>
+      `;
+      
+      modal.appendChild(modalContent);
+      document.body.appendChild(modal);
+      
+      // Close on background click
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeLocationModal();
+        }
+      });
+    }
+    
+    function openMaps() {
+      // Simulate opening maps app
+      showToast('Opening Berlin Zoo in Maps... 🗺️');
+      closeLocationModal();
+    }
+    
+    function closeLocationModal() {
+      const modal = document.querySelector('[style*="position: fixed"]');
+      if (modal) {
+        modal.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+          document.body.removeChild(modal);
+        }, 300);
+      }
+    }
+    
+    // Toast notification system
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 24px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 1001;
+        animation: toastIn 0.3s ease;
+        max-width: 280px;
+        text-align: center;
+      `;
+      
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'toastOut 0.3s ease';
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 300);
+      }, 2500);
+    }
+    
+    // Add CSS animations
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+      @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes toastIn {
+        from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+        to { transform: translateX(-50%) translateY(0); opacity: 1; }
+      }
+      @keyframes toastOut {
+        from { transform: translateX(-50%) translateY(0); opacity: 1; }
+        to { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Enter key support for comment input
+    document.getElementById('comment-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        addComment();
+      }
+    });
+  </script>
+</body>
+</html>

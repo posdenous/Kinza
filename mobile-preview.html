@@ -48,6 +48,11 @@
       flex-direction: column;
       align-items: center;
       width: 25%;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      padding: 8px 4px;
+      border-radius: 8px;
+      user-select: none;
       color: #777;
       font-size: 10px;
     }
@@ -118,10 +123,21 @@
       margin-right: 8px;
       font-size: 14px;
       white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .filter-chip:hover {
+      background-color: #ddd;
+      transform: translateY(-1px);
     }
     .filter-chip.active {
       background-color: #4A90E2;
       color: white;
+      box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    }
+    .filter-chip.active:hover {
+      background-color: #3A80D2;
     }
     .language-selector {
       position: absolute;
@@ -133,6 +149,106 @@
       padding: 4px;
       border-radius: 4px;
       border: 1px solid #ddd;
+    }
+    
+    /* Interactive Button Styles */
+    .event-actions {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+    }
+    
+    .action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      min-height: 44px;
+      min-width: 60px;
+      user-select: none;
+    }
+    
+    .action-btn:hover {
+      background-color: #f8f9fa;
+      transform: translateY(-1px);
+    }
+    
+    .action-btn:active {
+      transform: translateY(0);
+      background-color: #e9ecef;
+    }
+    
+    .btn-icon {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    
+    .btn-text {
+      font-size: 12px;
+      color: #666;
+      font-weight: 500;
+    }
+    
+    .save-btn.saved .btn-icon {
+      filter: brightness(1.2);
+    }
+    
+    .save-btn.saved .btn-text {
+      color: #ff4757;
+      font-weight: 600;
+    }
+    
+    .tab:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .tab.active {
+      color: #4A90E2;
+      background-color: #e8f4fd;
+    }
+    
+    .screen {
+      display: none;
+      padding: 16px;
+    }
+    
+    .screen.active {
+      display: block;
+    }
+    
+    /* Toast notification styles */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 1001;
+      animation: toastIn 0.3s ease;
+      max-width: 280px;
+      text-align: center;
+    }
+    
+    @keyframes toastIn {
+      from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+    
+    @keyframes toastOut {
+      from { transform: translateX(-50%) translateY(0); opacity: 1; }
+      to { transform: translateX(-50%) translateY(-20px); opacity: 0; }
     }
   </style>
 </head>
@@ -174,6 +290,20 @@
             <div class="event-description" id="event1-desc">
               Join us for a special family day at Berlin Zoo with activities for children of all ages.
             </div>
+            <div class="event-actions">
+              <button class="action-btn save-btn" onclick="toggleSave(1)" id="save-btn-1">
+                <span class="btn-icon">❤️</span>
+                <span class="btn-text">Save</span>
+              </button>
+              <button class="action-btn comment-btn" onclick="showComments(1)">
+                <span class="btn-icon">💬</span>
+                <span class="btn-text">Comment</span>
+              </button>
+              <button class="action-btn location-btn" onclick="showLocation(1)">
+                <span class="btn-icon">📍</span>
+                <span class="btn-text">Location</span>
+              </button>
+            </div>
           </div>
         </div>
         <div class="event-card">
@@ -187,16 +317,30 @@
             <div class="event-description" id="event2-desc">
               Create your own puppet and learn storytelling techniques in this interactive workshop.
             </div>
+            <div class="event-actions">
+              <button class="action-btn save-btn" onclick="toggleSave(2)" id="save-btn-2">
+                <span class="btn-icon">❤️</span>
+                <span class="btn-text">Save</span>
+              </button>
+              <button class="action-btn comment-btn" onclick="showComments(2)">
+                <span class="btn-icon">💬</span>
+                <span class="btn-text">Comment</span>
+              </button>
+              <button class="action-btn location-btn" onclick="showLocation(2)">
+                <span class="btn-icon">📍</span>
+                <span class="btn-text">Location</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="tab-bar">
-      <div class="tab active">
+      <div class="tab active" onclick="switchTab('home')">
         <div class="tab-icon">🏠</div>
         <div id="tab-home">Home</div>
       </div>
-      <div class="tab">
+      <div class="tab" onclick="switchTab('search')">
         <div class="tab-icon">🔍</div>
         <div id="tab-search">Search</div>
       </div>
@@ -212,27 +356,32 @@
   </div>
 
   <script>
+    // State management
+    let savedEvents = new Set();
+    let currentLanguage = 'en';
+    let activeFilter = 'all';
+    
     // Translations
     const translations = {
       en: {
-        screenTitle: "Home",
-        tabHome: "Home",
-        tabSearch: "Search",
-        tabSaved: "Saved",
-        tabProfile: "Profile",
-        filterAll: "All",
-        filterToday: "Today",
-        filterWeekend: "Weekend",
-        filterFree: "Free",
-        filterKids: "Kids",
-        event1Title: "Berlin Zoo Family Day",
-        event1Date: "July 20, 2025",
-        event1Age: "Ages 3-12",
-        event1Desc: "Join us for a special family day at Berlin Zoo with activities for children of all ages.",
-        event2Title: "Puppet Theater Workshop",
-        event2Date: "July 21, 2025",
-        event2Age: "Ages 5-10",
-        event2Desc: "Create your own puppet and learn storytelling techniques in this interactive workshop."
+        'screen-title': 'Home',
+        'tab-home': 'Home',
+        'tab-search': 'Search',
+        'tab-saved': 'Saved',
+        'tab-profile': 'Profile',
+        'filter-all': 'All',
+        'filter-today': 'Today',
+        'filter-weekend': 'Weekend',
+        'filter-free': 'Free',
+        'filter-kids': 'Kids',
+        'event1-title': 'Berlin Zoo Family Day',
+        'event1-date': 'July 20, 2025',
+        'event1-age': 'Ages 3-12',
+        'event1-desc': 'Join us for a special family day at Berlin Zoo with activities for children of all ages.',
+        'event2-title': 'Puppet Theater Workshop',
+        'event2-date': 'July 21, 2025',
+        'event2-age': 'Ages 5-10',
+        'event2-desc': 'Create your own puppet and learn storytelling techniques in this interactive workshop.'
       },
       de: {
         screenTitle: "Start",

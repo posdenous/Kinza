@@ -305,9 +305,206 @@
       align-items: center;
       color: #777;
       font-size: 14px;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .event-action:hover {
+      color: #4285f4;
     }
     .event-action-icon {
       margin-right: 4px;
+    }
+    .comment-count {
+      margin-left: 4px;
+      font-weight: 500;
+      color: #4285f4;
+    }
+    
+    /* Mobile Comment Pagination Styles */
+    .comment-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e0e0e0;
+      animation: slideDown 0.3s ease-out;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .comment-status {
+      font-size: 13px;
+      color: #666;
+      font-weight: 500;
+    }
+    
+    .comment-list {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+    
+    .comment-item {
+      display: flex;
+      margin-bottom: 12px;
+      padding: 8px;
+      border-radius: 8px;
+      background: #f8f9fa;
+    }
+    
+    .comment-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #4285f4;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    
+    .comment-content {
+      flex: 1;
+    }
+    
+    .comment-author {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 2px;
+    }
+    
+    .comment-text {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+    
+    .comment-time {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .load-more-container {
+      text-align: center;
+      margin: 16px 0;
+    }
+    
+    .load-more-btn {
+      background: #4285f4;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto;
+    }
+    
+    .load-more-btn:hover {
+      background: #3367d6;
+      transform: translateY(-1px);
+    }
+    
+    .load-more-btn:active {
+      transform: translateY(0);
+    }
+    
+    .load-more-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .comment-input-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+    }
+    
+    .comment-input-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #666;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    
+    .comment-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      outline: none;
+      padding: 8px 0;
+    }
+    
+    .comment-input::placeholder {
+      color: #999;
+    }
+    
+    .comment-send-btn {
+      background: #4285f4;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      color: white;
+    }
+    
+    .comment-send-btn:hover {
+      background: #3367d6;
     }
   </style>
 </head>

@@ -47,6 +47,21 @@ export interface CommentServiceOptions {
   moderationService: ReturnType<typeof useUgcModeration>;
 }
 
+// Enhanced comment pagination interface
+interface CommentPaginationOptions {
+  limit?: number;
+  offset?: number;
+  lastCommentId?: string;
+  includeHidden?: boolean;
+}
+
+interface CommentPaginationResult {
+  comments: Comment[];
+  totalCount: number;
+  hasMore: boolean;
+  nextOffset: number;
+}
+
 /**
  * Creates a comment service instance
  */
@@ -93,38 +108,104 @@ export const createCommentService = ({
   };
 
   /**
-   * Get comments for an event
+   * Get comments for an event with pagination support
    * Enforces city scoping and moderation rules
    */
-  const getComments = async (eventId: string, includeHidden: boolean = false): Promise<Comment[]> => {
+  const getComments = async (
+    eventId: string, 
+    options: CommentPaginationOptions = {}
+  ): Promise<CommentPaginationResult> => {
     if (!firestore || !cityId) {
       throw new Error('Missing required dependencies');
     }
 
+    const {
+      limit = 15,
+      offset = 0,
+      includeHidden = false
+    } = options;
+
     const commentsRef = collection(firestore, 'comments');
     
-    // Build query with city scoping
+    // First, get total count for the event
+    let countQuery = query(
+      commentsRef,
+      where('eventId', '==', eventId),
+      where('cityId', '==', cityId)
+    );
+    
+    if (!includeHidden) {
+      countQuery = query(countQuery, where('isVisible', '==', true));
+    }
+    
+    const countSnapshot = await getDocs(countQuery);
+    const totalCount = countSnapshot.size;
+    
+    // Build paginated query with city scoping
     let commentsQuery = query(
       commentsRef,
       where('eventId', '==', eventId),
       where('cityId', '==', cityId),
-      orderBy('createdAt', 'desc')
+      orderBy('createdAt', 'desc'),
+      limit(limit)
     );
     
     // If not including hidden comments, filter by visibility
     if (!includeHidden) {
       commentsQuery = query(
-        commentsQuery,
-        where('isVisible', '==', true)
+        commentsRef,
+        where('eventId', '==', eventId),
+        where('cityId', '==', cityId),
+        where('isVisible', '==', true),
+        orderBy('createdAt', 'desc'),
+        limit(limit)
       );
+    }
+    
+    // Apply offset if provided (for pagination)
+    if (offset > 0) {
+      // For offset-based pagination, we need to skip documents
+      // Note: Firestore doesn't have native offset, so we simulate it
+      const skipQuery = query(
+        commentsRef,
+        where('eventId', '==', eventId),
+        where('cityId', '==', cityId),
+        ...(includeHidden ? [] : [where('isVisible', '==', true)]),
+        orderBy('createdAt', 'desc'),
+        limit(offset)
+      );
+      
+      const skipSnapshot = await getDocs(skipQuery);
+      if (skipSnapshot.docs.length > 0) {
+        const lastDoc = skipSnapshot.docs[skipSnapshot.docs.length - 1];
+        commentsQuery = query(
+          commentsRef,
+          where('eventId', '==', eventId),
+          where('cityId', '==', cityId),
+          ...(includeHidden ? [] : [where('isVisible', '==', true)]),
+          orderBy('createdAt', 'desc'),
+          startAfter(lastDoc),
+          limit(limit)
+        );
+      }
     }
     
     const snapshot = await getDocs(commentsQuery);
     
-    return snapshot.docs.map(doc => ({
+    const comments = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     } as Comment));
+    
+    const hasMore = (offset + comments.length) < totalCount;
+    const nextOffset = offset + comments.length;
+    
+    return {
+      comments,
+      totalCount,
+      hasMore,
+      nextOffset
+    };
   };
 
   /**
@@ -152,6 +233,26 @@ export const createCommentService = ({
       id: commentSnap.id,
       ...commentData
     } as Comment;
+  };
+
+  /**
+   * Get comment count for an event (for display purposes)
+   */
+  const getCommentCount = async (eventId: string): Promise<number> => {
+    if (!firestore || !cityId) {
+      return 0;
+    }
+
+    const commentsRef = collection(firestore, 'comments');
+    const countQuery = query(
+      commentsRef,
+      where('eventId', '==', eventId),
+      where('cityId', '==', cityId),
+      where('isVisible', '==', true)
+    );
+    
+    const snapshot = await getDocs(countQuery);
+    return snapshot.size;
   };
 
   /**
@@ -218,6 +319,7 @@ export const createCommentService = ({
     addComment,
     getComments,
     getComment,
+    getCommentCount,
     updateComment,
     deleteComment,
   };
