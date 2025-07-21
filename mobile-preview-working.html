@@ -39,6 +39,7 @@
     
     .app-content {
       padding: 16px;
+      padding-bottom: 80px; /* Add space for fixed tab bar */
     }
     
     .language-selector {
@@ -198,11 +199,19 @@
     }
     
     .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 375px;
+      max-width: 100%;
       display: flex;
       justify-content: space-around;
       padding: 12px 0;
       border-top: 1px solid #e0e0e0;
       background: white;
+      z-index: 1000;
+      border-radius: 0 0 12px 12px;
     }
     
     .tab {
@@ -770,7 +779,7 @@
               </div>
               <div class="profile-option-arrow">›</div>
             </div>
-            <div class="profile-option" onclick="switchTab('privacy')">
+            <div class="profile-option" onclick="showToast('Privacy Settings clicked')">
               <div class="profile-option-left">
                 <div class="profile-option-icon">🔒</div>
                 <div class="profile-option-text" id="privacy-settings">Privacy Settings</div>
