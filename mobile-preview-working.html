@@ -258,6 +258,362 @@
       from { transform: translateX(-50%) translateY(0); opacity: 1; }
       to { transform: translateX(-50%) translateY(-20px); opacity: 0; }
     }
+
+    /* Screen Management */
+    .screen {
+      display: none;
+    }
+    
+    .screen.active {
+      display: block;
+    }
+
+    /* Search Screen Styles */
+    .search-container {
+      padding: 16px;
+    }
+    
+    .search-bar {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 12px 40px 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 25px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    
+    .search-input:focus {
+      border-color: #4A90E2;
+    }
+    
+    .search-button {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #4A90E2;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .search-filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .search-filter {
+      background: #f0f0f0;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .search-filter.active {
+      background: #4A90E2;
+      color: white;
+    }
+    
+    .search-results {
+      margin-top: 20px;
+    }
+    
+    .search-result-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    
+    .search-result-item:hover {
+      background: #f8f9fa;
+    }
+    
+    .search-result-image {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
+      text-align: center;
+    }
+    
+    .search-result-content {
+      flex: 1;
+    }
+    
+    .search-result-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .search-result-meta {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    
+    .search-result-description {
+      font-size: 14px;
+      color: #888;
+      line-height: 1.3;
+    }
+
+    /* Profile Screen Styles */
+    .profile-container {
+      padding: 16px;
+    }
+    
+    .profile-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      color: white;
+    }
+    
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: bold;
+    }
+    
+    .profile-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .profile-email {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .profile-section {
+      margin-bottom: 24px;
+    }
+    
+    .profile-section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #333;
+    }
+    
+    .profile-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid #f0f0f0;
+    }
+    
+    .profile-option:hover {
+      background: #f8f9fa;
+      transform: translateY(-1px);
+    }
+    
+    .profile-option-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .profile-option-icon {
+      width: 24px;
+      height: 24px;
+      background: #4A90E2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+    }
+    
+    .profile-option-text {
+      font-weight: 500;
+    }
+    
+    .profile-option-arrow {
+      color: #ccc;
+    }
+    
+    .profile-stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .profile-stat {
+      flex: 1;
+      text-align: center;
+      padding: 16px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #f0f0f0;
+    }
+    
+    .profile-stat-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4A90E2;
+      margin-bottom: 4px;
+    }
+    
+    .profile-stat-label {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Saved Events Screen Styles */
+    .saved-container {
+      padding: 16px;
+    }
+    
+    .saved-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .saved-count {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .saved-clear {
+      background: none;
+      border: none;
+      color: #ff4757;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    
+    .saved-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+    
+    .saved-empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    
+    .saved-empty-text {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    
+    .saved-empty-subtext {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+    
+    .saved-event {
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+    
+    .saved-event:hover {
+      transform: translateY(-2px);
+    }
+    
+    .saved-event-image {
+      height: 120px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      position: relative;
+    }
+    
+    .saved-event-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .saved-event-content {
+      padding: 16px;
+    }
+    
+    .saved-event-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .saved-event-meta {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    
+    .saved-event-description {
+      font-size: 14px;
+      color: #888;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -277,72 +633,189 @@
         </select>
       </div>
       
-      <h2 class="screen-title" id="screen-title">Home</h2>
-      
-      <div class="map-container" id="map-container">
-        Interactive Map View
-      </div>
-      
-      <div class="filter-bar">
-        <button class="filter-chip active" id="filter-all" onclick="handleFilter('all')">All</button>
-        <button class="filter-chip" id="filter-today" onclick="handleFilter('today')">Today</button>
-        <button class="filter-chip" id="filter-weekend" onclick="handleFilter('weekend')">Weekend</button>
-        <button class="filter-chip" id="filter-free" onclick="handleFilter('free')">Free</button>
-        <button class="filter-chip" id="filter-kids" onclick="handleFilter('kids')">Kids</button>
-      </div>
-      
-      <div class="event-card">
-        <div class="event-image">Berlin Zoo Family Day</div>
-        <div class="event-details">
-          <div class="event-title" id="event1-title">Berlin Zoo Family Day</div>
-          <div class="event-meta">
-            <span id="event1-date">July 20, 2025</span>
-            <span id="event1-age">Ages 3-12</span>
+      <!-- Home Screen -->
+      <div id="home-screen" class="screen active">
+        <h2 class="screen-title" id="screen-title">Home</h2>
+        
+        <div class="map-container" id="map-container">
+          Interactive Map View
+        </div>
+        
+        <div class="filter-bar">
+          <button class="filter-chip active" id="filter-all" onclick="handleFilter('all')">All</button>
+          <button class="filter-chip" id="filter-today" onclick="handleFilter('today')">Today</button>
+          <button class="filter-chip" id="filter-weekend" onclick="handleFilter('weekend')">Weekend</button>
+          <button class="filter-chip" id="filter-free" onclick="handleFilter('free')">Free</button>
+          <button class="filter-chip" id="filter-kids" onclick="handleFilter('kids')">Kids</button>
+        </div>
+        
+        <div class="event-card">
+          <div class="event-image">Berlin Zoo Family Day</div>
+          <div class="event-details">
+            <div class="event-title" id="event1-title">Berlin Zoo Family Day</div>
+            <div class="event-meta">
+              <span id="event1-date">July 20, 2025</span>
+              <span id="event1-age">Ages 3-12</span>
+            </div>
+            <div class="event-description" id="event1-desc">
+              Join us for a special family day at Berlin Zoo with activities for children of all ages.
+            </div>
+            <div class="event-actions">
+              <button class="action-btn save-btn" onclick="toggleSave(1)" id="save-btn-1">
+                <span class="btn-icon">❤️</span>
+                <span class="btn-text">Save</span>
+              </button>
+              <button class="action-btn comment-btn" onclick="showComments(1)">
+                <span class="btn-icon">💬</span>
+                <span class="btn-text">Comment</span>
+              </button>
+              <button class="action-btn location-btn" onclick="showLocation(1)">
+                <span class="btn-icon">📍</span>
+                <span class="btn-text">Location</span>
+              </button>
+            </div>
           </div>
-          <div class="event-description" id="event1-desc">
-            Join us for a special family day at Berlin Zoo with activities for children of all ages.
-          </div>
-          <div class="event-actions">
-            <button class="action-btn save-btn" onclick="toggleSave(1)" id="save-btn-1">
-              <span class="btn-icon">❤️</span>
-              <span class="btn-text">Save</span>
-            </button>
-            <button class="action-btn comment-btn" onclick="showComments(1)">
-              <span class="btn-icon">💬</span>
-              <span class="btn-text">Comment</span>
-            </button>
-            <button class="action-btn location-btn" onclick="showLocation(1)">
-              <span class="btn-icon">📍</span>
-              <span class="btn-text">Location</span>
-            </button>
+        </div>
+        
+        <div class="event-card">
+          <div class="event-image">Puppet Theater Workshop</div>
+          <div class="event-details">
+            <div class="event-title" id="event2-title">Puppet Theater Workshop</div>
+            <div class="event-meta">
+              <span id="event2-date">July 21, 2025</span>
+              <span id="event2-age">Ages 5-10</span>
+            </div>
+            <div class="event-description" id="event2-desc">
+              Create your own puppet and learn storytelling techniques in this interactive workshop.
+            </div>
+            <div class="event-actions">
+              <button class="action-btn save-btn" onclick="toggleSave(2)" id="save-btn-2">
+                <span class="btn-icon">❤️</span>
+                <span class="btn-text">Save</span>
+              </button>
+              <button class="action-btn comment-btn" onclick="showComments(2)">
+                <span class="btn-icon">💬</span>
+                <span class="btn-text">Comment</span>
+              </button>
+              <button class="action-btn location-btn" onclick="showLocation(2)">
+                <span class="btn-icon">📍</span>
+                <span class="btn-text">Location</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
       
-      <div class="event-card">
-        <div class="event-image">Puppet Theater Workshop</div>
-        <div class="event-details">
-          <div class="event-title" id="event2-title">Puppet Theater Workshop</div>
-          <div class="event-meta">
-            <span id="event2-date">July 21, 2025</span>
-            <span id="event2-age">Ages 5-10</span>
+      <!-- Search Screen -->
+      <div id="search-screen" class="screen">
+        <h2 class="screen-title" id="search-title">Search</h2>
+        <div class="search-container">
+          <div class="search-bar">
+            <input type="text" class="search-input" id="search-input" placeholder="Search events...">
+            <button class="search-button" onclick="performSearch()">🔍</button>
           </div>
-          <div class="event-description" id="event2-desc">
-            Create your own puppet and learn storytelling techniques in this interactive workshop.
+          
+          <div class="search-filters">
+            <button class="search-filter active" onclick="setSearchFilter('all')" id="search-filter-all">All</button>
+            <button class="search-filter" onclick="setSearchFilter('today')" id="search-filter-today">Today</button>
+            <button class="search-filter" onclick="setSearchFilter('weekend')" id="search-filter-weekend">Weekend</button>
+            <button class="search-filter" onclick="setSearchFilter('free')" id="search-filter-free">Free</button>
+            <button class="search-filter" onclick="setSearchFilter('kids')" id="search-filter-kids">Kids</button>
           </div>
-          <div class="event-actions">
-            <button class="action-btn save-btn" onclick="toggleSave(2)" id="save-btn-2">
-              <span class="btn-icon">❤️</span>
-              <span class="btn-text">Save</span>
-            </button>
-            <button class="action-btn comment-btn" onclick="showComments(2)">
-              <span class="btn-icon">💬</span>
-              <span class="btn-text">Comment</span>
-            </button>
-            <button class="action-btn location-btn" onclick="showLocation(2)">
-              <span class="btn-icon">📍</span>
-              <span class="btn-text">Location</span>
-            </button>
+          
+          <div class="search-results" id="search-results">
+            <!-- Search results will be populated here -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Profile Screen -->
+      <div id="profile-screen" class="screen">
+        <h2 class="screen-title" id="profile-title">Profile</h2>
+        <div class="profile-container">
+          <div class="profile-header">
+            <div class="profile-avatar">JD</div>
+            <div class="profile-name" id="profile-name">John Doe</div>
+            <div class="profile-email" id="profile-email">john.doe@example.com</div>
+          </div>
+          
+          <div class="profile-stats">
+            <div class="profile-stat">
+              <div class="profile-stat-number" id="saved-events-count">12</div>
+              <div class="profile-stat-label" id="saved-events-label">Saved Events</div>
+            </div>
+            <div class="profile-stat">
+              <div class="profile-stat-number" id="attended-events-count">8</div>
+              <div class="profile-stat-label" id="attended-events-label">Attended</div>
+            </div>
+            <div class="profile-stat">
+              <div class="profile-stat-number" id="reviews-count">15</div>
+              <div class="profile-stat-label" id="reviews-label">Reviews</div>
+            </div>
+          </div>
+          
+          <div class="profile-section">
+            <div class="profile-section-title" id="account-section">Account</div>
+            <div class="profile-option" onclick="showToast('Edit Profile clicked')">
+              <div class="profile-option-left">
+                <div class="profile-option-icon">👤</div>
+                <div class="profile-option-text" id="edit-profile">Edit Profile</div>
+              </div>
+              <div class="profile-option-arrow">›</div>
+            </div>
+            <div class="profile-option" onclick="showToast('Notifications clicked')">
+              <div class="profile-option-left">
+                <div class="profile-option-icon">🔔</div>
+                <div class="profile-option-text" id="notifications">Notifications</div>
+              </div>
+              <div class="profile-option-arrow">›</div>
+            </div>
+            <div class="profile-option" onclick="switchTab('privacy')">
+              <div class="profile-option-left">
+                <div class="profile-option-icon">🔒</div>
+                <div class="profile-option-text" id="privacy-settings">Privacy Settings</div>
+              </div>
+              <div class="profile-option-arrow">›</div>
+            </div>
+          </div>
+          
+          <div class="profile-section">
+            <div class="profile-section-title" id="preferences-section">Preferences</div>
+            <div class="profile-option" onclick="showToast('Language settings clicked')">
+              <div class="profile-option-left">
+                <div class="profile-option-icon">🌐</div>
+                <div class="profile-option-text" id="language-settings">Language</div>
+              </div>
+              <div class="profile-option-arrow">›</div>
+            </div>
+            <div class="profile-option" onclick="showToast('Help & Support clicked')">
+              <div class="profile-option-left">
+                <div class="profile-option-icon">❓</div>
+                <div class="profile-option-text" id="help-support">Help & Support</div>
+              </div>
+              <div class="profile-option-arrow">›</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Saved Events Screen -->
+      <div id="saved-screen" class="screen">
+        <h2 class="screen-title" id="saved-title">Saved Events</h2>
+        <div class="saved-container">
+          <div class="saved-header">
+            <div class="saved-count" id="saved-count-text">2 saved events</div>
+            <button class="saved-clear" onclick="clearAllSaved()" id="clear-all">Clear All</button>
+          </div>
+          
+          <div id="saved-events-list">
+            <!-- Saved events will be populated here -->
+          </div>
+          
+          <div id="saved-empty" class="saved-empty" style="display: none;">
+            <div class="saved-empty-icon">❤️</div>
+            <div class="saved-empty-text" id="no-saved-events">No saved events</div>
+            <div class="saved-empty-subtext" id="save-events-hint">Save events you're interested in to see them here</div>
           </div>
         </div>
       </div>
@@ -389,7 +862,33 @@
         'event2-title': 'Puppet Theater Workshop',
         'event2-date': 'July 21, 2025',
         'event2-age': 'Ages 5-10',
-        'event2-desc': 'Create your own puppet and learn storytelling techniques in this interactive workshop.'
+        'event2-desc': 'Create your own puppet and learn storytelling techniques in this interactive workshop.',
+        // Search Screen
+        'search-title': 'Search',
+        'search-filter-all': 'All',
+        'search-filter-today': 'Today',
+        'search-filter-weekend': 'Weekend',
+        'search-filter-free': 'Free',
+        'search-filter-kids': 'Kids',
+        // Profile Screen
+        'profile-title': 'Profile',
+        'profile-name': 'John Doe',
+        'profile-email': 'john.doe@example.com',
+        'saved-events-label': 'Saved Events',
+        'attended-events-label': 'Attended',
+        'reviews-label': 'Reviews',
+        'account-section': 'Account',
+        'edit-profile': 'Edit Profile',
+        'notifications': 'Notifications',
+        'privacy-settings': 'Privacy Settings',
+        'preferences-section': 'Preferences',
+        'language-settings': 'Language',
+        'help-support': 'Help & Support',
+        // Saved Events Screen
+        'saved-title': 'Saved Events',
+        'clear-all': 'Clear All',
+        'no-saved-events': 'No saved events',
+        'save-events-hint': 'Save events you\'re interested in to see them here'
       },
       de: {
         'screen-title': 'Start',
@@ -404,7 +903,33 @@
         'event2-title': 'Puppentheater Workshop',
         'event2-date': '21. Juli 2025',
         'event2-age': 'Alter 5-10',
-        'event2-desc': 'Erstellen Sie Ihre eigene Puppe und lernen Sie Geschichtenerzähltechniken in diesem interaktiven Workshop.'
+        'event2-desc': 'Erstellen Sie Ihre eigene Puppe und lernen Sie Geschichtenerzähltechniken in diesem interaktiven Workshop.',
+        // Search Screen
+        'search-title': 'Suchen',
+        'search-filter-all': 'Alle',
+        'search-filter-today': 'Heute',
+        'search-filter-weekend': 'Weekend',
+        'search-filter-free': 'Gratis',
+        'search-filter-kids': 'Kinder',
+        // Profile Screen
+        'profile-title': 'Profil',
+        'profile-name': 'Max Mustermann',
+        'profile-email': 'max.mustermann@beispiel.de',
+        'saved-events-label': 'Gespeicherte Events',
+        'attended-events-label': 'Teilgenommen',
+        'reviews-label': 'Bewertungen',
+        'account-section': 'Konto',
+        'edit-profile': 'Profil bearbeiten',
+        'notifications': 'Benachrichtigungen',
+        'privacy-settings': 'Datenschutz',
+        'preferences-section': 'Einstellungen',
+        'language-settings': 'Sprache',
+        'help-support': 'Hilfe & Support',
+        // Saved Events Screen
+        'saved-title': 'Gespeicherte Events',
+        'clear-all': 'Alle löschen',
+        'no-saved-events': 'Keine gespeicherten Events',
+        'save-events-hint': 'Speichere Events, die dich interessieren, um sie hier zu sehen'
       },
       it: {
         'screen-title': 'Home',
@@ -419,7 +944,33 @@
         'event2-title': 'Workshop Teatro delle Marionette',
         'event2-date': '21 Luglio 2025',
         'event2-age': 'Età 5-10',
-        'event2-desc': 'Crea la tua marionetta e impara le tecniche di narrazione in questo workshop interattivo.'
+        'event2-desc': 'Crea la tua marionetta e impara le tecniche di narrazione in questo workshop interattivo.',
+        // Search Screen
+        'search-title': 'Cerca',
+        'search-filter-all': 'Tutti',
+        'search-filter-today': 'Oggi',
+        'search-filter-weekend': 'Weekend',
+        'search-filter-free': 'Gratuito',
+        'search-filter-kids': 'Bambini',
+        // Profile Screen
+        'profile-title': 'Profilo',
+        'profile-name': 'Mario Rossi',
+        'profile-email': 'mario.rossi@esempio.it',
+        'saved-events-label': 'Eventi Salvati',
+        'attended-events-label': 'Partecipati',
+        'reviews-label': 'Recensioni',
+        'account-section': 'Account',
+        'edit-profile': 'Modifica Profilo',
+        'notifications': 'Notifiche',
+        'privacy-settings': 'Impostazioni Privacy',
+        'preferences-section': 'Preferenze',
+        'language-settings': 'Lingua',
+        'help-support': 'Aiuto e Supporto',
+        // Saved Events Screen
+        'saved-title': 'Eventi Salvati',
+        'clear-all': 'Cancella Tutto',
+        'no-saved-events': 'Nessun evento salvato',
+        'save-events-hint': 'Salva gli eventi che ti interessano per vederli qui'
       }
     };
     
@@ -476,27 +1027,35 @@
     // Save functionality
     function toggleSave(eventId) {
       const saveBtn = document.getElementById(`save-btn-${eventId}`);
-      const btnText = saveBtn.querySelector('.btn-text');
+      const isCurrentlySaved = savedEvents.has(eventId);
       
-      if (savedEvents.has(eventId)) {
-        // Unsave
+      if (isCurrentlySaved) {
         savedEvents.delete(eventId);
         saveBtn.classList.remove('saved');
-        btnText.textContent = 'Save';
-        showToast('Event removed from favorites');
+        saveBtn.style.color = '#666';
+        showToast('Event removed from saved');
       } else {
-        // Save
         savedEvents.add(eventId);
         saveBtn.classList.add('saved');
-        btnText.textContent = 'Saved';
-        showToast('Event saved to favorites! ❤️');
+        saveBtn.style.color = '#ff4757';
+        showToast('Event saved!');
       }
       
-      // Haptic feedback simulation
-      saveBtn.style.transform = 'scale(1.1)';
+      // Update profile stats if profile screen is active
+      if (document.getElementById('profile-screen').classList.contains('active')) {
+        updateProfileStats();
+      }
+      
+      // Update saved screen if it's active
+      if (document.getElementById('saved-screen').classList.contains('active')) {
+        displaySavedEvents();
+      }
+      
+      // Visual feedback
+      saveBtn.style.transform = 'scale(0.9)';
       setTimeout(() => {
         saveBtn.style.transform = 'scale(1)';
-      }, 200);
+      }, 150);
     }
     
     // Comment functionality
@@ -521,8 +1080,30 @@
         tab.classList.remove('active');
       });
       
+      // Remove active class from all screens
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+      });
+      
       // Add active class to clicked tab
       event.currentTarget.classList.add('active');
+      
+      // Show corresponding screen
+      const screenId = tabName === 'home' ? 'home-screen' : 
+                      tabName === 'search' ? 'search-screen' :
+                      tabName === 'saved' ? 'saved-screen' :
+                      tabName === 'profile' ? 'profile-screen' : 'home-screen';
+      
+      document.getElementById(screenId).classList.add('active');
+      
+      // Initialize screen-specific functionality
+      if (tabName === 'search') {
+        initializeSearchScreen();
+      } else if (tabName === 'saved') {
+        initializeSavedScreen();
+      } else if (tabName === 'profile') {
+        initializeProfileScreen();
+      }
       
       // Visual feedback
       event.currentTarget.style.transform = 'scale(0.95)';
@@ -531,6 +1112,208 @@
       }, 150);
       
       showToast(`Switched to ${tabName.charAt(0).toUpperCase() + tabName.slice(1)} tab`);
+    }
+    
+    // Search Screen Functions
+    function initializeSearchScreen() {
+      const searchInput = document.getElementById('search-input');
+      searchInput.focus();
+      
+      // Add event listener for Enter key
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          performSearch();
+        }
+      });
+      
+      // Show initial search results
+      displaySearchResults([]);
+    }
+    
+    function performSearch() {
+      const query = document.getElementById('search-input').value.trim();
+      const searchResults = document.getElementById('search-results');
+      
+      if (!query) {
+        showToast('Please enter a search term');
+        return;
+      }
+      
+      // Simulate search with mock results
+      const mockResults = [
+        {
+          id: 1,
+          title: 'Berlin Zoo Family Day',
+          date: 'July 20, 2025',
+          age: 'Ages 3-12',
+          description: 'Join us for a special family day at Berlin Zoo with activities for children of all ages.'
+        },
+        {
+          id: 2,
+          title: 'Puppet Theater Workshop',
+          date: 'July 21, 2025',
+          age: 'Ages 5-10',
+          description: 'Create your own puppet and learn storytelling techniques in this interactive workshop.'
+        },
+        {
+          id: 3,
+          title: 'Science Museum Adventure',
+          date: 'July 22, 2025',
+          age: 'Ages 6-14',
+          description: 'Explore interactive exhibits and conduct fun experiments at the Science Museum.'
+        }
+      ];
+      
+      // Filter results based on query
+      const filteredResults = mockResults.filter(event => 
+        event.title.toLowerCase().includes(query.toLowerCase()) ||
+        event.description.toLowerCase().includes(query.toLowerCase())
+      );
+      
+      displaySearchResults(filteredResults);
+      showToast(`Found ${filteredResults.length} results for "${query}"`);
+    }
+    
+    function displaySearchResults(results) {
+      const searchResults = document.getElementById('search-results');
+      
+      if (results.length === 0) {
+        searchResults.innerHTML = `
+          <div style="text-align: center; padding: 40px; color: #666;">
+            <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;">🔍</div>
+            <div style="font-size: 16px; margin-bottom: 8px;">No results found</div>
+            <div style="font-size: 14px; opacity: 0.7;">Try different keywords or browse all events</div>
+          </div>
+        `;
+        return;
+      }
+      
+      searchResults.innerHTML = results.map(event => `
+        <div class="search-result-item" onclick="showToast('Viewing ${event.title}')">
+          <div class="search-result-image">${event.title.split(' ').map(w => w[0]).join('').substring(0, 3)}</div>
+          <div class="search-result-content">
+            <div class="search-result-title">${event.title}</div>
+            <div class="search-result-meta">${event.date} • ${event.age}</div>
+            <div class="search-result-description">${event.description}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function setSearchFilter(filterType) {
+      // Remove active class from all search filters
+      document.querySelectorAll('.search-filter').forEach(filter => {
+        filter.classList.remove('active');
+      });
+      
+      // Add active class to clicked filter
+      document.getElementById(`search-filter-${filterType}`).classList.add('active');
+      
+      showToast(`Applied ${filterType} search filter`);
+    }
+    
+    // Profile Screen Functions
+    function initializeProfileScreen() {
+      updateProfileStats();
+    }
+    
+    function updateProfileStats() {
+      const savedCount = savedEvents.size;
+      document.getElementById('saved-events-count').textContent = savedCount;
+    }
+    
+    // Saved Events Screen Functions
+    function initializeSavedScreen() {
+      displaySavedEvents();
+    }
+    
+    function displaySavedEvents() {
+      const savedEventsList = document.getElementById('saved-events-list');
+      const savedEmpty = document.getElementById('saved-empty');
+      const savedCountText = document.getElementById('saved-count-text');
+      
+      if (savedEvents.size === 0) {
+        savedEventsList.innerHTML = '';
+        savedEmpty.style.display = 'block';
+        savedCountText.textContent = '0 saved events';
+        return;
+      }
+      
+      savedEmpty.style.display = 'none';
+      savedCountText.textContent = `${savedEvents.size} saved event${savedEvents.size !== 1 ? 's' : ''}`;
+      
+      const mockSavedEvents = [
+        {
+          id: 1,
+          title: 'Berlin Zoo Family Day',
+          date: 'July 20, 2025',
+          age: 'Ages 3-12',
+          description: 'Join us for a special family day at Berlin Zoo with activities for children of all ages.'
+        },
+        {
+          id: 2,
+          title: 'Puppet Theater Workshop',
+          date: 'July 21, 2025',
+          age: 'Ages 5-10',
+          description: 'Create your own puppet and learn storytelling techniques in this interactive workshop.'
+        }
+      ];
+      
+      const savedEventsArray = mockSavedEvents.filter(event => savedEvents.has(event.id));
+      
+      savedEventsList.innerHTML = savedEventsArray.map(event => `
+        <div class="saved-event">
+          <div class="saved-event-image">
+            ${event.title}
+            <button class="saved-event-remove" onclick="removeSavedEvent(${event.id})" title="Remove from saved">×</button>
+          </div>
+          <div class="saved-event-content">
+            <div class="saved-event-title">${event.title}</div>
+            <div class="saved-event-meta">${event.date} • ${event.age}</div>
+            <div class="saved-event-description">${event.description}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function removeSavedEvent(eventId) {
+      savedEvents.delete(eventId);
+      
+      // Update save button state
+      const saveBtn = document.getElementById(`save-btn-${eventId}`);
+      if (saveBtn) {
+        saveBtn.classList.remove('saved');
+        saveBtn.style.color = '#666';
+      }
+      
+      // Refresh saved events display
+      displaySavedEvents();
+      updateProfileStats();
+      
+      showToast('Event removed from saved');
+    }
+    
+    function clearAllSaved() {
+      if (savedEvents.size === 0) {
+        showToast('No saved events to clear');
+        return;
+      }
+      
+      if (confirm('Are you sure you want to remove all saved events?')) {
+        // Update all save button states
+        savedEvents.forEach(eventId => {
+          const saveBtn = document.getElementById(`save-btn-${eventId}`);
+          if (saveBtn) {
+            saveBtn.classList.remove('saved');
+            saveBtn.style.color = '#666';
+          }
+        });
+        
+        savedEvents.clear();
+        displaySavedEvents();
+        updateProfileStats();
+        showToast('All saved events cleared');
+      }
     }
     
     // Language switching
