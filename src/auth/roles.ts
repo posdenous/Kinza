@@ -108,3 +108,37 @@ export const hasPermission = (userRole: UserRole, permission: Permission): boole
 export const getPermissionsForRole = (role: UserRole): Permission[] => {
   return rolePermissions[role] || [];
 };
+
+/**
+ * Screen access control definitions
+ */
+export const screenAccessControl = {
+  // Admin-only screens
+  AdminDashboard: [UserRole.ADMIN],
+  ReportReview: [UserRole.ADMIN],
+  ModerationQueue: [UserRole.ADMIN],
+  
+  // Organiser screens
+  OrganiserDashboard: [UserRole.ORGANISER, UserRole.ADMIN],
+  
+  // Authenticated user screens
+  Privacy: [UserRole.PARENT, UserRole.ORGANISER, UserRole.ADMIN, UserRole.PARTNER],
+  SubmitEvent: [UserRole.ORGANISER, UserRole.ADMIN, UserRole.PARTNER],
+  
+  // Public screens (accessible by all roles including guests)
+  Home: Object.values(UserRole),
+  Search: Object.values(UserRole),
+  Map: Object.values(UserRole),
+  EventDetail: Object.values(UserRole),
+};
+
+/**
+ * Check if a user role can access a specific screen
+ * @param userRole The role of the user
+ * @param screenName The name of the screen
+ * @returns boolean indicating if the user can access the screen
+ */
+export const canAccessScreen = (userRole: UserRole, screenName: string): boolean => {
+  const allowedRoles = screenAccessControl[screenName as keyof typeof screenAccessControl];
+  return allowedRoles ? allowedRoles.includes(userRole) : false;
+};
