@@ -5,8 +5,14 @@ module.exports = {
     '<rootDir>/jest.setup.js'
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(jest-)?react-native|@react-native|expo(nent)?|@expo(nent)?/.*|react-clone-referenced-element|@react-native-community|expo-constants|expo-permissions|@unimodules)'
+    'node_modules/(?!(jest-)?react-native|@react-native|expo(nent)?|@expo(nent)?/.*|react-clone-referenced-element|@react-native-community|expo-constants|expo-permissions|@unimodules|@react-native/js-polyfills)'
   ],
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', {
+      presets: ['babel-preset-expo'],
+      plugins: []
+    }]
+  },
   moduleNameMapper: {
     '^@components/(.*)$': '<rootDir>/src/components/$1',
     '^@screens/(.*)$': '<rootDir>/src/screens/$1',

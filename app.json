@@ -9,16 +9,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kinza.berlin"
     },
     "android": {
       "package": "com.kinza.berlin",
       "permissions": [
-        "ACCESS_FINE_LOCATION"
+        "ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
       ]
     },
-    "web": {
-    },
+    "web": {},
     "plugins": [
       [
         "expo-location",

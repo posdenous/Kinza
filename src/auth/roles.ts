@@ -15,11 +15,11 @@ export enum UserRole {
  * Role descriptions
  */
 export const roleDescriptions = {
-  [UserRole.PARENT]: 'Primary user – discover events, connect locally',
-  [UserRole.ORGANISER]: 'Hosts or venues posting events',
-  [UserRole.ADMIN]: 'Kinza team or moderators',
-  [UserRole.GUEST]: 'New or anonymous user',
-  [UserRole.PARTNER]: 'Businesses promoting kid-friendly places'
+  [UserRole.PARENT]: 'Registered family user seeking age-appropriate events and activities for their children',
+  [UserRole.ORGANISER]: 'Individual or small organization that creates and hosts community events for families',
+  [UserRole.ADMIN]: 'Kinza team members and moderators responsible for platform governance and safety',
+  [UserRole.GUEST]: 'Unregistered user with read-only access to public content',
+  [UserRole.PARTNER]: 'Commercial businesses and venues that promote kid-friendly services and host events'
 };
 
 /**
@@ -72,11 +72,14 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
     Permission.MANAGE_USERS,
     Permission.VIEW_ANALYTICS,
     Permission.EDIT_PROFILE,
-    Permission.VIEW_FULL_MAP
+    Permission.VIEW_FULL_MAP,
+    Permission.VIEW_LIMITED_MAP
   ],
   [UserRole.GUEST]: [
     Permission.VIEW_EVENTS,
     Permission.VIEW_LIMITED_MAP
+    // Note: Guests cannot save events, comment, or access personalized features
+    // They must register to become Parent/Organiser for full functionality
   ],
   [UserRole.PARTNER]: [
     Permission.VIEW_EVENTS,
@@ -126,10 +129,15 @@ export const screenAccessControl = {
   SubmitEvent: [UserRole.ORGANISER, UserRole.ADMIN, UserRole.PARTNER],
   
   // Public screens (accessible by all roles including guests)
-  Home: Object.values(UserRole),
-  Search: Object.values(UserRole),
-  Map: Object.values(UserRole),
-  EventDetail: Object.values(UserRole),
+  Home: Object.values(UserRole), // Guests see limited version without personalization
+  Search: Object.values(UserRole), // Guests can search but cannot save results
+  Map: Object.values(UserRole), // Guests see limited map without full location features
+  EventDetail: Object.values(UserRole), // Guests can view but cannot interact (save/comment)
+  
+  // Guest-restricted screens (require registration)
+  Profile: [UserRole.PARENT, UserRole.ORGANISER, UserRole.ADMIN, UserRole.PARTNER],
+  SavedEvents: [UserRole.PARENT, UserRole.ORGANISER, UserRole.ADMIN, UserRole.PARTNER],
+  Comments: [UserRole.PARENT, UserRole.ORGANISER, UserRole.ADMIN, UserRole.PARTNER], // View-only for guests
 };
 
 /**

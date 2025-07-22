@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinza App - Complete Testing Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .flow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .flow-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+        
+        .flow-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .flow-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .flow-header h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .flow-content {
+            padding: 20px;
+        }
+        
+        .flow-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .flow-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .testing-tools {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .testing-tools h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .tool-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .tool-card h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .tool-card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .iframe-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .iframe-wrapper {
+            background: white;
+            border-radius: 12px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .iframe-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .iframe-header h3 {
+            margin: 0;
+        }
+        
+        .close-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .close-btn:hover {
+            background: #c0392b;
+        }
+        
+        .iframe-content {
+            flex: 1;
+            border: none;
+            width: 100%;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-ready { background: #27ae60; }
+        .status-testing { background: #f39c12; }
+        .status-demo { background: #3498db; }
+        
+        @media (max-width: 768px) {
+            .flow-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .iframe-container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 Kinza App - Complete Testing Dashboard</h1>
+        <p>Test all user flows, roles, and functionality in one unified interface</p>
+    </div>
+    
+    <div class="testing-tools">
+        <h2>🛠️ Testing Tools & Commands</h2>
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h4>Unit Tests</h4>
+                <p>Run comprehensive role and flow tests</p>
+                <code>npm test</code>
+            </div>
+            <div class="tool-card">
+                <h4>E2E Tests (Playwright)</h4>
+                <p>Automated browser testing with UI</p>
+                <code>npx playwright test --ui</code>
+            </div>
+            <div class="tool-card">
+                <h4>React Native Dev</h4>
+                <p>Live development server</p>
+                <code>npm start</code>
+            </div>
+            <div class="tool-card">
+                <h4>Test Reports</h4>
+                <p>View detailed test results</p>
+                <code>npx playwright show-report</code>
+            </div>
+        </div>
+    </div>
+    
+    <div class="flow-grid">
+        <!-- Main Mobile App -->
+        <div class="flow-card">
+            <div class="flow-header">
+                <span class="status-indicator status-ready"></span>
+                <h3>📱 Complete Mobile App</h3>
+            </div>
+            <div class="flow-content">
+                <div class="flow-description">
+                    Full mobile app with Home, Search, Profile, and Saved Events screens. 
+                    Test navigation, multilingual support, and core functionality.
+                </div>
+                <div class="flow-actions">
+                    <button class="btn btn-primary" onclick="openFlow('mobile-preview.html', 'Complete Mobile App')">
+                        🔍 Open Flow
+                    </button>
+                    <a href="mobile-preview.html" target="_blank" class="btn btn-secondary">
+                        🔗 New Tab
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Parent Onboarding -->
+        <div class="flow-card">
+            <div class="flow-header">
+                <span class="status-indicator status-ready"></span>
+                <h3>👨‍👩‍👧‍👦 Parent Onboarding</h3>
+            </div>
+            <div class="flow-content">
+                <div class="flow-description">
+                    GDPR-compliant parent registration with granular consent system, 
+                    child profile setup, and privacy-first design.
+                </div>
+                <div class="flow-actions">
+                    <button class="btn btn-primary" onclick="openFlow('preview/parent_onboarding.html', 'Parent Onboarding Flow')">
+                        🔍 Open Flow
+                    </button>
+                    <a href="preview/parent_onboarding.html" target="_blank" class="btn btn-secondary">
+                        🔗 New Tab
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Privacy & Trust -->
+        <div class="flow-card">
+            <div class="flow-header">
+                <span class="status-indicator status-ready"></span>
+                <h3>🔒 Privacy & Trust</h3>
+            </div>
+            <div class="flow-content">
+                <div class="flow-description">
+                    Comprehensive privacy settings, child profile visibility controls, 
+                    data retention policies, and community safety features.
+                </div>
+                <div class="flow-actions">
+                    <button class="btn btn-primary" onclick="openFlow('preview/mobile_privacy.html', 'Privacy & Trust Settings')">
+                        🔍 Open Flow
+                    </button>
+                    <a href="preview/mobile_privacy.html" target="_blank" class="btn btn-secondary">
+                        🔗 New Tab
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Dashboard -->
+        <div class="flow-card">
+            <div class="flow-header">
+                <span class="status-indicator status-ready"></span>
+                <h3>⚡ Admin Dashboard</h3>
+            </div>
+            <div class="flow-content">
+                <div class="flow-description">
+                    Content moderation tools, user management, city-scoped analytics, 
+                    and real-time moderation queue for administrators.
+                </div>
+                <div class="flow-actions">
+                    <button class="btn btn-primary" onclick="openFlow('preview/admin_dashboard.html', 'Admin Dashboard')">
+                        🔍 Open Flow
+                    </button>
+                    <a href="preview/admin_dashboard.html" target="_blank" class="btn btn-secondary">
+                        🔗 New Tab
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Organiser Dashboard -->
+        <div class="flow-card">
+            <div class="flow-header">
+                <span class="status-indicator status-ready"></span>
+                <h3>📅 Organiser Dashboard</h3>
+            </div>
+            <div class="flow-content">
+                <div class="flow-description">
+                    Event creation and management, analytics, verification status, 
+                    and comprehensive event filtering tools for organisers.
+                </div>
+                <div class="flow-actions">
+                    <button class="btn btn-primary" onclick="openFlow('preview/organiser_dashboard.html', 'Organiser Dashboard')">
+                        🔍 Open Flow
+                    </button>
+                    <a href="preview/organiser_dashboard.html" target="_blank" class="btn btn-secondary">
+                        🔗 New Tab
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comment Pagination -->
+        <div class="flow-card">
+            <div class="flow-header">
+                <span class="status-indicator status-demo"></span>
+                <h3>💬 Comment System</h3>
+            </div>
+            <div class="flow-content">
+                <div class="flow-description">
+                    Advanced comment pagination with "Load More" functionality, 
+                    moderation status indicators, and pull-to-refresh support.
+                </div>
+                <div class="flow-actions">
+                    <button class="btn btn-primary" onclick="openFlow('mobile-comment-pagination.html', 'Comment Pagination Demo')">
+                        🔍 Open Flow
+                    </button>
+                    <a href="mobile-comment-pagination.html" target="_blank" class="btn btn-secondary">
+                        🔗 New Tab
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Saved Events -->
+        <div class="flow-card">
+            <div class="flow-header">
+                <span class="status-indicator status-ready"></span>
+                <h3>⭐ Saved Events</h3>
+            </div>
+            <div class="flow-content">
+                <div class="flow-description">
+                    Event saving functionality with dynamic display, count tracking, 
+                    individual removal, and empty state handling.
+                </div>
+                <div class="flow-actions">
+                    <button class="btn btn-primary" onclick="openFlow('preview/saved_events.html', 'Saved Events Flow')">
+                        🔍 Open Flow
+                    </button>
+                    <a href="preview/saved_events.html" target="_blank" class="btn btn-secondary">
+                        🔗 New Tab
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Report Review -->
+        <div class="flow-card">
+            <div class="flow-header">
+                <span class="status-indicator status-ready"></span>
+                <h3>🛡️ Report Review</h3>
+            </div>
+            <div class="flow-content">
+                <div class="flow-description">
+                    Content moderation workflow with report review, approval/rejection 
+                    actions, and comprehensive moderation tools.
+                </div>
+                <div class="flow-actions">
+                    <button class="btn btn-primary" onclick="openFlow('preview/report_review.html', 'Report Review System')">
+                        🔍 Open Flow
+                    </button>
+                    <a href="preview/report_review.html" target="_blank" class="btn btn-secondary">
+                        🔗 New Tab
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for embedded flows -->
+    <div id="flowModal" class="iframe-container">
+        <div class="iframe-wrapper">
+            <div class="iframe-header">
+                <h3 id="flowTitle">Flow Preview</h3>
+                <button class="close-btn" onclick="closeFlow()">✕ Close</button>
+            </div>
+            <iframe id="flowFrame" class="iframe-content" src=""></iframe>
+        </div>
+    </div>
+    
+    <script>
+        function openFlow(url, title) {
+            document.getElementById('flowModal').style.display = 'block';
+            document.getElementById('flowFrame').src = url;
+            document.getElementById('flowTitle').textContent = title;
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeFlow() {
+            document.getElementById('flowModal').style.display = 'none';
+            document.getElementById('flowFrame').src = '';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeFlow();
+            }
+        });
+        
+        // Close modal on background click
+        document.getElementById('flowModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFlow();
+            }
+        });
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        openFlow('mobile-preview.html', 'Complete Mobile App');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        openFlow('preview/parent_onboarding.html', 'Parent Onboarding Flow');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        openFlow('preview/mobile_privacy.html', 'Privacy & Trust Settings');
+                        break;
+                    case '4':
+                        e.preventDefault();
+                        openFlow('preview/admin_dashboard.html', 'Admin Dashboard');
+                        break;
+                }
+            }
+        });
+        
+        // Show keyboard shortcuts on load
+        console.log('🎯 Kinza Testing Dashboard Shortcuts:');
+        console.log('Cmd/Ctrl + 1: Open Mobile App');
+        console.log('Cmd/Ctrl + 2: Open Parent Onboarding');
+        console.log('Cmd/Ctrl + 3: Open Privacy Settings');
+        console.log('Cmd/Ctrl + 4: Open Admin Dashboard');
+        console.log('Escape: Close current flow');
+    </script>
+</body>
+</html>

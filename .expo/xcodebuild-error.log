@@ -1,0 +1,11 @@
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:6C6B6C10-0EDE-472C-9048-A6E4006E9CD0, OS:18.5, name:iPhone 16 Plus }
+{ platform:iOS Simulator, arch:x86_64, id:6C6B6C10-0EDE-472C-9048-A6E4006E9CD0, OS:18.5, name:iPhone 16 Plus }
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 Compiling\ ExpoModulesProvider.swift /Users/brianwilliams/Documents/GitHub/Kinza/ios/Pods/Target\ Support\ Files/Pods-KinzaBerlin/ExpoModulesProvider.swift (in target 'KinzaBerlin' from project 'KinzaBerlin')
+	SwiftCompile normal arm64 /Users/brianwilliams/Documents/GitHub/Kinza/ios/Pods/Target\ Support\ Files/Pods-KinzaBerlin/ExpoModulesProvider.swift (in target 'KinzaBerlin' from project 'KinzaBerlin')
+	Building workspace KinzaBerlin with scheme KinzaBerlin and configuration Debug
+(3 failures)
