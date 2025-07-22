@@ -255,7 +255,10 @@
     "validation": "Validierungsfehler",
     "timeout": "Zeitüberschreitung der Anfrage",
     "offline": "Du bist offline",
-    "tryAgain": "Bitte versuche es erneut"
+    "tryAgain": "Bitte versuche es erneut",
+    "retrying": "Wiederhole...",
+    "retriedTimes": "{{count}} mal wiederholt",
+    "maxRetriesReached": "Maximale Wiederholungen erreicht"
   },
   "accessibility": {
     "skipToContent": "Zum Inhalt springen",

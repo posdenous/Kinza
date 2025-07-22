@@ -5,13 +5,10 @@ module.exports = {
     '<rootDir>/jest.setup.js'
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(jest-)?react-native|@react-native|expo(nent)?|@expo(nent)?/.*|react-clone-referenced-element|@react-native-community|expo-constants|expo-permissions|@unimodules|@react-native/js-polyfills)'
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?|@unimodules|@react-navigation|@testing-library|react-i18next))'
   ],
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', {
-      presets: ['babel-preset-expo'],
-      plugins: []
-    }]
+  testEnvironmentOptions: {
+    url: 'http://localhost'
   },
   moduleNameMapper: {
     '^@components/(.*)$': '<rootDir>/src/components/$1',
@@ -32,5 +29,32 @@ module.exports = {
     '!src/**/*.d.ts',
     '!src/**/__tests__/**',
     '!src/**/node_modules/**'
+  ],
+  projects: [
+    {
+      displayName: 'unit',
+      testMatch: ['<rootDir>/src/**/*.test.{ts,tsx,js,jsx}'],
+      testPathIgnorePatterns: ['/integration\.test\./'],
+      coverageThreshold: {
+        global: {
+          branches: 70,
+          functions: 70,
+          lines: 70,
+          statements: 70
+        }
+      }
+    },
+    {
+      displayName: 'integration',
+      testMatch: ['<rootDir>/src/**/*.integration.test.{ts,tsx,js,jsx}'],
+      coverageThreshold: {
+        global: {
+          branches: 60,
+          functions: 60,
+          lines: 60,
+          statements: 60
+        }
+      }
+    }
   ]
 };

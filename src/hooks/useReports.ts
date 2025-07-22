@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, doc, updateDoc, orderBy, limit } from 'firebase/firestore';
+import { useState, useEffect, useCallback } from 'react';
+import { collection, query, where, getDocs, doc, updateDoc, orderBy, limit, getDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebaseConfig';
 import authService from '../auth/authService';
 import { useUserRole } from '../hooks/useUserRole';
+import { useApiWithRetry } from './common/useApiWithRetry';
 
 // Types for reports
 export interface Report {
@@ -42,6 +43,73 @@ const useReports = (): UseReportsResult => {
   // Check if user has admin permissions
   const isAdmin = role === 'admin';
 
+  // Create API call function for retry logic
+  const fetchReportsApiCall = useCallback(async () => {
+    if (!isAdmin || !user) {
+      throw new Error('User not authorized to view reports');
+    }
+
+    // Fetch pending reports for the admin's city
+    const pendingReportsQuery = query(
+      collection(firestore, 'reports'),
+      where('status', '==', 'pending'),
+      where('cityId', '==', userCityId),
+      orderBy('reportedAt', 'desc'),
+      limit(50)
+    );
+    
+    const reportsSnapshot = await getDocs(pendingReportsQuery);
+    const reportsData: Report[] = [];
+    
+    reportsSnapshot.forEach((doc) => {
+      const reportData = doc.data();
+      reportsData.push({
+        id: doc.id,
+        type: reportData.type,
+        targetId: reportData.targetId,
+        reason: reportData.reason,
+        details: reportData.details,
+        reportedBy: reportData.reportedBy,
+        reportedAt: new Date(reportData.reportedAt?.toDate() || Date.now()),
+        status: reportData.status,
+        cityId: reportData.cityId,
+        contentSnapshot: reportData.contentSnapshot,
+      });
+    });
+    
+    // Fetch content details for each report if not already included in snapshot
+    for (let i = 0; i < reportsData.length; i++) {
+      const report = reportsData[i];
+      
+      if (!report.contentSnapshot) {
+        try {
+          const contentRef = doc(firestore, report.type + 's', report.targetId);
+          const contentSnapshot = await getDoc(contentRef);
+          
+          if (contentSnapshot.exists()) {
+            reportsData[i] = {
+              ...report,
+              contentSnapshot: contentSnapshot.data(),
+            };
+          }
+        } catch (err) {
+          console.error(`Error fetching content for report ${report.id}:`, err);
+        }
+      }
+    }
+    
+    return reportsData;
+  }, [isAdmin, user, userCityId, refreshTrigger]);
+
+  // Use retry-enabled API call for fetching reports
+  const { execute: fetchReportsWithRetry, isRetrying } = useApiWithRetry(
+    fetchReportsApiCall,
+    {
+      maxRetries: 3,
+      baseDelay: 1000,
+    }
+  );
+
   useEffect(() => {
     const fetchReports = async () => {
       if (!isAdmin || !user) {
@@ -54,66 +122,23 @@ const useReports = (): UseReportsResult => {
       setError(null);
 
       try {
-        // Fetch pending reports for the admin's city
-        const pendingReportsQuery = query(
-          collection(firestore, 'reports'),
-          where('status', '==', 'pending'),
-          where('cityId', '==', userCityId),
-          orderBy('reportedAt', 'desc'),
-          limit(50)
-        );
-        
-        const reportsSnapshot = await getDocs(pendingReportsQuery);
-        const reportsData: Report[] = [];
-        
-        reportsSnapshot.forEach((doc) => {
-          const reportData = doc.data();
-          reportsData.push({
-            id: doc.id,
-            type: reportData.type,
-            targetId: reportData.targetId,
-            reason: reportData.reason,
-            details: reportData.details,
-            reportedBy: reportData.reportedBy,
-            reportedAt: new Date(reportData.reportedAt?.toDate() || Date.now()),
-            status: reportData.status,
-            cityId: reportData.cityId,
-            contentSnapshot: reportData.contentSnapshot,
-          });
-        });
-        
-        // Fetch content details for each report if not already included in snapshot
-        for (let i = 0; i < reportsData.length; i++) {
-          const report = reportsData[i];
-          
-          if (!report.contentSnapshot) {
-            try {
-              const contentRef = doc(firestore, report.type + 's', report.targetId);
-              const contentSnapshot = await getDocs(contentRef);
-              
-              if (contentSnapshot.exists()) {
-                reportsData[i] = {
-                  ...report,
-                  contentSnapshot: contentSnapshot.data(),
-                };
-              }
-            } catch (err) {
-              console.error(`Error fetching content for report ${report.id}:`, err);
-            }
-          }
-        }
-        
-        setReports(reportsData);
+        const result = await fetchReportsWithRetry();
+        setReports(result);
       } catch (err) {
         console.error('Error fetching reports:', err);
-        setError('Failed to load reports. Please try again.');
+        if (err instanceof Error && err.message === 'User not authorized to view reports') {
+          setReports([]);
+          setError('User not authorized to view reports');
+        } else {
+          setError('Failed to load reports. Please try again.');
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchReports();
-  }, [isAdmin, user, userCityId, refreshTrigger]);
+  }, [fetchReportsWithRetry, isAdmin, user]);
 
   // Resolve a report
   const resolveReport = async (report: Report): Promise<boolean> => {
@@ -172,7 +197,7 @@ const useReports = (): UseReportsResult => {
 
   return {
     reports,
-    loading,
+    loading: loading || isRetrying,
     error,
     resolveReport,
     dismissReport,

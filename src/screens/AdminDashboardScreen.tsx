@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebaseConfig';
 import { useUserRole } from '../hooks/useUserRole';
+import { useApiWithRetry } from '../hooks/common/useApiWithRetry';
+import StatCardWithSkeleton from '../components/StatCardWithSkeleton';
 
 type RootStackParamList = {
   AdminDashboard: undefined;
@@ -53,6 +55,61 @@ const AdminDashboardScreen: React.FC = () => {
   // Check if user has admin permissions
   const isAdmin = role === 'admin';
 
+  // Create API call function for retry logic
+  const fetchStatsApiCall = useCallback(async () => {
+    if (!isAdmin) {
+      throw new Error('User not authorized to view admin stats');
+    }
+
+    // Fetch pending events count
+    const pendingEventsQuery = query(
+      collection(firestore, 'events'),
+      where('status', '==', 'pending'),
+      where('cityId', '==', userCityId)
+    );
+    const pendingEventsSnapshot = await getDocs(pendingEventsQuery);
+    
+    // Fetch pending comments count
+    const pendingCommentsQuery = query(
+      collection(firestore, 'comments'),
+      where('status', '==', 'pending'),
+      where('cityId', '==', userCityId)
+    );
+    const pendingCommentsSnapshot = await getDocs(pendingCommentsQuery);
+    
+    // Fetch active events count
+    const activeEventsQuery = query(
+      collection(firestore, 'events'),
+      where('status', '==', 'approved'),
+      where('cityId', '==', userCityId)
+    );
+    const activeEventsSnapshot = await getDocs(activeEventsQuery);
+    
+    // Fetch reported content count
+    const reportedContentQuery = query(
+      collection(firestore, 'reports'),
+      where('status', '==', 'pending'),
+      where('cityId', '==', userCityId)
+    );
+    const reportedContentSnapshot = await getDocs(reportedContentQuery);
+    
+    return {
+      pendingEvents: pendingEventsSnapshot.size,
+      pendingComments: pendingCommentsSnapshot.size,
+      activeEvents: activeEventsSnapshot.size,
+      reportedContent: reportedContentSnapshot.size,
+    };
+  }, [isAdmin, userCityId]);
+
+  // Use retry-enabled API call for fetching stats
+  const { execute: fetchStatsWithRetry, isRetrying } = useApiWithRetry(
+    fetchStatsApiCall,
+    {
+      maxRetries: 3,
+      baseDelay: 1000,
+    }
+  );
+
   // Fetch dashboard stats
   useEffect(() => {
     const fetchStats = async () => {
@@ -63,57 +120,22 @@ const AdminDashboardScreen: React.FC = () => {
 
       try {
         setLoading(true);
-        
-        // Fetch pending events count
-        const pendingEventsQuery = query(
-          collection(firestore, 'events'),
-          where('status', '==', 'pending'),
-          where('cityId', '==', userCityId)
-        );
-        const pendingEventsSnapshot = await getDocs(pendingEventsQuery);
-        
-        // Fetch pending comments count
-        const pendingCommentsQuery = query(
-          collection(firestore, 'comments'),
-          where('status', '==', 'pending'),
-          where('cityId', '==', userCityId)
-        );
-        const pendingCommentsSnapshot = await getDocs(pendingCommentsQuery);
-        
-        // Fetch active events count
-        const activeEventsQuery = query(
-          collection(firestore, 'events'),
-          where('status', '==', 'approved'),
-          where('cityId', '==', userCityId)
-        );
-        const activeEventsSnapshot = await getDocs(activeEventsQuery);
-        
-        // Fetch reported content count
-        const reportedContentQuery = query(
-          collection(firestore, 'reports'),
-          where('status', '==', 'pending'),
-          where('cityId', '==', userCityId)
-        );
-        const reportedContentSnapshot = await getDocs(reportedContentQuery);
-        
-        // Update stats
-        setStats({
-          pendingEvents: pendingEventsSnapshot.size,
-          pendingComments: pendingCommentsSnapshot.size,
-          activeEvents: activeEventsSnapshot.size,
-          reportedContent: reportedContentSnapshot.size,
-        });
-        
+        const result = await fetchStatsWithRetry();
+        setStats(result);
       } catch (err) {
         console.error('Error fetching admin stats:', err);
-        setError(t('errors.fetchStats'));
+        if (err instanceof Error && err.message === 'User not authorized to view admin stats') {
+          setError('User not authorized to view admin stats');
+        } else {
+          setError(t('errors.fetchStats'));
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchStats();
-  }, [isAdmin, userCityId, t]);
+  }, [fetchStatsWithRetry, isAdmin, t]);
 
   // Navigate to moderation queue
   const handleNavigateToModerationQueue = () => {
@@ -152,38 +174,49 @@ const AdminDashboardScreen: React.FC = () => {
       <ScrollView style={styles.content}>
         {/* Stats Cards */}
         {loading ? (
-          <View style={styles.loadingContainer}>
+          <View style={styles.centerContainer}>
             <ActivityIndicator size="large" color="#4CAF50" />
-            <Text style={styles.loadingText}>{t('common.loading')}</Text>
+            <Text style={styles.loadingText}>
+              {isRetrying ? t('common.retrying') : t('common.loading')}
+            </Text>
           </View>
         ) : (
           <View style={styles.statsContainer}>
             <View style={styles.statsRow}>
-              <View style={[styles.statsCard, styles.pendingEventsCard]}>
-                <Ionicons name="calendar" size={24} color="#FFFFFF" />
-                <Text style={styles.statsNumber}>{stats.pendingEvents}</Text>
-                <Text style={styles.statsLabel}>{t('admin.pendingEvents')}</Text>
-              </View>
-              
-              <View style={[styles.statsCard, styles.pendingCommentsCard]}>
-                <Ionicons name="chatbubbles" size={24} color="#FFFFFF" />
-                <Text style={styles.statsNumber}>{stats.pendingComments}</Text>
-                <Text style={styles.statsLabel}>{t('admin.pendingComments')}</Text>
-              </View>
+              <StatCardWithSkeleton
+                loading={loading || isRetrying}
+                title={t('admin.pendingEvents')}
+                value={stats.pendingEvents}
+                backgroundColor="#FF9800"
+                textColor="#FFFFFF"
+                testID="pending-events-card"
+              />
+              <StatCardWithSkeleton
+                loading={loading || isRetrying}
+                title={t('admin.pendingComments')}
+                value={stats.pendingComments}
+                backgroundColor="#9C27B0"
+                textColor="#FFFFFF"
+                testID="pending-comments-card"
+              />
             </View>
-            
             <View style={styles.statsRow}>
-              <View style={[styles.statsCard, styles.activeEventsCard]}>
-                <Ionicons name="checkmark-circle" size={24} color="#FFFFFF" />
-                <Text style={styles.statsNumber}>{stats.activeEvents}</Text>
-                <Text style={styles.statsLabel}>{t('admin.activeEvents')}</Text>
-              </View>
-              
-              <View style={[styles.statsCard, styles.reportedContentCard]}>
-                <Ionicons name="flag" size={24} color="#FFFFFF" />
-                <Text style={styles.statsNumber}>{stats.reportedContent}</Text>
-                <Text style={styles.statsLabel}>{t('admin.reportedContent')}</Text>
-              </View>
+              <StatCardWithSkeleton
+                loading={loading || isRetrying}
+                title={t('admin.activeEvents')}
+                value={stats.activeEvents}
+                backgroundColor="#4CAF50"
+                textColor="#FFFFFF"
+                testID="active-events-card"
+              />
+              <StatCardWithSkeleton
+                loading={loading || isRetrying}
+                title={t('admin.reportedContent')}
+                value={stats.reportedContent}
+                backgroundColor="#F44336"
+                textColor="#FFFFFF"
+                testID="reported-content-card"
+              />
             </View>
           </View>
         )}

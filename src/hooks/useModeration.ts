@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { collection, query, where, getDocs, doc, updateDoc, orderBy, limit } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebaseConfig';
 import { Event } from '../types/events';
 import authService from '../auth/authService';
 import { useUserRole } from '../hooks/useUserRole';
+import { useApiWithRetry } from './common/useApiWithRetry';
 
 // Types for moderation
 export interface ModerationItem {
@@ -41,6 +42,79 @@ const useModeration = (): UseModerationResult => {
   // Check if user has admin permissions
   const isAdmin = role === 'admin';
 
+  // Create API call function for retry logic
+  const fetchPendingItemsApiCall = useCallback(async () => {
+    if (!isAdmin || !user) {
+      throw new Error('User not authorized to view moderation queue');
+    }
+
+    // Fetch pending events for the admin's city
+    const pendingEventsQuery = query(
+      collection(firestore, 'events'),
+      where('status', '==', 'pending'),
+      where('cityId', '==', userCityId),
+      orderBy('createdAt', 'desc'),
+      limit(50)
+    );
+    
+    const pendingEventsSnapshot = await getDocs(pendingEventsQuery);
+    const pendingEventsData: ModerationItem[] = [];
+    
+    pendingEventsSnapshot.forEach((doc) => {
+      const eventData = doc.data() as Event;
+      pendingEventsData.push({
+        id: doc.id,
+        type: 'event',
+        content: eventData,
+        status: 'pending',
+        createdAt: new Date(eventData.createdAt?.toDate() || Date.now()),
+        createdBy: eventData.organiser?.id || 'unknown',
+        cityId: eventData.cityId,
+      });
+    });
+
+    // Fetch pending comments
+    const pendingCommentsQuery = query(
+      collection(firestore, 'comments'),
+      where('status', '==', 'pending'),
+      where('cityId', '==', userCityId),
+      orderBy('createdAt', 'desc'),
+      limit(50)
+    );
+    
+    const pendingCommentsSnapshot = await getDocs(pendingCommentsQuery);
+    const pendingCommentsData: ModerationItem[] = [];
+    
+    pendingCommentsSnapshot.forEach((doc) => {
+      const commentData = doc.data();
+      pendingCommentsData.push({
+        id: doc.id,
+        type: 'comment',
+        content: commentData,
+        status: 'pending',
+        createdAt: new Date(commentData.createdAt?.toDate() || Date.now()),
+        createdBy: commentData.userId || 'unknown',
+        cityId: commentData.cityId,
+      });
+    });
+
+    // Combine and sort by creation date (newest first)
+    const allPendingItems = [...pendingEventsData, ...pendingCommentsData].sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+    );
+    
+    return allPendingItems;
+  }, [isAdmin, user, userCityId, refreshTrigger]);
+
+  // Use retry-enabled API call for fetching pending items
+  const { execute: fetchPendingItemsWithRetry, isRetrying } = useApiWithRetry(
+    fetchPendingItemsApiCall,
+    {
+      maxRetries: 3,
+      baseDelay: 1000,
+    }
+  );
+
   useEffect(() => {
     const fetchPendingItems = async () => {
       if (!isAdmin || !user) {
@@ -53,72 +127,23 @@ const useModeration = (): UseModerationResult => {
       setError(null);
 
       try {
-        // Fetch pending events for the admin's city
-        const pendingEventsQuery = query(
-          collection(firestore, 'events'),
-          where('status', '==', 'pending'),
-          where('cityId', '==', userCityId),
-          orderBy('createdAt', 'desc'),
-          limit(50)
-        );
-        
-        const pendingEventsSnapshot = await getDocs(pendingEventsQuery);
-        const pendingEventsData: ModerationItem[] = [];
-        
-        pendingEventsSnapshot.forEach((doc) => {
-          const eventData = doc.data() as Event;
-          pendingEventsData.push({
-            id: doc.id,
-            type: 'event',
-            content: eventData,
-            status: 'pending',
-            createdAt: new Date(eventData.createdAt?.toDate() || Date.now()),
-            createdBy: eventData.organiser?.id || 'unknown',
-            cityId: eventData.cityId,
-          });
-        });
-
-        // Fetch pending comments
-        const pendingCommentsQuery = query(
-          collection(firestore, 'comments'),
-          where('status', '==', 'pending'),
-          where('cityId', '==', userCityId),
-          orderBy('createdAt', 'desc'),
-          limit(50)
-        );
-        
-        const pendingCommentsSnapshot = await getDocs(pendingCommentsQuery);
-        const pendingCommentsData: ModerationItem[] = [];
-        
-        pendingCommentsSnapshot.forEach((doc) => {
-          const commentData = doc.data();
-          pendingCommentsData.push({
-            id: doc.id,
-            type: 'comment',
-            content: commentData,
-            status: 'pending',
-            createdAt: new Date(commentData.createdAt?.toDate() || Date.now()),
-            createdBy: commentData.userId || 'unknown',
-            cityId: commentData.cityId,
-          });
-        });
-
-        // Combine and sort by creation date (newest first)
-        const allPendingItems = [...pendingEventsData, ...pendingCommentsData].sort(
-          (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-        );
-        
-        setPendingItems(allPendingItems);
+        const result = await fetchPendingItemsWithRetry();
+        setPendingItems(result);
       } catch (err) {
         console.error('Error fetching moderation items:', err);
-        setError('Failed to load moderation queue. Please try again.');
+        if (err instanceof Error && err.message === 'User not authorized to view moderation queue') {
+          setPendingItems([]);
+          setError('User not authorized to view moderation queue');
+        } else {
+          setError('Failed to load moderation queue. Please try again.');
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchPendingItems();
-  }, [isAdmin, user, userCityId, refreshTrigger]);
+  }, [fetchPendingItemsWithRetry, isAdmin, user]);
 
   // Approve a moderation item
   const approveItem = async (item: ModerationItem): Promise<boolean> => {
@@ -179,7 +204,7 @@ const useModeration = (): UseModerationResult => {
 
   return {
     pendingItems,
-    loading,
+    loading: loading || isRetrying,
     error,
     approveItem,
     rejectItem,

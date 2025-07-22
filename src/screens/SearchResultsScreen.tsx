@@ -14,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useSearch, SearchResult, SearchResultType } from '../hooks/useSearch';
-import EventCard from '../components/EventCard';
+import EventCardWithSkeleton from '../components/EventCardWithSkeleton';
 import { useUserRole } from '../hooks/useUserRole';
 import { format } from 'date-fns';
 
@@ -121,7 +121,7 @@ const SearchResultsScreen: React.FC<SearchResultsScreenProps> = ({ route }) => {
   const renderResultItem = ({ item }: { item: SearchResult }) => {
     if (item.type === 'event') {
       return (
-        <EventCard 
+        <EventCardWithSkeleton 
           event={{
             id: item.id,
             title: item.title,

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebaseConfig';
 import { Event } from '../types/events';
+import { useApiWithRetry } from './common/useApiWithRetry';
 
 interface UseMapEventsOptions {
   cityId: string;
@@ -33,90 +34,105 @@ export const useMapEvents = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Create API call function for retry logic
+  const fetchEventsApiCall = useCallback(async () => {
+    // Start with base query for the city
+    let eventsQuery = query(
+      collection(firestore, 'events'),
+      where('cityId', '==', cityId),
+      where('isApproved', '==', true),
+      where('startDate', '>=', new Date()),
+      orderBy('startDate', 'asc'),
+      limit(eventLimit)
+    );
+
+    // Apply filters if provided
+    if (filters) {
+      // Age range filter
+      if (filters.ageRange) {
+        const [minAge, maxAge] = filters.ageRange;
+        eventsQuery = query(
+          eventsQuery,
+          where('minAge', '<=', maxAge),
+          where('maxAge', '>=', minAge)
+        );
+      }
+
+      // Categories filter
+      if (filters.categories && filters.categories.length > 0) {
+        eventsQuery = query(
+          eventsQuery,
+          where('categories', 'array-contains-any', filters.categories)
+        );
+      }
+
+      // Date filter
+      if (filters.date) {
+        const startOfDay = new Date(filters.date);
+        startOfDay.setHours(0, 0, 0, 0);
+        
+        const endOfDay = new Date(filters.date);
+        endOfDay.setHours(23, 59, 59, 999);
+        
+        eventsQuery = query(
+          eventsQuery,
+          where('startDate', '>=', startOfDay),
+          where('startDate', '<=', endOfDay)
+        );
+      }
+
+      // Free events filter
+      if (filters.free) {
+        eventsQuery = query(eventsQuery, where('isFree', '==', true));
+      }
+    }
+
+    const querySnapshot = await getDocs(eventsQuery);
+    const eventsData: Event[] = [];
+
+    querySnapshot.forEach((doc) => {
+      eventsData.push({ id: doc.id, ...doc.data() } as Event);
+    });
+
+    // If center coordinates are provided, filter events by distance
+    if (center) {
+      const filteredEvents = eventsData.filter((event) => {
+        if (!event.location?.coordinates) return false;
+        
+        // Calculate distance using Haversine formula
+        const distance = calculateDistance(
+          center.latitude,
+          center.longitude,
+          event.location.coordinates.latitude,
+          event.location.coordinates.longitude
+        );
+        
+        return distance <= radius;
+      });
+      
+      return filteredEvents;
+    } else {
+      return eventsData;
+    }
+  }, [cityId, filters, radius, center, eventLimit]);
+
+  // Use retry-enabled API call for fetching events
+  const { execute: fetchEventsWithRetry, isRetrying } = useApiWithRetry(
+    fetchEventsApiCall,
+    {
+      maxRetries: 3,
+      baseDelay: 1000,
+    }
+  );
+
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
       setError(null);
-
+      
       try {
-        // Start with base query for the city
-        let eventsQuery = query(
-          collection(firestore, 'events'),
-          where('cityId', '==', cityId),
-          where('isApproved', '==', true),
-          where('startDate', '>=', new Date()),
-          orderBy('startDate', 'asc'),
-          limit(eventLimit)
-        );
-
-        // Apply filters if provided
-        if (filters) {
-          // Age range filter
-          if (filters.ageRange) {
-            const [minAge, maxAge] = filters.ageRange;
-            eventsQuery = query(
-              eventsQuery,
-              where('minAge', '<=', maxAge),
-              where('maxAge', '>=', minAge)
-            );
-          }
-
-          // Categories filter
-          if (filters.categories && filters.categories.length > 0) {
-            eventsQuery = query(
-              eventsQuery,
-              where('categories', 'array-contains-any', filters.categories)
-            );
-          }
-
-          // Date filter
-          if (filters.date) {
-            const startOfDay = new Date(filters.date);
-            startOfDay.setHours(0, 0, 0, 0);
-            
-            const endOfDay = new Date(filters.date);
-            endOfDay.setHours(23, 59, 59, 999);
-            
-            eventsQuery = query(
-              eventsQuery,
-              where('startDate', '>=', startOfDay),
-              where('startDate', '<=', endOfDay)
-            );
-          }
-
-          // Free events filter
-          if (filters.free) {
-            eventsQuery = query(eventsQuery, where('isFree', '==', true));
-          }
-        }
-
-        const querySnapshot = await getDocs(eventsQuery);
-        const eventsData: Event[] = [];
-
-        querySnapshot.forEach((doc) => {
-          eventsData.push({ id: doc.id, ...doc.data() } as Event);
-        });
-
-        // If center coordinates are provided, filter events by distance
-        if (center) {
-          const filteredEvents = eventsData.filter((event) => {
-            if (!event.location?.coordinates) return false;
-            
-            // Calculate distance using Haversine formula
-            const distance = calculateDistance(
-              center.latitude,
-              center.longitude,
-              event.location.coordinates.latitude,
-              event.location.coordinates.longitude
-            );
-            
-            return distance <= radius;
-          });
-          
-          setEvents(filteredEvents);
-        } else {
-          setEvents(eventsData);
-        }
+        const result = await fetchEventsWithRetry();
+        setEvents(result as Event[]);
       } catch (err) {
         console.error('Error fetching events:', err);
         setError('Failed to load events. Please try again.');
@@ -126,9 +142,9 @@ export const useMapEvents = ({
     };
 
     fetchEvents();
-  }, [cityId, filters, radius, center, eventLimit]);
+  }, [fetchEventsWithRetry]);
 
-  return { events, loading, error };
+  return { events, loading: loading || isRetrying, error };
 };
 
 /**

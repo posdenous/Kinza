@@ -3,6 +3,7 @@ import { collection, query, where, getDocs, limit, orderBy, startAt, endAt, Fire
 import { useFirestoreInstance } from './useFirestoreInstance';
 import { getAuth } from 'firebase/auth';
 import { useUserRole } from './useUserRole';
+import useApiWithRetry from './common/useApiWithRetry';
 
 export type SearchResultType = 'event' | 'venue' | 'profile';
 
@@ -40,23 +41,20 @@ export const useSearch = (options: SearchOptions) => {
   const auth = getAuth();
   const user = auth.currentUser;
 
-  useEffect(() => {
-    const fetchResults = async () => {
+  // Create retry-enabled search function
+  const { execute: searchWithRetry, isRetrying } = useApiWithRetry(
+    async () => {
       if (!options.query || options.query.length < 2 || !firestore || roleLoading) {
-        return;
+        return [];
       }
 
-      setLoading(true);
-      setError(null);
+      const searchResults: SearchResult[] = [];
+      const { query: searchQuery, types, categories, ageRange, dateRange, limit: resultLimit = 20, cityId } = options;
 
-      try {
-        const searchResults: SearchResult[] = [];
-        const { query: searchQuery, types, categories, ageRange, dateRange, limit: resultLimit = 20, cityId } = options;
-
-        // Normalize the search query for better matching
-        const normalizedQuery = searchQuery.toLowerCase().trim();
-        const queryStart = normalizedQuery;
-        const queryEnd = normalizedQuery + '\uf8ff'; // Unicode character for end of string search
+      // Normalize the search query for better matching
+      const normalizedQuery = searchQuery.toLowerCase().trim();
+      const queryStart = normalizedQuery;
+      const queryEnd = normalizedQuery + '\uf8ff'; // Unicode character for end of string search
 
         // Search events
         if (!types || types.includes('event')) {
@@ -189,6 +187,23 @@ export const useSearch = (options: SearchOptions) => {
           return aTitle.localeCompare(bTitle);
         });
 
+      return searchResults;
+    },
+    { maxRetries: 2, baseDelay: 500 } // Shorter retry for search
+  );
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      if (!options.query || options.query.length < 2 || !firestore || roleLoading) {
+        setResults([]);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const searchResults = await searchWithRetry();
         setResults(searchResults);
       } catch (err) {
         console.error('Error searching:', err);
@@ -199,7 +214,7 @@ export const useSearch = (options: SearchOptions) => {
     };
 
     fetchResults();
-  }, [options, firestore, userRole, roleLoading]);
+  }, [options, firestore, userRole, roleLoading, searchWithRetry]);
 
   return { results, loading, error };
 };

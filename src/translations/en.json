@@ -255,7 +255,10 @@
     "validation": "Validation error",
     "timeout": "Request timed out",
     "offline": "You are offline",
-    "tryAgain": "Please try again"
+    "tryAgain": "Please try again",
+    "retrying": "Retrying...",
+    "retriedTimes": "Retried {{count}} times",
+    "maxRetriesReached": "Maximum retries reached"
   },
   "accessibility": {
     "skipToContent": "Skip to content",

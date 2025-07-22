@@ -14,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import useSavedEvents from '../hooks/useSavedEvents';
-import EventCard from '../components/EventCard';
+import EventCardWithSkeleton from '../components/EventCardWithSkeleton';
 import { Event } from '../types/events';
 import authService from '../auth/authService';
 import { doc, deleteDoc } from 'firebase/firestore';
@@ -93,12 +93,20 @@ const SavedEventsScreen: React.FC = () => {
     );
   }
 
-  // Render loading state
+  // Render loading state with skeletons
   if (loading && !refreshing) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#4CAF50" />
-        <Text style={styles.loadingText}>{t('common.loading')}</Text>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>{t('savedEvents.title')}</Text>
+        </View>
+        
+        <View style={styles.listContent}>
+          {/* Show 3 skeleton cards while loading */}
+          <EventCardWithSkeleton loading={true} onPress={() => {}} />
+          <EventCardWithSkeleton loading={true} onPress={() => {}} />
+          <EventCardWithSkeleton loading={true} onPress={() => {}} />
+        </View>
       </View>
     );
   }
@@ -147,11 +155,13 @@ const SavedEventsScreen: React.FC = () => {
           if (!item.eventDetails) return null;
           
           return (
-            <EventCard
+            <EventCardWithSkeleton
               event={item.eventDetails}
+              loading={removingEventId === item.eventId}
               onPress={handleEventPress}
               onSaveToggle={handleRemoveSavedEvent}
               isSaved={true}
+              testID={`saved-event-${item.eventId}`}
             />
           );
         }}

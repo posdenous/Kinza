@@ -255,7 +255,10 @@
     "validation": "Errore di validazione",
     "timeout": "Richiesta scaduta",
     "offline": "Sei offline",
-    "tryAgain": "Per favore riprova"
+    "tryAgain": "Per favore riprova",
+    "retrying": "Riprovando...",
+    "retriedTimes": "Riprovato {{count}} volte",
+    "maxRetriesReached": "Numero massimo di tentativi raggiunto"
   },
   "accessibility": {
     "skipToContent": "Vai al contenuto",

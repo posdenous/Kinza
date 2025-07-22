@@ -18,6 +18,7 @@ import EventFormFields from '../components/EventFormFields';
 import useEventValidation from '../hooks/useEventValidation';
 import authService from '../auth/authService';
 import { Event } from '../types/events';
+import { useApiWithRetry } from '../hooks/common/useApiWithRetry';
 
 type RootStackParamList = {
   SubmitEvent: undefined;
@@ -58,8 +59,25 @@ const SubmitEventScreen: React.FC = () => {
   });
   
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationTriggered, setValidationTriggered] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  
+  // API with retry for event submission
+  const { execute: executeSubmission, isRetrying } = useApiWithRetry(
+    async () => {
+      const eventRef = await addDoc(collection(firestore, 'events'), {
+        ...eventData,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        status: 'pending', // Events require moderation before being displayed
+        approved: false,
+        views: 0,
+        saves: 0,
+      });
+      return eventRef;
+    }
+  );
   
   // Check if user is authenticated
   const user = authService.getCurrentUser();
@@ -130,31 +148,21 @@ const SubmitEventScreen: React.FC = () => {
     
     try {
       setIsSubmitting(true);
+      setSubmitError(null);
       
-      // Add event to Firestore
-      const eventRef = await addDoc(collection(firestore, 'events'), {
-        ...eventData,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        status: 'pending', // Events require moderation before being displayed
-        approved: false,
-        views: 0,
-        saves: 0,
-      });
+      // Submit event with retry logic
+      await executeSubmission();
       
       setIsSubmitting(false);
       
       // Show success message
       Alert.alert(
-        t('events.submitSuccess'),
-        t('events.moderationNotice'),
+        t('events.success'),
+        t('events.eventSubmitted'),
         [
           {
             text: t('common.ok'),
-            onPress: () => {
-              // Navigate to event detail or reset form
-              navigation.navigate('EventDetail', { eventId: eventRef.id });
-            },
+            onPress: () => navigation.goBack(),
           },
         ]
       );
@@ -185,7 +193,12 @@ const SubmitEventScreen: React.FC = () => {
     } catch (error) {
       console.error('Error submitting event:', error);
       setIsSubmitting(false);
-      Alert.alert(t('errors.title'), t('errors.submitEvent'));
+      const errorMessage = error instanceof Error ? error.message : t('errors.submitEvent');
+      setSubmitError(errorMessage);
+      Alert.alert(
+        t('errors.title'), 
+        errorMessage
+      );
     }
   };
   
@@ -226,7 +239,12 @@ const SubmitEventScreen: React.FC = () => {
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <ActivityIndicator color="#FFFFFF" size="small" />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <ActivityIndicator color="#FFFFFF" size="small" />
+              <Text style={[styles.submitButtonText, { marginLeft: 8 }]}>
+                {isRetrying ? t('common.retrying') : t('common.submitting')}
+              </Text>
+            </View>
           ) : (
             <Text style={styles.submitButtonText}>{t('events.submit')}</Text>
           )}
