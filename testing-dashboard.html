@@ -224,6 +224,53 @@
         .status-testing { background: #f39c12; }
         .status-demo { background: #3498db; }
         
+        /* Admin-only styling */
+        .flow-card.admin-only {
+            border: 2px solid #e74c3c;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+        }
+        
+        .flow-header.admin-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            position: relative;
+        }
+        
+        .admin-badge {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        
+        .admin-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            color: #856404;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .btn-admin {
+            background: #e74c3c;
+            color: white;
+            border: 1px solid #c0392b;
+        }
+        
+        .btn-admin:hover {
+            background: #c0392b;
+            border-color: #a93226;
+        }
+        
         @media (max-width: 768px) {
             .flow-grid {
                 grid-template-columns: 1fr;
@@ -354,6 +401,34 @@
                         🔍 Open Flow
                     </button>
                     <a href="preview/admin_dashboard.html" target="_blank" class="btn btn-secondary">
+                        🔗 New Tab
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Moderation Queue (Admin Only) -->
+        <div class="flow-card admin-only">
+            <div class="flow-header admin-header">
+                <span class="status-indicator status-ready"></span>
+                <h3>🛡️ Moderation Queue</h3>
+                <span class="admin-badge">ADMIN ONLY</span>
+            </div>
+            <div class="flow-content">
+                <div class="flow-description">
+                    <strong>⚠️ Non-Public Admin Tool:</strong> Content moderation queue for reviewing 
+                    and approving/rejecting user-generated content. Includes pending events, 
+                    comments, and reports with detailed review interface and bulk actions.
+                </div>
+                <div class="admin-warning">
+                    🔒 Restricted Access: Only administrators can view and interact with this screen. 
+                    Requires admin role authentication and city-scoped permissions.
+                </div>
+                <div class="flow-actions">
+                    <button class="btn btn-admin" onclick="openFlow('preview/moderation_queue.html', 'Moderation Queue (Admin)')">
+                        🔍 Open Admin Tool
+                    </button>
+                    <a href="preview/moderation_queue.html" target="_blank" class="btn btn-secondary">
                         🔗 New Tab
                     </a>
                 </div>

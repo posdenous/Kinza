@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderation Queue - Admin Only</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .admin-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .city-badge {
+            background: rgba(255,255,255,0.15);
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+        
+        .warning-banner {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stats-bar {
+            background: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .moderation-list {
+            margin: 20px;
+        }
+        
+        .moderation-item {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .moderation-item.high-priority {
+            border-left-color: #e74c3c;
+        }
+        
+        .moderation-item.low-priority {
+            border-left-color: #27ae60;
+        }
+        
+        .item-header {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .item-type {
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .item-type.event { background: #9b59b6; }
+        .item-type.comment { background: #e67e22; }
+        .item-type.report { background: #e74c3c; }
+        
+        .item-priority {
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .priority-high { color: #e74c3c; }
+        .priority-medium { color: #f39c12; }
+        .priority-low { color: #27ae60; }
+        
+        .item-content {
+            padding: 20px;
+        }
+        
+        .item-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .item-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-approve {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-approve:hover {
+            background: #229954;
+        }
+        
+        .btn-reject {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-reject:hover {
+            background: #c0392b;
+        }
+        
+        .btn-view {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background: #2980b9;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .item-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .item-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="admin-badge">🔒 ADMIN ONLY - NON-PUBLIC</div>
+        <h1>🛡️ Moderation Queue</h1>
+        <p>Content Review & Approval System <span class="city-badge">📍 Berlin</span></p>
+    </div>
+    
+    <div class="warning-banner">
+        <strong>⚠️ Restricted Access:</strong> This is an administrative tool for content moderation. 
+        Only users with admin role can access this interface. All actions are logged and audited.
+    </div>
+    
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-number">12</div>
+            <div class="stat-label">Pending Items</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">3</div>
+            <div class="stat-label">High Priority</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">156</div>
+            <div class="stat-label">Approved Today</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">8</div>
+            <div class="stat-label">Rejected Today</div>
+        </div>
+    </div>
+    
+    <div class="moderation-list">
+        <!-- High Priority Event -->
+        <div class="moderation-item high-priority">
+            <div class="item-header">
+                <span class="item-type event">EVENT</span>
+                <span class="item-priority priority-high">HIGH PRIORITY</span>
+            </div>
+            <div class="item-content">
+                <div class="item-title">Kids Coding Workshop - Mitte Library</div>
+                <div class="item-description">
+                    Interactive coding workshop for children aged 8-12. Learn basic programming 
+                    concepts through fun games and activities. All materials provided.
+                </div>
+                <div class="item-meta">
+                    <span>📅 Submitted: 2 hours ago</span>
+                    <span>👤 By: sarah.mueller@example.com</span>
+                    <span>🏢 Organiser: Tech Kids Berlin</span>
+                </div>
+                <div class="item-actions">
+                    <button class="btn btn-view" onclick="viewItem('event_001')">👁️ View Details</button>
+                    <button class="btn btn-approve" onclick="approveItem('event_001')">✅ Approve</button>
+                    <button class="btn btn-reject" onclick="rejectItem('event_001')">❌ Reject</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Medium Priority Comment -->
+        <div class="moderation-item">
+            <div class="item-header">
+                <span class="item-type comment">COMMENT</span>
+                <span class="item-priority priority-medium">MEDIUM PRIORITY</span>
+            </div>
+            <div class="item-content">
+                <div class="item-title">Comment on "Family Picnic in Tiergarten"</div>
+                <div class="item-description">
+                    "This looks amazing! My kids would love this. Is there a backup plan if it rains? 
+                    Also, are pets allowed? We have a friendly golden retriever."
+                </div>
+                <div class="item-meta">
+                    <span>📅 Submitted: 45 minutes ago</span>
+                    <span>👤 By: parent_user_berlin</span>
+                    <span>🎯 On Event: Family Picnic</span>
+                </div>
+                <div class="item-actions">
+                    <button class="btn btn-view" onclick="viewItem('comment_002')">👁️ View Details</button>
+                    <button class="btn btn-approve" onclick="approveItem('comment_002')">✅ Approve</button>
+                    <button class="btn btn-reject" onclick="rejectItem('comment_002')">❌ Reject</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- High Priority Report -->
+        <div class="moderation-item high-priority">
+            <div class="item-header">
+                <span class="item-type report">REPORT</span>
+                <span class="item-priority priority-high">HIGH PRIORITY</span>
+            </div>
+            <div class="item-content">
+                <div class="item-title">Inappropriate Content Report</div>
+                <div class="item-description">
+                    User reported inappropriate language in event description. Automated system 
+                    flagged potential policy violation. Requires immediate review.
+                </div>
+                <div class="item-meta">
+                    <span>📅 Submitted: 1 hour ago</span>
+                    <span>👤 Reported by: concerned_parent_123</span>
+                    <span>🎯 Target: "Teen Gaming Night"</span>
+                </div>
+                <div class="item-actions">
+                    <button class="btn btn-view" onclick="viewItem('report_003')">👁️ View Details</button>
+                    <button class="btn btn-approve" onclick="approveItem('report_003')">✅ Dismiss</button>
+                    <button class="btn btn-reject" onclick="rejectItem('report_003')">⚠️ Take Action</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Low Priority Event -->
+        <div class="moderation-item low-priority">
+            <div class="item-header">
+                <span class="item-type event">EVENT</span>
+                <span class="item-priority priority-low">LOW PRIORITY</span>
+            </div>
+            <div class="item-content">
+                <div class="item-title">Parent Coffee Meetup - Prenzlauer Berg</div>
+                <div class="item-description">
+                    Casual coffee meetup for parents in Prenzlauer Berg. Share experiences, 
+                    make friends, and enjoy good coffee while kids play nearby.
+                </div>
+                <div class="item-meta">
+                    <span>📅 Submitted: 3 hours ago</span>
+                    <span>👤 By: coffee.parent.berlin@gmail.com</span>
+                    <span>🏢 Organiser: Berlin Parent Network</span>
+                </div>
+                <div class="item-actions">
+                    <button class="btn btn-view" onclick="viewItem('event_004')">👁️ View Details</button>
+                    <button class="btn btn-approve" onclick="approveItem('event_004')">✅ Approve</button>
+                    <button class="btn btn-reject" onclick="rejectItem('event_004')">❌ Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function viewItem(itemId) {
+            alert(`🔍 Viewing details for item: ${itemId}\n\nThis would open a detailed modal with:\n• Full content and metadata\n• User history and reputation\n• Similar content analysis\n• Moderation guidelines\n• Action history`);
+        }
+        
+        function approveItem(itemId) {
+            if (confirm(`✅ Approve this item?\n\nItem: ${itemId}\n\nThis action will:\n• Make content publicly visible\n• Notify the submitter\n• Log the approval decision`)) {
+                alert(`✅ Item ${itemId} has been approved!\n\n• Content is now live\n• User notification sent\n• Action logged in audit trail`);
+                // In real app: remove item from queue
+                event.target.closest('.moderation-item').style.opacity = '0.5';
+                event.target.closest('.moderation-item').style.pointerEvents = 'none';
+            }
+        }
+        
+        function rejectItem(itemId) {
+            const reason = prompt(`❌ Reject this item?\n\nItem: ${itemId}\n\nPlease provide a reason for rejection:`);
+            if (reason) {
+                alert(`❌ Item ${itemId} has been rejected!\n\nReason: ${reason}\n\n• Content removed from queue\n• User notification sent with reason\n• Action logged in audit trail`);
+                // In real app: remove item from queue
+                event.target.closest('.moderation-item').style.opacity = '0.5';
+                event.target.closest('.moderation-item').style.pointerEvents = 'none';
+            }
+        }
+        
+        // Simulate real-time updates
+        setInterval(() => {
+            const stats = document.querySelectorAll('.stat-number');
+            const pendingCount = parseInt(stats[0].textContent);
+            if (Math.random() > 0.8 && pendingCount < 20) {
+                stats[0].textContent = pendingCount + 1;
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
