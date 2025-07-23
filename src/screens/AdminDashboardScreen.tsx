@@ -3,19 +3,21 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
-import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebaseConfig';
 import { useUserRole } from '../hooks/useUserRole';
 import { useApiWithRetry } from '../hooks/common/useApiWithRetry';
-import StatCardWithSkeleton from '../components/StatCardWithSkeleton';
+import AdminStatsCards from '../components/admin/AdminStatsCards';
+import AdminToolsSection from '../components/admin/AdminToolsSection';
+import AdminGuidelinesCard from '../components/admin/AdminGuidelinesCard';
 
 type RootStackParamList = {
   AdminDashboard: undefined;
@@ -41,7 +43,7 @@ interface DashboardStats {
 const AdminDashboardScreen: React.FC = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<AdminDashboardNavigationProp>();
-  const { role, userCityId } = useUserRole();
+  const { role, cityId: userCityId } = useUserRole();
   
   const [stats, setStats] = useState<DashboardStats>({
     pendingEvents: 0,
@@ -181,116 +183,24 @@ const AdminDashboardScreen: React.FC = () => {
             </Text>
           </View>
         ) : (
-          <View style={styles.statsContainer}>
-            <View style={styles.statsRow}>
-              <StatCardWithSkeleton
-                loading={loading || isRetrying}
-                title={t('admin.pendingEvents')}
-                value={stats.pendingEvents}
-                backgroundColor="#FF9800"
-                textColor="#FFFFFF"
-                testID="pending-events-card"
-              />
-              <StatCardWithSkeleton
-                loading={loading || isRetrying}
-                title={t('admin.pendingComments')}
-                value={stats.pendingComments}
-                backgroundColor="#9C27B0"
-                textColor="#FFFFFF"
-                testID="pending-comments-card"
-              />
-            </View>
-            <View style={styles.statsRow}>
-              <StatCardWithSkeleton
-                loading={loading || isRetrying}
-                title={t('admin.activeEvents')}
-                value={stats.activeEvents}
-                backgroundColor="#4CAF50"
-                textColor="#FFFFFF"
-                testID="active-events-card"
-              />
-              <StatCardWithSkeleton
-                loading={loading || isRetrying}
-                title={t('admin.reportedContent')}
-                value={stats.reportedContent}
-                backgroundColor="#F44336"
-                textColor="#FFFFFF"
-                testID="reported-content-card"
-              />
-            </View>
-          </View>
+          <AdminStatsCards
+            stats={stats}
+            loading={loading}
+            isRetrying={isRetrying}
+            t={t}
+          />
         )}
         
-        {/* Admin Tools */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>{t('admin.tools')}</Text>
-          
-          <TouchableOpacity
-            style={styles.toolButton}
-            onPress={handleNavigateToModerationQueue}
-          >
-            <View style={styles.toolIconContainer}>
-              <Ionicons name="shield-checkmark" size={24} color="#FFFFFF" />
-            </View>
-            <View style={styles.toolTextContainer}>
-              <Text style={styles.toolTitle}>{t('admin.moderationQueue')}</Text>
-              <Text style={styles.toolDescription}>{t('admin.moderationQueueDescription')}</Text>
-            </View>
-            <View style={styles.toolBadgeContainer}>
-              <Text style={styles.toolBadgeText}>
-                {stats.pendingEvents + stats.pendingComments}
-              </Text>
-              <Ionicons name="chevron-forward" size={20} color="#666666" />
-            </View>
-          </TouchableOpacity>
-          
-          <TouchableOpacity
-            style={styles.toolButton}
-            onPress={handleNavigateToReportReview}
-          >
-            <View style={[styles.toolIconContainer, { backgroundColor: '#F44336' }]}>
-              <Ionicons name="flag" size={24} color="#FFFFFF" />
-            </View>
-            <View style={styles.toolTextContainer}>
-              <Text style={styles.toolTitle}>{t('admin.reportReview')}</Text>
-              <Text style={styles.toolDescription}>{t('admin.reportReviewDescription')}</Text>
-            </View>
-            <View style={styles.toolBadgeContainer}>
-              <Text style={styles.toolBadgeText}>{stats.reportedContent}</Text>
-              <Ionicons name="chevron-forward" size={20} color="#666666" />
-            </View>
-          </TouchableOpacity>
-        </View>
+        {/* Admin Tools Section */}
+        <AdminToolsSection
+          stats={stats}
+          onNavigateToModerationQueue={handleNavigateToModerationQueue}
+          onNavigateToReportReview={handleNavigateToReportReview}
+          t={t}
+        />
         
-        {/* Admin Guidelines */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>{t('admin.guidelines')}</Text>
-          
-          <View style={styles.guidelineCard}>
-            <Text style={styles.guidelineTitle}>{t('admin.moderationPolicy')}</Text>
-            <Text style={styles.guidelineText}>{t('admin.moderationPolicyDescription')}</Text>
-            
-            <View style={styles.guidelineRule}>
-              <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
-              <Text style={styles.guidelineRuleText}>{t('admin.approveRule1')}</Text>
-            </View>
-            
-            <View style={styles.guidelineRule}>
-              <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
-              <Text style={styles.guidelineRuleText}>{t('admin.approveRule2')}</Text>
-            </View>
-            
-            <View style={styles.guidelineRule}>
-              <Ionicons name="close-circle" size={20} color="#F44336" />
-              <Text style={styles.guidelineRuleText}>{t('admin.rejectRule1')}</Text>
-            </View>
-            
-            <View style={styles.guidelineRule}>
-              <Ionicons name="close-circle" size={20} color="#F44336" />
-              <Text style={styles.guidelineRuleText}>{t('admin.rejectRule2')}</Text>
-            </View>
-          </View>
-        </View>
+        {/* Guidelines Section */}
+        <AdminGuidelinesCard t={t} />
       </ScrollView>
     </View>
   );

@@ -15,6 +15,7 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useFirestoreInstance } from '../hooks/useFirestoreInstance';
 import { useUserCity } from '../hooks/useCities';
 import useUgcModeration from '../hooks/useUgcModeration';
+import { useSubmissionThrottle } from '../hooks/useSubmissionThrottle';
 
 interface CommentInputProps {
   eventId: string;
@@ -32,6 +33,7 @@ const CommentInput: React.FC<CommentInputProps> = ({ eventId, onCommentAdded }) 
   const user = auth.currentUser;
   const { currentCityId } = useUserCity();
   const { submitForModeration } = useUgcModeration();
+  const { canSubmit, recordSubmission, getRemainingSubmissions, getTimeUntilReset, isThrottled } = useSubmissionThrottle();
   
   const [comment, setComment] = useState<string>('');
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -82,6 +84,23 @@ const CommentInput: React.FC<CommentInputProps> = ({ eventId, onCommentAdded }) 
       return;
     }
 
+    // Check submission throttle
+    if (!canSubmit('comment')) {
+      const remaining = getRemainingSubmissions('comment');
+      const timeUntilReset = Math.ceil(getTimeUntilReset() / (1000 * 60)); // Convert to minutes
+      
+      Alert.alert(
+        t('comments.throttleTitle'),
+        t('comments.throttleMessage', { 
+          remaining, 
+          timeUntilReset,
+          maxSubmissions: 5 
+        }),
+        [{ text: t('common.ok') }]
+      );
+      return;
+    }
+
     if (!user) {
       Alert.alert(
         t('comments.loginRequired'),
@@ -124,6 +143,9 @@ const CommentInput: React.FC<CommentInputProps> = ({ eventId, onCommentAdded }) 
         ...newComment,
         id: commentDoc.id
       });
+      
+      // Record successful submission for throttling
+      recordSubmission('comment');
       
       // Clear input and notify parent
       setComment('');
