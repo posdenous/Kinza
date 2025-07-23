@@ -139,7 +139,19 @@
       "required": "Kommentartext ist erforderlich",
       "tooShort": "Kommentar ist zu kurz",
       "tooLong": "Kommentar ist zu lang"
-    }
+    },
+    "throttleTitle": "Sendegrenze erreicht",
+    "throttleMessage": "Sie haben das Maximum von {{maxSubmissions}} Kommentaren in 10 Minuten erreicht. Sie haben noch {{remaining}} Sendungen übrig. Bitte warten Sie {{timeUntilReset}} Minuten, bevor Sie erneut kommentieren.",
+    "loginRequired": "Anmeldung erforderlich",
+    "loginToComment": "Bitte melden Sie sich an, um Kommentare zu posten",
+    "submitted": "Kommentar gesendet",
+    "moderationNotice": "Ihr Kommentar wurde zur Moderation eingereicht und wird nach der Genehmigung angezeigt.",
+    "submitError": "Kommentar konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+    "placeholder": "Schreiben Sie hier Ihren Kommentar...",
+    "errorEmpty": "Kommentar darf nicht leer sein",
+    "errorTooShort": "Kommentar muss mindestens 3 Zeichen lang sein",
+    "errorTooLong": "Kommentar überschreitet die maximale Länge von {{max}} Zeichen",
+    "errorInappropriate": "Kommentar enthält unangemessene Inhalte"
   },
   "profile": {
     "title": "Profil",

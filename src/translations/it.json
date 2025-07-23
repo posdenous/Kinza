@@ -139,7 +139,19 @@
       "required": "Il testo del commento è obbligatorio",
       "tooShort": "Il commento è troppo breve",
       "tooLong": "Il commento è troppo lungo"
-    }
+    },
+    "throttleTitle": "Limite di Invio Raggiunto",
+    "throttleMessage": "Hai raggiunto il massimo di {{maxSubmissions}} commenti in 10 minuti. Ti rimangono {{remaining}} invii. Attendi {{timeUntilReset}} minuti prima di commentare di nuovo.",
+    "loginRequired": "Accesso Richiesto",
+    "loginToComment": "Effettua l'accesso per pubblicare commenti",
+    "submitted": "Commento Inviato",
+    "moderationNotice": "Il tuo commento è stato inviato per la moderazione e apparirà una volta approvato.",
+    "submitError": "Impossibile inviare il commento. Riprova.",
+    "placeholder": "Scrivi il tuo commento qui...",
+    "errorEmpty": "Il commento non può essere vuoto",
+    "errorTooShort": "Il commento deve essere di almeno 3 caratteri",
+    "errorTooLong": "Il commento supera la lunghezza massima di {{max}} caratteri",
+    "errorInappropriate": "Il commento contiene contenuti inappropriati"
   },
   "profile": {
     "title": "Profilo",

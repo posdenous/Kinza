@@ -139,7 +139,19 @@
       "required": "Comment text is required",
       "tooShort": "Comment is too short",
       "tooLong": "Comment is too long"
-    }
+    },
+    "throttleTitle": "Submission Limit Reached",
+    "throttleMessage": "You have reached the maximum of {{maxSubmissions}} comments in 10 minutes. You have {{remaining}} submissions remaining. Please wait {{timeUntilReset}} minutes before commenting again.",
+    "loginRequired": "Login Required",
+    "loginToComment": "Please log in to post comments",
+    "submitted": "Comment Submitted",
+    "moderationNotice": "Your comment has been submitted for moderation and will appear once approved.",
+    "submitError": "Failed to submit comment. Please try again.",
+    "placeholder": "Write your comment here...",
+    "errorEmpty": "Comment cannot be empty",
+    "errorTooShort": "Comment must be at least 3 characters",
+    "errorTooLong": "Comment exceeds maximum length of {{max}} characters",
+    "errorInappropriate": "Comment contains inappropriate content"
   },
   "profile": {
     "title": "Profile",
