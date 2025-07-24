@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Kinza Berlin - Mobile Preview</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
@@ -9,6 +10,13 @@
       margin: 0;
       padding: 0;
       background-color: #f5f5f5;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      touch-action: manipulation;
     }
     .mobile-container {
       position: relative;
@@ -138,6 +146,24 @@
     }
     .filter-chip.active:hover {
       background-color: #3A80D2;
+    }
+    .filter-chip-with-subtitle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.2;
+    }
+    .filter-chip-main {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .filter-chip-subtitle {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-top: 1px;
+    }
+    .filter-chip.active .filter-chip-subtitle {
+      opacity: 0.9;
     }
     .language-selector {
       position: absolute;
@@ -277,7 +303,12 @@
           <div class="filter-chip" id="filter-today">Today</div>
           <div class="filter-chip" id="filter-weekend">Weekend</div>
           <div class="filter-chip" id="filter-free">Free</div>
-          <div class="filter-chip" id="filter-kids">Kids</div>
+          <div class="filter-chip" id="filter-kids">
+            <div class="filter-chip-with-subtitle">
+              <div class="filter-chip-main">Kids</div>
+              <div class="filter-chip-subtitle">(0-12)</div>
+            </div>
+          </div>
         </div>
         <div class="event-card">
           <div class="event-image">Event Image</div>
@@ -374,6 +405,7 @@
         'filter-weekend': 'Weekend',
         'filter-free': 'Free',
         'filter-kids': 'Kids',
+        'filter-kids-age': '(0-12)',
         'event1-title': 'Berlin Zoo Family Day',
         'event1-date': 'July 20, 2025',
         'event1-age': 'Ages 3-12',
@@ -394,6 +426,7 @@
         filterWeekend: "Wochenende",
         filterFree: "Kostenlos",
         filterKids: "Kinder",
+        filterKidsAge: "(0-12)",
         event1Title: "Familientag im Berliner Zoo",
         event1Date: "20. Juli 2025",
         event1Age: "Alter 3-12",
@@ -414,6 +447,7 @@
         filterWeekend: "Weekend",
         filterFree: "Gratuito",
         filterKids: "Bambini",
+        filterKidsAge: "(0-12)",
         event1Title: "Giornata della Famiglia allo Zoo di Berlino",
         event1Date: "20 Luglio 2025",
         event1Age: "Età 3-12",
@@ -440,7 +474,12 @@
       document.getElementById('filter-today').textContent = t.filterToday;
       document.getElementById('filter-weekend').textContent = t.filterWeekend;
       document.getElementById('filter-free').textContent = t.filterFree;
-      document.getElementById('filter-kids').textContent = t.filterKids;
+      
+      // Update Kids filter with subtitle
+      const kidsMainText = document.querySelector('#filter-kids .filter-chip-main');
+      const kidsSubtitle = document.querySelector('#filter-kids .filter-chip-subtitle');
+      if (kidsMainText) kidsMainText.textContent = t.filterKids || t['filter-kids'];
+      if (kidsSubtitle) kidsSubtitle.textContent = t.filterKidsAge || t['filter-kids-age'];
       
       document.getElementById('event1-title').textContent = t.event1Title;
       document.getElementById('event1-date').textContent = t.event1Date;
@@ -453,19 +492,64 @@
       document.getElementById('event2-desc').textContent = t.event2Desc;
     }
 
-    // Add click handlers for filter chips
+    // Add enhanced touch handlers for filter chips (mobile-friendly)
     document.querySelectorAll('.filter-chip').forEach(chip => {
-      chip.addEventListener('click', function() {
+      // Add both click and touch events for better mobile support
+      const handleFilterSelect = function() {
+        console.log('Filter selected:', this.id);
         document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
         this.classList.add('active');
+        
+        // Add visual feedback
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 150);
+      };
+      
+      chip.addEventListener('click', handleFilterSelect);
+      chip.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        handleFilterSelect.call(this);
+      });
+      
+      // Add visual feedback on touch
+      chip.addEventListener('touchstart', function() {
+        this.style.backgroundColor = '#3A80D2';
+      });
+      chip.addEventListener('touchend', function() {
+        if (!this.classList.contains('active')) {
+          this.style.backgroundColor = '';
+        }
       });
     });
 
-    // Add click handlers for tabs
+    // Add enhanced touch handlers for tabs (mobile-friendly)
     document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', function() {
+      const handleTabSelect = function() {
+        console.log('Tab selected:', this.id);
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
+        
+        // Add visual feedback
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 150);
+      };
+      
+      tab.addEventListener('click', handleTabSelect);
+      tab.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        handleTabSelect.call(this);
+      });
+      
+      // Add visual feedback on touch
+      tab.addEventListener('touchstart', function() {
+        this.style.opacity = '0.7';
+      });
+      tab.addEventListener('touchend', function() {
+        this.style.opacity = '';
       });
     });
   </script>
