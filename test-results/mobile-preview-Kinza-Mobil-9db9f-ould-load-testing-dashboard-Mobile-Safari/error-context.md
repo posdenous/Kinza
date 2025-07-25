@@ -1,0 +1,66 @@
+# Page snapshot
+
+```yaml
+- heading "🎯 Kinza App - Complete Testing Dashboard" [level=1]
+- paragraph: Test all user flows, roles, and functionality in one unified interface
+- heading "🛠️ Testing Tools & Commands" [level=2]
+- heading "Unit Tests" [level=4]
+- paragraph: Run comprehensive role and flow tests
+- code: npm test
+- heading "E2E Tests (Playwright)" [level=4]
+- paragraph: Automated browser testing with UI
+- code: npx playwright test --ui
+- heading "React Native Dev" [level=4]
+- paragraph: Live development server
+- code: npm start
+- heading "Test Reports" [level=4]
+- paragraph: View detailed test results
+- code: npx playwright show-report
+- heading "📱 Complete Mobile App" [level=3]
+- text: Full mobile app with Home, Search, Profile, and Saved Events screens. Test navigation, multilingual support, and core functionality.
+- button "🔍 Open Flow"
+- link "🔗 New Tab":
+  - /url: mobile-preview.html
+- heading "👨‍👩‍👧‍👦 Parent Onboarding" [level=3]
+- text: GDPR-compliant parent registration with granular consent system, child profile setup, and privacy-first design.
+- button "🔍 Open Flow"
+- link "🔗 New Tab":
+  - /url: preview/parent_onboarding.html
+- heading "🔒 Privacy & Trust" [level=3]
+- text: Comprehensive privacy settings, child profile visibility controls, data retention policies, and community safety features.
+- button "🔍 Open Flow"
+- link "🔗 New Tab":
+  - /url: preview/mobile_privacy.html
+- heading "⚡ Admin Dashboard" [level=3]
+- text: Content moderation tools, user management, city-scoped analytics, and real-time moderation queue for administrators.
+- button "🔍 Open Flow"
+- link "🔗 New Tab":
+  - /url: preview/admin_dashboard.html
+- heading "🛡️ Moderation Queue" [level=3]
+- text: ADMIN ONLY
+- strong: "⚠️ Non-Public Admin Tool:"
+- text: "Content moderation queue for reviewing and approving/rejecting user-generated content. Includes pending events, comments, and reports with detailed review interface and bulk actions. 🔒 Restricted Access: Only administrators can view and interact with this screen. Requires admin role authentication and city-scoped permissions."
+- button "🔍 Open Admin Tool"
+- link "🔗 New Tab":
+  - /url: preview/moderation_queue.html
+- heading "📅 Organiser Dashboard" [level=3]
+- text: Event creation and management, analytics, verification status, and comprehensive event filtering tools for organisers.
+- button "🔍 Open Flow"
+- link "🔗 New Tab":
+  - /url: preview/organiser_dashboard.html
+- heading "💬 Comment System" [level=3]
+- text: Advanced comment pagination with "Load More" functionality, moderation status indicators, and pull-to-refresh support.
+- button "🔍 Open Flow"
+- link "🔗 New Tab":
+  - /url: mobile-comment-pagination.html
+- heading "⭐ Saved Events" [level=3]
+- text: Event saving functionality with dynamic display, count tracking, individual removal, and empty state handling.
+- button "🔍 Open Flow"
+- link "🔗 New Tab":
+  - /url: preview/saved_events.html
+- heading "🛡️ Report Review" [level=3]
+- text: Content moderation workflow with report review, approval/rejection actions, and comprehensive moderation tools.
+- button "🔍 Open Flow"
+- link "🔗 New Tab":
+  - /url: preview/report_review.html
+```

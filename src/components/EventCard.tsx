@@ -53,16 +53,18 @@ const EventCard: React.FC<EventCardProps> = ({
     });
   };
 
-  // Get category color based on first category
+  // Get category color based on first category - using new brand colors
   const getCategoryColor = (category: string) => {
     const categoryColors: { [key: string]: string } = {
-      music: '#FF5722',
-      sports: '#4CAF50',
-      art: '#9C27B0',
-      education: '#2196F3',
-      outdoor: '#8BC34A',
-      food: '#FF9800',
-      default: '#607D8B',
+      music: theme.colors.tertiary, // Purple
+      sports: theme.colors.primary, // Teal
+      art: theme.colors.secondary, // Coral
+      education: theme.colors.primary, // Teal
+      outdoor: theme.colors.accent, // Yellow
+      food: theme.colors.secondary, // Coral
+      community: theme.colors.accent, // Yellow
+      classes: theme.colors.tertiary, // Purple
+      default: theme.colors.primary, // Teal as default
     };
     
     return categoryColors[category] || categoryColors.default;

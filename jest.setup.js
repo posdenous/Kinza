@@ -1,5 +1,95 @@
 import '@testing-library/jest-native/extend-expect';
 
+// Mock React Native components that cause Jest scoping issues
+jest.mock('react-native', () => {
+  const React = require('react');
+  return {
+    Platform: {
+      OS: 'ios',
+      select: jest.fn((obj) => obj.ios || obj.default),
+    },
+    StyleSheet: {
+      create: jest.fn((styles) => styles),
+      flatten: jest.fn((styles) => styles),
+    },
+    Dimensions: {
+      get: jest.fn(() => ({ width: 375, height: 667 })),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    },
+    Text: jest.fn(({ children, ...props }) => React.createElement('Text', props, children)),
+    View: jest.fn(({ children, ...props }) => React.createElement('View', props, children)),
+    TouchableOpacity: jest.fn(({ children, onPress, ...props }) => 
+      React.createElement('TouchableOpacity', { ...props, onPress }, children)),
+    ScrollView: jest.fn(({ children, ...props }) => React.createElement('ScrollView', props, children)),
+    FlatList: jest.fn(({ data, renderItem, ...props }) => 
+      React.createElement('FlatList', props, data?.map(renderItem) || [])),
+    Image: jest.fn(({ source, ...props }) => React.createElement('Image', { ...props, source })),
+    TextInput: jest.fn(({ ...props }) => React.createElement('TextInput', props)),
+    StatusBar: jest.fn(({ ...props }) => React.createElement('StatusBar', props)),
+    SafeAreaView: jest.fn(({ children, ...props }) => 
+      React.createElement('SafeAreaView', props, children)),
+    ActivityIndicator: jest.fn(({ ...props }) => React.createElement('ActivityIndicator', props)),
+    Modal: jest.fn(({ children, ...props }) => React.createElement('Modal', props, children)),
+    Alert: {
+      alert: jest.fn(),
+    },
+    Animated: {
+      Value: jest.fn(() => ({
+        interpolate: jest.fn(),
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+      })),
+      timing: jest.fn(() => ({ start: jest.fn(), stop: jest.fn() })),
+      spring: jest.fn(() => ({ start: jest.fn(), stop: jest.fn() })),
+      View: jest.fn(({ children, ...props }) => 
+        React.createElement('Animated.View', props, children)),
+      Text: jest.fn(({ children, ...props }) => 
+        React.createElement('Animated.Text', props, children)),
+    },
+    PanResponder: {
+      create: jest.fn(() => ({
+        panHandlers: {},
+      })),
+    },
+    Easing: {
+      linear: jest.fn(),
+      ease: jest.fn(),
+      quad: jest.fn(),
+      cubic: jest.fn(),
+    },
+  };
+});
+
+// Mock Expo Vector Icons
+jest.mock('@expo/vector-icons', () => ({
+  Ionicons: jest.fn().mockImplementation(({ name, size, color, ...props }) => {
+    const React = require('react');
+    const { Text } = require('react-native');
+    return React.createElement('Text', {
+      testID: `icon-${name}`,
+      style: { fontSize: size, color },
+      ...props
+    }, name);
+  }),
+}));
+
+// Mock react-i18next
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => key,
+    i18n: {
+      changeLanguage: jest.fn(),
+      language: 'en',
+    },
+  }),
+  Trans: ({ children }) => children,
+  initReactI18next: {
+    type: '3rdParty',
+    init: jest.fn(),
+  },
+}));
+
 // Silence console warnings during tests
 const originalWarn = console.warn;
 const originalError = console.error;

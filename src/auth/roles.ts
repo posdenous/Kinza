@@ -86,30 +86,7 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
     Permission.VIEW_CITY_EVENTS,
     Permission.HANDLE_PERSONAL_DATA
   ],
-  [UserRole.ADMIN]: [
-    Permission.VIEW_EVENTS,
-    Permission.CREATE_EVENT,
-    Permission.EDIT_EVENT,
-    Permission.DELETE_EVENT,
-    Permission.COMMENT,
-    Permission.SAVE_EVENT,
-    Permission.MODERATE_CONTENT,
-    Permission.MANAGE_USERS,
-    Permission.VIEW_ANALYTICS,
-    Permission.EDIT_PROFILE,
-    Permission.VIEW_FULL_MAP,
-    Permission.VIEW_LIMITED_MAP,
-    Permission.EDIT_OWN_EVENT,
-    Permission.VIEW_EVENT_ANALYTICS,
-    Permission.SAVE_EVENTS,
-    Permission.SUBMIT_FEEDBACK,
-    Permission.DELETE_ANY_EVENT,
-    Permission.APPROVE_ORGANISER,
-    Permission.ACCESS_REPORTS,
-    Permission.VIEW_CITY_EVENTS,
-    Permission.ACCESS_CROSS_CITY_DATA,
-    Permission.HANDLE_PERSONAL_DATA
-  ],
+  [UserRole.ADMIN]: Object.values(Permission), // Admin has all permissions
   [UserRole.GUEST]: [
     Permission.VIEW_EVENTS,
     Permission.VIEW_LIMITED_MAP,
@@ -120,6 +97,7 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
   ],
   [UserRole.PARTNER]: [
     Permission.VIEW_EVENTS,
+    Permission.CREATE_EVENT,
     Permission.EDIT_EVENT,
     Permission.COMMENT,
     Permission.SAVE_EVENT,
@@ -176,9 +154,9 @@ export const screenAccessControl = {
   PartnerDashboard: [UserRole.PARTNER, UserRole.ADMIN],
   PartnerDashboardScreen: [UserRole.PARTNER, UserRole.ADMIN],
   
-  // Public information screens (accessible by all including guests)
-  Privacy: Object.values(UserRole), // Privacy policy should be accessible to all
-  PrivacyScreen: Object.values(UserRole),
+  // Privacy screens (require authentication)
+  Privacy: [UserRole.PARENT, UserRole.ORGANISER, UserRole.ADMIN, UserRole.PARTNER],
+  PrivacyScreen: [UserRole.PARENT, UserRole.ORGANISER, UserRole.ADMIN, UserRole.PARTNER],
   Trust: Object.values(UserRole), // Trust and safety info should be accessible to all
   TrustScreen: Object.values(UserRole),
   

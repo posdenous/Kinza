@@ -15,9 +15,13 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebaseConfig';
 import { useUserRole } from '../hooks/useUserRole';
 import { useApiWithRetry } from '../hooks/common/useApiWithRetry';
+import KinzaLogo from '../components/KinzaLogo';
+import GradientCard from '../components/common/GradientCard';
+import GradientButton from '../components/common/GradientButton';
 import AdminStatsCards from '../components/admin/AdminStatsCards';
 import AdminToolsSection from '../components/admin/AdminToolsSection';
 import AdminGuidelinesCard from '../components/admin/AdminGuidelinesCard';
+import theme from '../styles/theme';
 
 type RootStackParamList = {
   AdminDashboard: undefined;
@@ -152,17 +156,17 @@ const AdminDashboardScreen: React.FC = () => {
   // Render not authorized state
   if (!isAdmin) {
     return (
-      <View style={styles.centerContainer}>
-        <Ionicons name="alert-circle" size={64} color="#F44336" />
-        <Text style={styles.titleText}>{t('errors.notAuthorized')}</Text>
-        <Text style={styles.subtitleText}>{t('errors.adminOnly')}</Text>
-        <TouchableOpacity
-          style={styles.loginButton}
+      <GradientCard variant="background" style={styles.centerContainer}>
+        <KinzaLogo size="large" />
+        <Ionicons name="shield-checkmark" size={64} color={theme.colors.secondary} />
+        <Text style={styles.titleText}>{t('admin.accessDenied')}</Text>
+        <Text style={styles.subtitleText}>{t('admin.adminOnly')}</Text>
+        <GradientButton 
+          title={t('auth.login')} 
           onPress={() => navigation.navigate('Login')}
-        >
-          <Text style={styles.loginButtonText}>{t('auth.login')}</Text>
-        </TouchableOpacity>
-      </View>
+          variant="primary"
+        />
+      </GradientCard>
     );
   }
 
@@ -176,11 +180,10 @@ const AdminDashboardScreen: React.FC = () => {
       <ScrollView style={styles.content}>
         {/* Stats Cards */}
         {loading ? (
-          <View style={styles.centerContainer}>
-            <ActivityIndicator size="large" color="#4CAF50" />
-            <Text style={styles.loadingText}>
-              {isRetrying ? t('common.retrying') : t('common.loading')}
-            </Text>
+          <View style={styles.loadingContainer}>
+            <KinzaLogo size="medium" />
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+            <Text style={styles.loadingText}>{t('common.loading')}</Text>
           </View>
         ) : (
           <AdminStatsCards
@@ -209,30 +212,32 @@ const AdminDashboardScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: theme.colors.gradients.background[0],
   },
   header: {
-    backgroundColor: '#FFFFFF',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+    backgroundColor: theme.colors.ui.card,
+    paddingVertical: theme.spacing[4],
+    paddingHorizontal: theme.spacing[4],
     borderBottomWidth: 1,
-    borderBottomColor: '#EEEEEE',
+    borderBottomColor: theme.colors.ui.border,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    ...theme.shadows.sm,
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: theme.typography.fontSize.xl,
+    fontFamily: theme.typography.fontFamily.heading,
+    color: theme.colors.text.dark,
   },
   cityBadge: {
-    backgroundColor: '#2196F3',
-    color: '#FFFFFF',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    fontSize: 12,
-    fontWeight: 'bold',
+    backgroundColor: theme.colors.primary,
+    color: theme.colors.text.inverse,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[1],
+    borderRadius: theme.borders.radius.md,
+    fontSize: theme.typography.fontSize.xs,
+    fontFamily: theme.typography.fontFamily.heading,
   },
   content: {
     flex: 1,

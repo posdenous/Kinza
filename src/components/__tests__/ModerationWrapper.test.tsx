@@ -3,19 +3,7 @@ import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import ModerationWrapper from '../ModerationWrapper';
 import { Text } from 'react-native';
 
-// Mock the Ionicons component
-jest.mock('@expo/vector-icons', () => ({
-  Ionicons: ({ name, size, color, ...props }: any) => (
-    <Text testID={`icon-${name}`} style={{ fontSize: size, color }}>{name}</Text>
-  ),
-}));
-
-// Mock the translation hook
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
+// Mocks are now handled in jest.setup.js
 
 // Mock useUgcModeration hook with more control for testing
 const mockCheckModerationStatus = jest.fn();

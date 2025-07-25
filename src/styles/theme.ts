@@ -5,25 +5,30 @@
  * Always import from this file to ensure consistency across the app.
  */
 
-// Color Palette
+// Color Palette - Matching Kinza Mockup Design
 export const colors = {
-  // Primary brand colors - adjusted for better contrast
-  primary: '#E06B8B', // Darkened for better contrast on white backgrounds
-  secondary: '#4A90C0', // Darkened for better contrast on white backgrounds
-  accent: '#F5D78B', // Slightly darkened for better visibility
+  // Primary brand colors - vibrant and playful to match mockup
+  primary: '#4ECDC4', // Teal - main brand color from mockup
+  secondary: '#FF6B6B', // Coral - secondary brand color from mockup
+  accent: '#FDCB6E', // Yellow - accent color from mockup
+  tertiary: '#6C5CE7', // Purple - additional brand color from mockup
   
   // Text colors - ensuring WCAG AA compliance
   text: {
-    dark: '#333333', // Good contrast on light backgrounds
-    light: '#666666', // Darkened from #888888 for better contrast
+    dark: '#2d3748', // Darker for better contrast and modern look
+    light: '#718096', // Lighter gray for secondary text
     inverse: '#FFFFFF', // For text on dark backgrounds
   },
   
-  // Background gradients
+  // Brand gradients - matching mockup aesthetic
   gradients: {
-    home: ['#CDEDF6', '#FFDAB9'],
-    profile: ['#CDEDF6', '#FFDAB9'],
-    map: ['#FFE5EC', '#FDE2FF'],
+    primary: ['#4ECDC4', '#44A08D'], // Teal gradient
+    secondary: ['#FF6B6B', '#FF8E8E'], // Coral gradient
+    accent: ['#FDCB6E', '#E17055'], // Yellow to orange gradient
+    tertiary: ['#6C5CE7', '#A29BFE'], // Purple gradient
+    logo: ['#6C5CE7', '#FF6B6B'], // Logo gradient (purple to coral)
+    background: ['#f8f9ff', '#e8f4f8'], // Light background gradient
+    card: ['#FFFFFF', '#f8f9ff'], // Card gradient
   },
   
   // UI colors

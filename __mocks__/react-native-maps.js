@@ -1,0 +1,26 @@
+// Mock for react-native-maps
+module.exports = {
+  __esModule: true,
+  default: 'MapView',
+  MapView: 'MapView',
+  PROVIDER_GOOGLE: 'google',
+  PROVIDER_DEFAULT: 'default',
+  Marker: 'Marker',
+  Callout: 'Callout',
+  Circle: 'Circle',
+  Polygon: 'Polygon',
+  Polyline: 'Polyline',
+  Heatmap: 'Heatmap',
+  Geojson: 'Geojson',
+  Overlay: 'Overlay',
+  // Mock components
+  MapView: jest.fn(() => null),
+  Marker: jest.fn(() => null),
+  Callout: jest.fn(() => null),
+  Circle: jest.fn(() => null),
+  Polygon: jest.fn(() => null),
+  Polyline: jest.fn(() => null),
+  Heatmap: jest.fn(() => null),
+  Geojson: jest.fn(() => null),
+  Overlay: jest.fn(() => null),
+};

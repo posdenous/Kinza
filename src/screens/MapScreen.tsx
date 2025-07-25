@@ -12,6 +12,7 @@ import theme from '../styles/theme';
 import useMapEvents from '../hooks/useMapEvents';
 import MapEventMarker from '../components/MapEventMarker';
 import MapFilters from '../components/MapFilters';
+import KinzaLogo from '../components/KinzaLogo';
 import { Event, EventFilter } from '../types/events';
 import useUserRole from '../hooks/useUserRole';
 
@@ -126,7 +127,8 @@ const MapScreen: React.FC = () => {
     <View style={styles.container}>
       {locationLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#4CAF50" />
+          <KinzaLogo size="medium" />
+          <ActivityIndicator size="large" color={theme.colors.primary} />
           <Text style={styles.loadingText}>{t('map.loadingLocation')}</Text>
         </View>
       ) : (
@@ -173,7 +175,7 @@ const MapScreen: React.FC = () => {
           {/* Events Loading Indicator */}
           {eventsLoading && (
             <View style={styles.eventsLoadingContainer}>
-              <ActivityIndicator size="small" color="#4CAF50" />
+              <ActivityIndicator size="small" color={theme.colors.primary} />
               <Text style={styles.eventsLoadingText}>{t('map.loadingEvents')}</Text>
             </View>
           )}
@@ -201,7 +203,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
-    backgroundColor: theme.colors.gradients.map[0], // Use the first color from the map gradient
+    backgroundColor: theme.colors.gradients.background[0], // Use the first color from the background gradient
   },
   map: {
     flex: 1,

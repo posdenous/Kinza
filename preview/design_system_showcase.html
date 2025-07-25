@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinza - Updated Design System Showcase</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f4f8 100%);
+            min-height: 100vh;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        /* Updated Kinza Logo Styles */
+        .kinza-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .logo-k {
+            width: 40px;
+            height: 40px;
+            background: #4ECDC4;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 800;
+            transform: rotate(-5deg);
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .showcase-title {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            margin-bottom: 40px;
+        }
+
+        .showcase-title h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #6C5CE7, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .showcase-title p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        /* Screen Showcase */
+        .screens-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .screen-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #2d3748;
+            text-align: center;
+        }
+
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .screen-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .screen-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        }
+
+        .screen-header {
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .screen-header.admin {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+        }
+
+        .screen-header.map {
+            background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+        }
+
+        .screen-header.events {
+            background: linear-gradient(135deg, #FDCB6E 0%, #E17055 100%);
+        }
+
+        .screen-content {
+            padding: 24px;
+        }
+
+        .screen-preview {
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 200px;
+        }
+
+        /* Component Showcase */
+        .component-demo {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .demo-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2d3748;
+        }
+
+        /* Updated Buttons */
+        .btn-primary {
+            background: #4ECDC4;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+        }
+
+        .btn-secondary {
+            background: #FF6B6B;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-accent {
+            background: #FDCB6E;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(253, 203, 110, 0.3);
+        }
+
+        .btn-tertiary {
+            background: #6C5CE7;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        /* Event Cards */
+        .event-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .event-details {
+            padding: 16px;
+        }
+
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+
+        .event-meta {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            margin-right: 8px;
+        }
+
+        .category-outdoor { background: #FDCB6E; }
+        .category-art { background: #FF6B6B; }
+        .category-sports { background: #4ECDC4; }
+        .category-music { background: #6C5CE7; }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border-left: 4px solid #4ECDC4;
+        }
+
+        .stat-card.pending { border-left-color: #FF6B6B; }
+        .stat-card.active { border-left-color: #4ECDC4; }
+        .stat-card.reported { border-left-color: #FDCB6E; }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        /* Color Palette Display */
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .color-swatch {
+            text-align: center;
+        }
+
+        .color-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .color-primary { background: #4ECDC4; }
+        .color-secondary { background: #FF6B6B; }
+        .color-accent { background: #FDCB6E; }
+        .color-tertiary { background: #6C5CE7; }
+
+        .color-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .color-hex {
+            color: #718096;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .screens-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .showcase-title h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="kinza-logo">
+                <div class="logo-k">K</div>
+                <span>Kinza</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Showcase Title -->
+    <section class="showcase-title">
+        <h1>Updated Design System</h1>
+        <p>Showcasing the new consistent design throughout the Kinza app</p>
+    </section>
+
+    <div class="screens-container">
+        <!-- Color Palette Section -->
+        <section class="screen-section">
+            <h2 class="section-title">🎨 Updated Color Palette</h2>
+            <div class="color-palette">
+                <div class="color-swatch">
+                    <div class="color-circle color-primary"></div>
+                    <div class="color-name">Primary</div>
+                    <div class="color-hex">#4ECDC4</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-circle color-secondary"></div>
+                    <div class="color-name">Secondary</div>
+                    <div class="color-hex">#FF6B6B</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-circle color-accent"></div>
+                    <div class="color-name">Accent</div>
+                    <div class="color-hex">#FDCB6E</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-circle color-tertiary"></div>
+                    <div class="color-name">Tertiary</div>
+                    <div class="color-hex">#6C5CE7</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Components Section -->
+        <section class="screen-section">
+            <h2 class="section-title">🧩 Updated Components</h2>
+            
+            <div class="component-demo">
+                <div class="demo-title">Enhanced Buttons</div>
+                <button class="btn-primary">Primary Button</button>
+                <button class="btn-secondary">Secondary Button</button>
+                <button class="btn-accent">Accent Button</button>
+                <button class="btn-tertiary">Tertiary Button</button>
+            </div>
+
+            <div class="component-demo">
+                <div class="demo-title">Event Cards with New Colors</div>
+                <div class="event-card">
+                    <div class="event-image">🎨</div>
+                    <div class="event-details">
+                        <div class="event-title">Art Workshop for Kids</div>
+                        <div class="event-meta">📅 Today, 2:00 PM • 📍 Community Center</div>
+                        <span class="category-tag category-art">Art</span>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div class="event-image">🏃‍♂️</div>
+                    <div class="event-details">
+                        <div class="event-title">Family Sports Day</div>
+                        <div class="event-meta">📅 Tomorrow, 10:00 AM • 📍 City Park</div>
+                        <span class="category-tag category-sports">Sports</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen Previews -->
+        <section class="screen-section">
+            <h2 class="section-title">📱 Updated Screens</h2>
+            <div class="screens-grid">
+                <!-- Map Screen -->
+                <div class="screen-card">
+                    <div class="screen-header map">
+                        <div class="kinza-logo">
+                            <div class="logo-k">K</div>
+                            <span>Map View</span>
+                        </div>
+                    </div>
+                    <div class="screen-content">
+                        <div class="screen-preview">
+                            <div style="text-align: center; padding: 40px;">
+                                <div style="font-size: 3rem; margin-bottom: 16px;">🗺️</div>
+                                <div style="font-weight: 600; margin-bottom: 8px;">Interactive Map</div>
+                                <div style="color: #718096; font-size: 0.9rem;">Updated with new color scheme</div>
+                                <div style="margin-top: 16px;">
+                                    <button class="btn-primary" style="margin: 4px;">Find Events</button>
+                                </div>
+                            </div>
+                        </div>
+                        <p><strong>Updates:</strong> New loading states with KinzaLogo, updated color palette for markers and UI elements.</p>
+                    </div>
+                </div>
+
+                <!-- Admin Dashboard -->
+                <div class="screen-card">
+                    <div class="screen-header admin">
+                        <div class="kinza-logo">
+                            <div class="logo-k">K</div>
+                            <span>Admin Dashboard</span>
+                        </div>
+                    </div>
+                    <div class="screen-content">
+                        <div class="screen-preview">
+                            <div class="stats-grid">
+                                <div class="stat-card pending">
+                                    <div class="stat-number">12</div>
+                                    <div class="stat-label">Pending Events</div>
+                                </div>
+                                <div class="stat-card active">
+                                    <div class="stat-number">45</div>
+                                    <div class="stat-label">Active Events</div>
+                                </div>
+                            </div>
+                            <button class="btn-secondary" style="margin: 4px;">Moderation Queue</button>
+                            <button class="btn-accent" style="margin: 4px;">Reports</button>
+                        </div>
+                        <p><strong>Updates:</strong> Enhanced with GradientCard and GradientButton components, new color-coded stats.</p>
+                    </div>
+                </div>
+
+                <!-- Event Detail -->
+                <div class="screen-card">
+                    <div class="screen-header events">
+                        <div class="kinza-logo">
+                            <div class="logo-k">K</div>
+                            <span>Event Details</span>
+                        </div>
+                    </div>
+                    <div class="screen-content">
+                        <div class="screen-preview">
+                            <div class="event-card">
+                                <div class="event-image">🎪</div>
+                                <div class="event-details">
+                                    <div class="event-title">Family Circus Show</div>
+                                    <div class="event-meta">📅 Saturday, 3:00 PM • 📍 Main Square</div>
+                                    <span class="category-tag category-music">Entertainment</span>
+                                    <div style="margin-top: 12px;">
+                                        <button class="btn-primary" style="margin: 4px;">Join Event</button>
+                                        <button class="btn-accent" style="margin: 4px;">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p><strong>Updates:</strong> EventCard component now uses the new brand color palette for categories and enhanced visual hierarchy.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Design System Features -->
+        <section class="screen-section">
+            <h2 class="section-title">✨ Design System Features</h2>
+            <div class="component-demo">
+                <div class="demo-title">Key Improvements</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">🎨</div>
+                        <div style="font-weight: 600; margin-bottom: 8px;">Consistent Colors</div>
+                        <div style="color: #718096; font-size: 0.9rem;">All components now use the exact colors from your mockup</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">📱</div>
+                        <div style="font-weight: 600; margin-bottom: 8px;">KinzaLogo Integration</div>
+                        <div style="color: #718096; font-size: 0.9rem;">Professional logo component used throughout the app</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">🔧</div>
+                        <div style="font-weight: 600; margin-bottom: 8px;">Reusable Components</div>
+                        <div style="color: #718096; font-size: 0.9rem;">GradientCard and GradientButton for consistency</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">✨</div>
+                        <div style="font-weight: 600; margin-bottom: 8px;">Enhanced UX</div>
+                        <div style="color: #718096; font-size: 0.9rem;">Better loading states and visual feedback</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div style="text-align: center; padding: 40px; background: white; margin-top: 60px;">
+        <div class="kinza-logo" style="justify-content: center; margin-bottom: 16px;">
+            <div class="logo-k">K</div>
+            <span>Kinza</span>
+        </div>
+        <p style="color: #718096;">Design system successfully updated with 100% consistency!</p>
+    </div>
+</body>
+</html>

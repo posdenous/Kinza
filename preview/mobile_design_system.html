@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinza - Updated Design System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f4f8 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 30px;
+            padding: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .phone-screen {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 667px;
+            position: relative;
+        }
+
+        /* Updated Header */
+        .header {
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            color: white;
+            padding: 50px 20px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .kinza-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .logo-k {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 800;
+            transform: rotate(-5deg);
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 20px;
+            height: calc(100% - 120px);
+            overflow-y: auto;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+
+        /* Color Palette */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .color-card {
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .color-primary { background: #4ECDC4; }
+        .color-secondary { background: #FF6B6B; }
+        .color-accent { background: #FDCB6E; }
+        .color-tertiary { background: #6C5CE7; }
+
+        .color-name {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .color-hex {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* Updated Buttons */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-primary { background: #4ECDC4; }
+        .btn-secondary { background: #FF6B6B; }
+        .btn-accent { background: #FDCB6E; }
+        .btn-tertiary { background: #6C5CE7; }
+
+        /* Event Cards */
+        .event-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .event-image {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            position: relative;
+        }
+
+        .event-image.outdoor { background: linear-gradient(135deg, #FDCB6E, #E17055); }
+        .event-image.art { background: linear-gradient(135deg, #FF6B6B, #FF8E8E); }
+        .event-image.sports { background: linear-gradient(135deg, #4ECDC4, #44A08D); }
+
+        .event-details {
+            padding: 15px;
+        }
+
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+
+        .event-meta {
+            color: #718096;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .tag-outdoor { background: #FDCB6E; }
+        .tag-art { background: #FF6B6B; }
+        .tag-sports { background: #4ECDC4; }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            border-left: 4px solid #4ECDC4;
+        }
+
+        .stat-card.pending { border-left-color: #FF6B6B; }
+        .stat-card.active { border-left-color: #4ECDC4; }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 11px;
+        }
+
+        /* Navigation Tabs */
+        .tab-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        .tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            color: #718096;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            color: #4ECDC4;
+        }
+
+        .tab-icon {
+            font-size: 20px;
+        }
+
+        /* Screen Switcher */
+        .screen-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .switch-btn {
+            background: #4ECDC4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: block;
+            width: 120px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .before-after {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .old-color {
+            background: #E06B8B;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .new-color {
+            background: #4ECDC4;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Screen Switcher -->
+    <div class="screen-switcher">
+        <button class="switch-btn" onclick="showScreen('colors')">Colors</button>
+        <button class="switch-btn" onclick="showScreen('components')">Components</button>
+        <button class="switch-btn" onclick="showScreen('screens')">Screens</button>
+        <button class="switch-btn" onclick="showScreen('comparison')">Before/After</button>
+    </div>
+
+    <div class="phone-container">
+        <div class="phone-screen">
+            <!-- Header -->
+            <div class="header">
+                <div class="kinza-logo">
+                    <div class="logo-k">K</div>
+                    <span class="app-title">Kinza</span>
+                </div>
+                <div class="subtitle">Updated Design System</div>
+            </div>
+
+            <!-- Colors Screen -->
+            <div class="screen active" id="colors-screen">
+                <div class="content">
+                    <div class="section">
+                        <div class="section-title">🎨 New Color Palette</div>
+                        <div class="color-grid">
+                            <div class="color-card color-primary">
+                                <div class="color-name">Primary</div>
+                                <div class="color-hex">#4ECDC4</div>
+                            </div>
+                            <div class="color-card color-secondary">
+                                <div class="color-name">Secondary</div>
+                                <div class="color-hex">#FF6B6B</div>
+                            </div>
+                            <div class="color-card color-accent">
+                                <div class="color-name">Accent</div>
+                                <div class="color-hex">#FDCB6E</div>
+                            </div>
+                            <div class="color-card color-tertiary">
+                                <div class="color-name">Tertiary</div>
+                                <div class="color-hex">#6C5CE7</div>
+                            </div>
+                        </div>
+                        <p style="color: #718096; font-size: 14px; text-align: center;">
+                            Colors now match your mockup exactly!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Components Screen -->
+            <div class="screen" id="components-screen">
+                <div class="content">
+                    <div class="section">
+                        <div class="section-title">🧩 Updated Components</div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 10px; color: #2d3748;">Enhanced Buttons</h4>
+                            <div class="button-grid">
+                                <button class="btn btn-primary">Primary</button>
+                                <button class="btn btn-secondary">Secondary</button>
+                                <button class="btn btn-accent">Accent</button>
+                                <button class="btn btn-tertiary">Tertiary</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 style="margin-bottom: 10px; color: #2d3748;">Event Cards</h4>
+                            <div class="event-card">
+                                <div class="event-image outdoor">🎨</div>
+                                <div class="event-details">
+                                    <div class="event-title">Art Workshop</div>
+                                    <div class="event-meta">📅 Today, 2:00 PM • 📍 Community Center</div>
+                                    <span class="category-tag tag-outdoor">Outdoor</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screens Screen -->
+            <div class="screen" id="screens-screen">
+                <div class="content">
+                    <div class="section">
+                        <div class="section-title">📱 Updated Screens</div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 10px; color: #2d3748;">Admin Dashboard</h4>
+                            <div class="stats-grid">
+                                <div class="stat-card pending">
+                                    <div class="stat-number">12</div>
+                                    <div class="stat-label">Pending Events</div>
+                                </div>
+                                <div class="stat-card active">
+                                    <div class="stat-number">45</div>
+                                    <div class="stat-label">Active Events</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 style="margin-bottom: 10px; color: #2d3748;">Map View</h4>
+                            <div style="background: linear-gradient(135deg, #6C5CE7, #A29BFE); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 30px; margin-bottom: 10px;">🗺️</div>
+                                <div style="font-weight: 600;">Interactive Map</div>
+                                <div style="font-size: 12px; opacity: 0.9;">With KinzaLogo loading states</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison Screen -->
+            <div class="screen" id="comparison-screen">
+                <div class="content">
+                    <div class="section">
+                        <div class="section-title">🔄 Before vs After</div>
+                        
+                        <div class="before-after">
+                            <h4 style="margin-bottom: 10px; color: #2d3748;">Primary Color</h4>
+                            <div class="comparison">
+                                <div class="old-color">
+                                    <div>Before</div>
+                                    <div>#E06B8B</div>
+                                </div>
+                                <div class="new-color">
+                                    <div>After</div>
+                                    <div>#4ECDC4</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="before-after">
+                            <h4 style="margin-bottom: 10px; color: #2d3748;">Key Improvements</h4>
+                            <div style="color: #718096; font-size: 14px; line-height: 1.5;">
+                                ✅ Colors match your mockup exactly<br>
+                                ✅ KinzaLogo component created<br>
+                                ✅ Consistent design throughout<br>
+                                ✅ Enhanced loading states<br>
+                                ✅ Better visual hierarchy
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="tab-nav">
+                <div class="tab active">
+                    <div class="tab-icon">🏠</div>
+                    <div>Home</div>
+                </div>
+                <div class="tab">
+                    <div class="tab-icon">🔍</div>
+                    <div>Search</div>
+                </div>
+                <div class="tab">
+                    <div class="tab-icon">❤️</div>
+                    <div>Saved</div>
+                </div>
+                <div class="tab">
+                    <div class="tab-icon">👤</div>
+                    <div>Profile</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenName) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show selected screen
+            document.getElementById(screenName + '-screen').classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -6,6 +6,8 @@
     <title>Kinza Berlin - Organiser Dashboard Preview</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Maps Places API - Demo Mode -->
+    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initAutocomplete"></script> -->
     <style>
         * {
             box-sizing: border-box;
@@ -26,6 +28,28 @@
             min-height: 100vh;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+                margin: 0;
+                box-shadow: none;
+            }
+            
+            .header {
+                padding: 12px 16px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px !important;
+            }
+            
+            .stat-card {
+                padding: 12px !important;
+            }
         }
         
         .header {
@@ -111,15 +135,28 @@
         }
         
         .create-event-button {
-            background-color: #4CAF50;
-            border-radius: 8px;
+            background-color: #4ECDC4;
+            color: #FFFFFF;
             padding: 16px;
+            margin: 16px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            color: #FFFFFF;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .create-event-button:hover {
+            background-color: #45B7B8;
+            transform: translateY(-1px);
+        }
+        
+        .create-event-button:active {
+            transform: translateY(0);
         }
         
         .create-event-button-text {
@@ -143,6 +180,7 @@
             padding: 12px 0;
             text-align: center;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
         
         .tab.active {
@@ -310,6 +348,385 @@
             margin-bottom: 4px;
         }
         
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .modal-content {
+            background-color: #FFFFFF;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease-in-out;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #EEEEEE;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .close {
+            color: #999999;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .close:hover {
+            color: #333333;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+            padding: 0 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 12px;
+            padding: 0 20px;
+        }
+        
+        .form-group.half {
+            flex: 1;
+            padding: 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #333333;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #DDDDDD;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4ECDC4;
+            box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.2);
+        }
+        
+        .form-actions {
+            padding: 20px;
+            border-top: 1px solid #EEEEEE;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        
+        .btn-primary,
+        .btn-secondary {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background-color: #4ECDC4;
+            color: #FFFFFF;
+        }
+        
+        .btn-primary:hover {
+            background-color: #45B7B8;
+        }
+        
+        .btn-secondary {
+            background-color: #F5F5F5;
+            color: #333333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #EEEEEE;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Image Upload Styles */
+        .image-upload-container {
+            position: relative;
+        }
+        
+        .image-upload-container input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .image-upload-preview {
+            border: 2px dashed #DDDDDD;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            background-color: #FAFAFA;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .image-upload-preview:hover {
+            border-color: #4ECDC4;
+            background-color: #F0FFFE;
+        }
+        
+        .image-upload-preview.has-image {
+            padding: 0;
+            border: 1px solid #DDDDDD;
+        }
+        
+        .image-upload-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 6px;
+        }
+        
+        .image-upload-preview .material-icons {
+            font-size: 48px;
+            color: #CCCCCC;
+        }
+        
+        .image-upload-preview span:not(.material-icons) {
+            color: #666666;
+            font-size: 14px;
+        }
+        
+        /* Price Container Styles */
+        .price-container {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+        
+        .price-container select {
+            flex: 1;
+        }
+        
+        .price-input-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid #DDDDDD;
+            border-radius: 8px;
+            overflow: hidden;
+            flex: 1;
+        }
+        
+        .currency-symbol {
+            background-color: #F5F5F5;
+            padding: 12px;
+            border-right: 1px solid #DDDDDD;
+            font-weight: 500;
+            color: #666666;
+        }
+        
+        .price-input-container input {
+            border: none;
+            border-radius: 0;
+            margin: 0;
+        }
+        
+        .price-input-container input:focus {
+            box-shadow: none;
+        }
+        
+        /* Address Input Styles */
+        .address-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .address-input-container input {
+            padding-right: 40px;
+        }
+        
+        .address-icon {
+            position: absolute;
+            right: 12px;
+            color: #4ECDC4;
+            pointer-events: none;
+        }
+        
+        .address-details {
+            margin-top: 8px;
+        }
+        
+        .address-info {
+            color: #666666;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .address-info::before {
+            content: '✓';
+            color: #4ECDC4;
+            font-weight: bold;
+        }
+        
+        /* Google Places Autocomplete Styling */
+        .pac-container {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid #DDDDDD;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .pac-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #F0F0F0;
+            cursor: pointer;
+        }
+        
+        .pac-item:hover {
+            background-color: #F8F9FA;
+        }
+        
+        .pac-item-selected {
+            background-color: #4ECDC4 !important;
+            color: white;
+        }
+        
+        .pac-matched {
+            font-weight: 600;
+        }
+        
+        /* Demo Address Suggestions Styles */
+        .address-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #DDDDDD;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .suggestion-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #F0F0F0;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .suggestion-item:hover {
+            background-color: #F8F9FA;
+        }
+        
+        .suggestion-item strong {
+            color: #333333;
+            font-size: 14px;
+        }
+        
+        .suggestion-item small {
+            color: #666666;
+            font-size: 12px;
+        }
+        
+        /* Mobile modal adjustments */
+        @media (max-width: 480px) {
+            .modal-content {
+                margin: 2% auto;
+                width: 95%;
+                max-height: 95vh;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .form-group.half {
+                margin-bottom: 16px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+            }
+            
+            .price-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .image-upload-preview {
+                padding: 30px 15px;
+            }
+            
+            .address-input-container input {
+                padding-right: 35px;
+            }
+            
+            .address-icon {
+                right: 10px;
+                font-size: 20px;
+            }
+        }
+        
         .screen-title {
             text-align: center;
             font-size: 24px;
@@ -372,7 +789,7 @@
                 </div>
             </div>
             
-            <div class="create-event-button">
+            <div class="create-event-button" onclick="openCreateEventModal()">
                 <span class="material-icons">add_circle</span>
                 <div class="create-event-button-text">Create New Event</div>
             </div>
@@ -502,7 +919,7 @@
                 <span class="material-icons nav-icon">event</span>
                 <div>Events</div>
             </div>
-            <div class="nav-item">
+            <div class="nav-item" onclick="openCreateEventModal()">
                 <span class="material-icons nav-icon">add_circle</span>
                 <div>Create</div>
             </div>
@@ -516,5 +933,340 @@
             </div>
         </div>
     </div>
+    
+    <!-- Event Creation Modal -->
+    <div id="createEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Event</h2>
+                <span class="close" onclick="closeCreateEventModal()">&times;</span>
+            </div>
+            <form id="createEventForm" onsubmit="submitEvent(event)">
+                <div class="form-group">
+                    <label for="eventTitle">Event Title *</label>
+                    <input type="text" id="eventTitle" name="eventTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventDescription">Description</label>
+                    <textarea id="eventDescription" name="eventDescription" rows="3"></textarea>
+                </div>
+                
+                <!-- Image Upload Section -->
+                <div class="form-group">
+                    <label for="eventImage">Event Image</label>
+                    <div class="image-upload-container">
+                        <input type="file" id="eventImage" name="eventImage" accept="image/*" onchange="previewImage(event)">
+                        <div class="image-upload-preview" id="imagePreview">
+                            <span class="material-icons">add_photo_alternate</span>
+                            <span>Click to upload event image</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="eventDate">Date *</label>
+                        <input type="date" id="eventDate" name="eventDate" required>
+                    </div>
+                    <div class="form-group half">
+                        <label for="eventTime">Time *</label>
+                        <input type="time" id="eventTime" name="eventTime" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventVenue">Venue *</label>
+                    <input type="text" id="eventVenue" name="eventVenue" placeholder="Enter venue name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventAddress">Full Address *</label>
+                    <div class="address-input-container">
+                        <input type="text" id="eventAddress" name="eventAddress" placeholder="Start typing address..." required>
+                        <span class="material-icons address-icon">location_on</span>
+                    </div>
+                    <div class="address-details" id="addressDetails" style="display: none;">
+                        <small class="address-info">Selected: <span id="selectedAddress"></span></small>
+                    </div>
+                </div>
+                
+                <!-- Pricing Section -->
+                <div class="form-group">
+                    <label for="eventPrice">Price *</label>
+                    <div class="price-container">
+                        <select id="priceType" name="priceType" onchange="togglePriceInput()" required>
+                            <option value="">Select pricing</option>
+                            <option value="free">Free</option>
+                            <option value="paid">Paid</option>
+                        </select>
+                        <div id="priceInputContainer" class="price-input-container" style="display: none;">
+                            <span class="currency-symbol">€</span>
+                            <input type="number" id="eventPrice" name="eventPrice" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="maxAttendees">Maximum Attendees</label>
+                    <input type="number" id="maxAttendees" name="maxAttendees" placeholder="Leave empty for unlimited" min="1">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="minAge">Min Age *</label>
+                        <select id="minAge" name="minAge" required>
+                            <option value="">Select</option>
+                            <option value="0">0+</option>
+                            <option value="3">3+</option>
+                            <option value="6">6+</option>
+                            <option value="12">12+</option>
+                            <option value="16">16+</option>
+                        </select>
+                    </div>
+                    <div class="form-group half">
+                        <label for="maxAge">Max Age</label>
+                        <select id="maxAge" name="maxAge">
+                            <option value="">No limit</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="18">18</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eventCategory">Category</label>
+                    <select id="eventCategory" name="eventCategory">
+                        <option value="workshop">Workshop</option>
+                        <option value="sports">Sports</option>
+                        <option value="arts">Arts & Crafts</option>
+                        <option value="music">Music</option>
+                        <option value="outdoor">Outdoor</option>
+                        <option value="educational">Educational</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeCreateEventModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        let autocomplete;
+        let selectedPlace = null;
+        
+        // Demo Address Suggestions (simulates Google Places API)
+        const demoAddresses = [
+            { name: 'Alexanderplatz', address: 'Alexanderplatz 1, 10178 Berlin, Germany', lat: 52.5200, lng: 13.4050 },
+            { name: 'Brandenburg Gate', address: 'Pariser Platz, 10117 Berlin, Germany', lat: 52.5163, lng: 13.3777 },
+            { name: 'Berlin Cathedral', address: 'Am Lustgarten 1, 10178 Berlin, Germany', lat: 52.5191, lng: 13.4007 },
+            { name: 'Potsdamer Platz', address: 'Potsdamer Platz, 10785 Berlin, Germany', lat: 52.5096, lng: 13.3760 },
+            { name: 'Museum Island', address: 'Museum Island, 10117 Berlin, Germany', lat: 52.5170, lng: 13.4019 },
+            { name: 'Checkpoint Charlie', address: 'Friedrichstraße 43-45, 10117 Berlin, Germany', lat: 52.5074, lng: 13.3903 },
+            { name: 'Berlin Zoo', address: 'Hardenbergplatz 8, 10787 Berlin, Germany', lat: 52.5074, lng: 13.3370 },
+            { name: 'East Side Gallery', address: 'Mühlenstraße, 10243 Berlin, Germany', lat: 52.5058, lng: 13.4394 }
+        ];
+        
+        // Initialize Demo Address Autocomplete
+        function initAutocomplete() {
+            const addressInput = document.getElementById('eventAddress');
+            
+            if (addressInput) {
+                // Create suggestions dropdown
+                const suggestionsDiv = document.createElement('div');
+                suggestionsDiv.className = 'address-suggestions';
+                suggestionsDiv.style.display = 'none';
+                addressInput.parentNode.appendChild(suggestionsDiv);
+                
+                // Add input event listener for demo autocomplete
+                addressInput.addEventListener('input', function(e) {
+                    const query = e.target.value.toLowerCase();
+                    
+                    if (query.length < 2) {
+                        suggestionsDiv.style.display = 'none';
+                        return;
+                    }
+                    
+                    const matches = demoAddresses.filter(addr => 
+                        addr.name.toLowerCase().includes(query) || 
+                        addr.address.toLowerCase().includes(query)
+                    );
+                    
+                    if (matches.length > 0) {
+                        suggestionsDiv.innerHTML = matches.map(addr => 
+                            `<div class="suggestion-item" data-address="${addr.address}" data-name="${addr.name}" data-lat="${addr.lat}" data-lng="${addr.lng}">
+                                <strong>${addr.name}</strong><br>
+                                <small>${addr.address}</small>
+                            </div>`
+                        ).join('');
+                        suggestionsDiv.style.display = 'block';
+                        
+                        // Add click listeners to suggestions
+                        suggestionsDiv.querySelectorAll('.suggestion-item').forEach(item => {
+                            item.addEventListener('click', function() {
+                                const address = this.dataset.address;
+                                const name = this.dataset.name;
+                                const lat = parseFloat(this.dataset.lat);
+                                const lng = parseFloat(this.dataset.lng);
+                                
+                                addressInput.value = address;
+                                suggestionsDiv.style.display = 'none';
+                                
+                                // Simulate selected place
+                                selectedPlace = {
+                                    placeId: 'demo_' + name.toLowerCase().replace(/\s+/g, '_'),
+                                    formattedAddress: address,
+                                    name: name,
+                                    lat: lat,
+                                    lng: lng
+                                };
+                                
+                                // Show selected address confirmation
+                                const addressDetails = document.getElementById('addressDetails');
+                                const selectedAddress = document.getElementById('selectedAddress');
+                                selectedAddress.textContent = address;
+                                addressDetails.style.display = 'block';
+                                
+                                console.log('Selected place (demo):', selectedPlace);
+                            });
+                        });
+                    } else {
+                        suggestionsDiv.style.display = 'none';
+                    }
+                });
+                
+                // Hide suggestions when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!addressInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                        suggestionsDiv.style.display = 'none';
+                    }
+                });
+                
+                console.log('Demo address autocomplete initialized');
+            }
+        }
+        
+        // Initialize autocomplete when modal opens
+        function openCreateEventModal() {
+            document.getElementById('createEventModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Initialize autocomplete if not already done
+            setTimeout(() => {
+                if (!autocomplete && window.google && window.google.maps) {
+                    initAutocomplete();
+                }
+            }, 100);
+        }
+        
+        function closeCreateEventModal() {
+            document.getElementById('createEventModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('createEventForm').reset();
+            
+            // Reset address autocomplete and selected place
+            selectedPlace = null;
+            const addressDetails = document.getElementById('addressDetails');
+            const imagePreview = document.getElementById('imagePreview');
+            const priceInputContainer = document.getElementById('priceInputContainer');
+            
+            addressDetails.style.display = 'none';
+            imagePreview.innerHTML = '<span class="material-icons">add_photo_alternate</span><span>Click to upload event image</span>';
+            imagePreview.classList.remove('has-image');
+            priceInputContainer.style.display = 'none';
+        }
+        
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('imagePreview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Event preview">`;
+                    preview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function togglePriceInput() {
+            const priceType = document.getElementById('priceType').value;
+            const priceInputContainer = document.getElementById('priceInputContainer');
+            const priceInput = document.getElementById('eventPrice');
+            
+            if (priceType === 'paid') {
+                priceInputContainer.style.display = 'flex';
+                priceInput.required = true;
+            } else {
+                priceInputContainer.style.display = 'none';
+                priceInput.required = false;
+                priceInput.value = '';
+            }
+        }
+        
+        function submitEvent(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(event.target);
+            const eventData = {
+                title: formData.get('eventTitle'),
+                description: formData.get('eventDescription'),
+                image: formData.get('eventImage'),
+                date: formData.get('eventDate'),
+                time: formData.get('eventTime'),
+                venue: formData.get('eventVenue'),
+                address: formData.get('eventAddress'),
+                // Google Places data (if available)
+                placeId: selectedPlace ? selectedPlace.placeId : null,
+                coordinates: selectedPlace ? { lat: selectedPlace.lat, lng: selectedPlace.lng } : null,
+                formattedAddress: selectedPlace ? selectedPlace.formattedAddress : formData.get('eventAddress'),
+                priceType: formData.get('priceType'),
+                price: formData.get('eventPrice'),
+                maxAttendees: formData.get('maxAttendees'),
+                minAge: formData.get('minAge'),
+                maxAge: formData.get('maxAge'),
+                category: formData.get('eventCategory')
+            };
+            
+            // Validate required fields
+            if (!eventData.title || !eventData.date || !eventData.time || !eventData.venue || !eventData.address || !eventData.priceType || !eventData.minAge) {
+                alert('Please fill in all required fields (marked with *)');
+                return;
+            }
+            
+            // Validate paid events have a price
+            if (eventData.priceType === 'paid' && (!eventData.price || eventData.price <= 0)) {
+                alert('Please enter a valid price for paid events');
+                return;
+            }
+            
+            // Create success message
+            let priceText = eventData.priceType === 'free' ? 'Free' : `€${eventData.price}`;
+            let attendeesText = eventData.maxAttendees ? `Max ${eventData.maxAttendees} attendees` : 'Unlimited attendees';
+            
+            alert(`Event "${eventData.title}" created successfully!\n\nDate: ${eventData.date}\nTime: ${eventData.time}\nVenue: ${eventData.venue}\nAddress: ${eventData.address}\nPrice: ${priceText}\nAge Range: ${eventData.minAge}+ ${eventData.maxAge ? 'to ' + eventData.maxAge : ''}\n${attendeesText}`);
+            
+            // Close modal and reset form
+            closeCreateEventModal();
+            
+            // In a real app, this would send data to the server
+            console.log('Event created:', eventData);
+        }
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('createEventModal');
+            if (event.target === modal) {
+                closeCreateEventModal();
+            }
+        }
+    </script>
 </body>
 </html>
