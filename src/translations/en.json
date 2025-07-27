@@ -283,5 +283,42 @@
     "koala": "Koala avatar",
     "fox": "Fox avatar",
     "bunny": "Bunny avatar"
+  },
+  "search": {
+    "enhancedSearch": "Enhanced Search",
+    "findKidFriendlyEvents": "Find kid-friendly events from Berlin.de",
+    "placeholder": "Search for family events...",
+    "filters": "Smart Filters",
+    "includeScrapedEvents": "Include scraped events",
+    "kidsOnlyMode": "Kids-only mode",
+    "maxAge": "Max age",
+    "kidEvents": "Kids Events",
+    "freeEvents": "Free Events",
+    "clear": "Clear",
+    "scrapingResults": "Scraping Results",
+    "totalFound": "Total Found",
+    "kidFriendly": "Kid-Friendly",
+    "excluded": "Excluded",
+    "foundEvents": "Found {{count}} events",
+    "scrapedEvents": "Scraped Events",
+    "localEvents": "Local Events",
+    "scraped": "Scraped",
+    "saveEvent": "Save Event",
+    "eventSaved": "Event saved to your collection",
+    "saveFailed": "Failed to save event",
+    "viewDetails": "View Details",
+    "noResults": "No events found",
+    "tryDifferentQuery": "Try a different search term",
+    "error": "Search Error",
+    "enterQuery": "Please enter a search term",
+    "success": "Success"
+  },
+  "categories": {
+    "outdoor": "Outdoor",
+    "indoor": "Indoor",
+    "educational": "Educational",
+    "sports": "Sports",
+    "arts": "Arts",
+    "music": "Music"
   }
 }

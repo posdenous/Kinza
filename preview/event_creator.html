@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinza - Event Creator Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            color: white;
+            padding: 20px 16px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 20px 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4ECDC4;
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .image-upload {
+            border: 2px dashed #4ECDC4;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background: #f8fffe;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload:hover {
+            background: #f0fffe;
+            border-color: #44A08D;
+        }
+
+        .image-upload-icon {
+            font-size: 32px;
+            color: #4ECDC4;
+            margin-bottom: 8px;
+        }
+
+        .pricing-toggle {
+            display: flex;
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 12px;
+        }
+
+        .pricing-option {
+            flex: 1;
+            padding: 8px 16px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .pricing-option.active {
+            background: #4ECDC4;
+            color: white;
+        }
+
+        .price-input {
+            display: none;
+            margin-top: 12px;
+        }
+
+        .price-input.show {
+            display: block;
+        }
+
+        .age-range {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .age-input {
+            flex: 1;
+        }
+
+        .age-separator {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .category-chip {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .category-chip.selected {
+            background: #4ECDC4;
+            border-color: #4ECDC4;
+            color: white;
+        }
+
+        .address-autocomplete {
+            position: relative;
+        }
+
+        .address-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+        }
+
+        .address-suggestions.show {
+            display: block;
+        }
+
+        .address-suggestion {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s ease;
+        }
+
+        .address-suggestion:hover {
+            background: #f8f9fa;
+        }
+
+        .address-suggestion:last-child {
+            border-bottom: none;
+        }
+
+        .submit-button {
+            width: 100%;
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .moderation-notice {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .moderation-notice-icon {
+            color: #2196f3;
+            font-size: 18px;
+            margin-top: 2px;
+        }
+
+        .moderation-notice-text {
+            color: #0d47a1;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .form-input.error {
+            border-color: #e74c3c;
+        }
+
+        .datetime-input {
+            display: flex;
+            gap: 8px;
+        }
+
+        .datetime-input input {
+            flex: 1;
+        }
+
+        .capacity-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .capacity-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: #4ECDC4;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(20px);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Create Event</h1>
+            <p>Share amazing experiences with Berlin families</p>
+        </div>
+
+        <div class="form-container">
+            <form id="eventForm">
+                <!-- Event Image -->
+                <div class="form-group">
+                    <label class="form-label">Event Image <span class="required">*</span></label>
+                    <div class="image-upload" onclick="document.getElementById('imageInput').click()">
+                        <div class="image-upload-icon">📸</div>
+                        <div>Tap to upload event photo</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 4px;">Max 1MB, JPEG/WEBP</div>
+                    </div>
+                    <input type="file" id="imageInput" accept="image/jpeg,image/webp" style="display: none;">
+                </div>
+
+                <!-- Event Title -->
+                <div class="form-group">
+                    <label class="form-label" for="title">Event Title <span class="required">*</span></label>
+                    <input type="text" id="title" class="form-input" placeholder="e.g., Family Fun Day at Tiergarten" required>
+                    <div class="error-message" id="titleError"></div>
+                </div>
+
+                <!-- Event Description -->
+                <div class="form-group">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea id="description" class="form-input form-textarea" placeholder="Tell families what makes this event special..."></textarea>
+                </div>
+
+                <!-- Categories -->
+                <div class="form-group">
+                    <label class="form-label">Categories</label>
+                    <div class="category-grid">
+                        <div class="category-chip" data-category="outdoor">🌳 Outdoor</div>
+                        <div class="category-chip" data-category="indoor">🏠 Indoor</div>
+                        <div class="category-chip" data-category="educational">📚 Educational</div>
+                        <div class="category-chip" data-category="sports">⚽ Sports</div>
+                        <div class="category-chip" data-category="arts">🎨 Arts & Crafts</div>
+                        <div class="category-chip" data-category="music">🎵 Music</div>
+                    </div>
+                </div>
+
+                <!-- Age Range -->
+                <div class="form-group">
+                    <label class="form-label">Age Range <span class="required">*</span></label>
+                    <div class="age-range">
+                        <input type="number" id="minAge" class="form-input age-input" placeholder="Min age" min="0" max="18" required>
+                        <span class="age-separator">to</span>
+                        <input type="number" id="maxAge" class="form-input age-input" placeholder="Max age" min="0" max="18" required>
+                        <span style="font-size: 12px; color: #666;">years</span>
+                    </div>
+                    <div class="error-message" id="ageError"></div>
+                </div>
+
+                <!-- Venue Name -->
+                <div class="form-group">
+                    <label class="form-label" for="venue">Venue Name <span class="required">*</span></label>
+                    <input type="text" id="venue" class="form-input" placeholder="e.g., Tiergarten Playground" required>
+                    <div class="error-message" id="venueError"></div>
+                </div>
+
+                <!-- Full Address with Autocomplete -->
+                <div class="form-group">
+                    <label class="form-label" for="address">Full Address <span class="required">*</span></label>
+                    <div class="address-autocomplete">
+                        <input type="text" id="address" class="form-input" placeholder="Start typing address..." required>
+                        <div class="address-suggestions" id="addressSuggestions">
+                            <div class="address-suggestion">Tiergarten, 10785 Berlin, Germany</div>
+                            <div class="address-suggestion">Tiergartenstraße 1, 10785 Berlin, Germany</div>
+                            <div class="address-suggestion">Tiergarten S-Bahn, Berlin, Germany</div>
+                        </div>
+                    </div>
+                    <div class="error-message" id="addressError"></div>
+                </div>
+
+                <!-- Date and Time -->
+                <div class="form-group">
+                    <label class="form-label">Start Date & Time <span class="required">*</span></label>
+                    <div class="datetime-input">
+                        <input type="date" id="startDate" class="form-input" required>
+                        <input type="time" id="startTime" class="form-input" required>
+                    </div>
+                    <div class="error-message" id="datetimeError"></div>
+                </div>
+
+                <!-- Pricing -->
+                <div class="form-group">
+                    <label class="form-label">Pricing</label>
+                    <div class="pricing-toggle">
+                        <div class="pricing-option active" data-pricing="free">Free</div>
+                        <div class="pricing-option" data-pricing="paid">Paid</div>
+                    </div>
+                    <div class="price-input" id="priceInput">
+                        <input type="number" id="price" class="form-input" placeholder="Price in EUR" min="0" step="0.01">
+                    </div>
+                </div>
+
+                <!-- Max Attendees -->
+                <div class="form-group">
+                    <label class="form-label">Capacity</label>
+                    <div class="capacity-toggle">
+                        <div class="toggle-switch" id="capacityToggle">
+                            <div class="toggle-slider"></div>
+                        </div>
+                        <span>Set maximum attendees</span>
+                    </div>
+                    <div class="capacity-input" id="capacityInput" style="display: none;">
+                        <input type="number" id="maxAttendees" class="form-input" placeholder="Maximum attendees" min="1">
+                        <span style="font-size: 12px; color: #666;">people</span>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-button" id="submitButton">
+                    🚀 Create Event
+                </button>
+
+                <!-- Moderation Notice -->
+                <div class="moderation-notice">
+                    <div class="moderation-notice-icon">ℹ️</div>
+                    <div class="moderation-notice-text">
+                        <strong>Review Process:</strong> Your event will be reviewed by our team before being published. This usually takes 2-4 hours to ensure quality and safety for all families.
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Form validation and interaction logic
+        const form = document.getElementById('eventForm');
+        const submitButton = document.getElementById('submitButton');
+        
+        // Set default date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('startDate').value = tomorrow.toISOString().split('T')[0];
+        document.getElementById('startTime').value = '10:00';
+
+        // Category selection
+        document.querySelectorAll('.category-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+
+        // Pricing toggle
+        document.querySelectorAll('.pricing-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.pricing-option').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                const priceInput = document.getElementById('priceInput');
+                if (this.dataset.pricing === 'paid') {
+                    priceInput.classList.add('show');
+                    document.getElementById('price').required = true;
+                } else {
+                    priceInput.classList.remove('show');
+                    document.getElementById('price').required = false;
+                    document.getElementById('price').value = '';
+                }
+            });
+        });
+
+        // Capacity toggle
+        document.getElementById('capacityToggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            const capacityInput = document.getElementById('capacityInput');
+            if (this.classList.contains('active')) {
+                capacityInput.style.display = 'flex';
+            } else {
+                capacityInput.style.display = 'none';
+                document.getElementById('maxAttendees').value = '';
+            }
+        });
+
+        // Address autocomplete simulation
+        const addressInput = document.getElementById('address');
+        const addressSuggestions = document.getElementById('addressSuggestions');
+
+        addressInput.addEventListener('input', function() {
+            if (this.value.length > 2) {
+                addressSuggestions.classList.add('show');
+            } else {
+                addressSuggestions.classList.remove('show');
+            }
+        });
+
+        document.querySelectorAll('.address-suggestion').forEach(suggestion => {
+            suggestion.addEventListener('click', function() {
+                addressInput.value = this.textContent;
+                addressSuggestions.classList.remove('show');
+            });
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.address-autocomplete')) {
+                addressSuggestions.classList.remove('show');
+            }
+        });
+
+        // Image upload preview
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const imageUpload = document.querySelector('.image-upload');
+                imageUpload.innerHTML = `
+                    <div class="image-upload-icon">✅</div>
+                    <div>${file.name}</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 4px;">Click to change</div>
+                `;
+                imageUpload.style.background = '#e8f5e8';
+                imageUpload.style.borderColor = '#4CAF50';
+            }
+        });
+
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+            const errors = {};
+
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+            document.querySelectorAll('.form-input').forEach(input => input.classList.remove('error'));
+
+            // Title validation
+            const title = document.getElementById('title').value.trim();
+            if (!title) {
+                errors.title = 'Event title is required';
+                isValid = false;
+            }
+
+            // Age range validation
+            const minAge = parseInt(document.getElementById('minAge').value);
+            const maxAge = parseInt(document.getElementById('maxAge').value);
+            if (isNaN(minAge) || isNaN(maxAge)) {
+                errors.age = 'Both minimum and maximum age are required';
+                isValid = false;
+            } else if (minAge >= maxAge) {
+                errors.age = 'Maximum age must be greater than minimum age';
+                isValid = false;
+            }
+
+            // Venue validation
+            const venue = document.getElementById('venue').value.trim();
+            if (!venue) {
+                errors.venue = 'Venue name is required';
+                isValid = false;
+            }
+
+            // Address validation
+            const address = document.getElementById('address').value.trim();
+            if (!address) {
+                errors.address = 'Full address is required';
+                isValid = false;
+            }
+
+            // Date/time validation
+            const startDate = document.getElementById('startDate').value;
+            const startTime = document.getElementById('startTime').value;
+            if (!startDate || !startTime) {
+                errors.datetime = 'Start date and time are required';
+                isValid = false;
+            }
+
+            // Display errors
+            Object.keys(errors).forEach(field => {
+                const errorElement = document.getElementById(field + 'Error');
+                const inputElement = document.getElementById(field === 'age' ? 'minAge' : field);
+                if (errorElement) {
+                    errorElement.textContent = errors[field];
+                }
+                if (inputElement) {
+                    inputElement.classList.add('error');
+                }
+            });
+
+            return isValid;
+        }
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                submitButton.disabled = true;
+                submitButton.textContent = '⏳ Creating Event...';
+                
+                // Simulate API call
+                setTimeout(() => {
+                    alert('🎉 Event created successfully!\n\nYour event has been submitted for review and will be published within 2-4 hours.');
+                    
+                    // Reset form
+                    form.reset();
+                    document.querySelectorAll('.category-chip').forEach(chip => chip.classList.remove('selected'));
+                    document.querySelectorAll('.pricing-option').forEach(opt => opt.classList.remove('active'));
+                    document.querySelector('.pricing-option[data-pricing="free"]').classList.add('active');
+                    document.getElementById('priceInput').classList.remove('show');
+                    document.getElementById('capacityToggle').classList.remove('active');
+                    document.getElementById('capacityInput').style.display = 'none';
+                    
+                    // Reset image upload
+                    document.querySelector('.image-upload').innerHTML = `
+                        <div class="image-upload-icon">📸</div>
+                        <div>Tap to upload event photo</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 4px;">Max 1MB, JPEG/WEBP</div>
+                    `;
+                    document.querySelector('.image-upload').style.background = '#f8fffe';
+                    document.querySelector('.image-upload').style.borderColor = '#4ECDC4';
+                    
+                    submitButton.disabled = false;
+                    submitButton.textContent = '🚀 Create Event';
+                    
+                    // Set default date to tomorrow again
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    document.getElementById('startDate').value = tomorrow.toISOString().split('T')[0];
+                    document.getElementById('startTime').value = '10:00';
+                }, 2000);
+            }
+        });
+
+        // Real-time validation feedback
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    this.classList.add('error');
+                } else {
+                    this.classList.remove('error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -17,7 +17,7 @@ import CustomTabBar from './src/components/CustomTabBar';
 // Import screens
 import PrivacyScreen from './src/screens/PrivacyScreen';
 import TrustScreen from './src/screens/TrustScreen';
-import SearchResultsScreen from './src/screens/SearchResultsScreen';
+import { EnhancedSearchScreen } from './src/screens/EnhancedSearchScreen';
 import AdminDashboardScreen from './src/screens/AdminDashboardScreen';
 import OrganiserDashboardScreen from './src/screens/OrganiserDashboardScreen';
 import ReportReviewScreen from './src/screens/ReportReviewScreen';
@@ -55,7 +55,7 @@ function MainTabs() {
       <Tab.Screen name="Home" component={HomeStack} />
       <Tab.Screen 
         name="Search" 
-        component={(props: any) => <SearchResultsScreen {...props} route={{ params: { cityId: 'berlin' } }} />} 
+        component={(props: any) => <EnhancedSearchScreen {...props} cityId="berlin" />} 
       />
       <Tab.Screen name="Profile" component={ProfileStack} />
     </Tab.Navigator>

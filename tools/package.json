@@ -1,0 +1,39 @@
+{
+  "name": "kinza-event-scraper",
+  "version": "1.0.0",
+  "description": "Event scraper tool for Kinza Berlin app - extracts events from berlin.de and Google Maps",
+  "main": "event-scraper.js",
+  "bin": {
+    "kinza-scraper": "./event-scraper.js"
+  },
+  "scripts": {
+    "scrape": "node event-scraper.js",
+    "scrape-berlin": "node event-scraper.js --url https://www.berlin.de/wochenend-tipps/",
+    "scrape-kids": "node event-scraper.js --url https://www.berlin.de/kultur-und-tickets/tipps/kinder/",
+    "scrape-maps": "node event-scraper.js --search 'family events' --maps",
+    "test-scraper": "node event-scraper.js --debug --output test-events"
+  },
+  "dependencies": {
+    "puppeteer": "^21.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0"
+  },
+  "keywords": [
+    "scraper",
+    "events",
+    "berlin",
+    "families",
+    "automation",
+    "kinza"
+  ],
+  "author": "Kinza Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/posdenous/Kinza.git"
+  }
+}
